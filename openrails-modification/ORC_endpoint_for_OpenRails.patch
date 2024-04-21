@@ -1,0 +1,63 @@
+diff --git a/Source/RunActivity/Viewer3D/WebServices/WebServer.cs b/Source/RunActivity/Viewer3D/WebServices/WebServer.cs
+index 42c8128..802fe91 100644
+--- a/Source/RunActivity/Viewer3D/WebServices/WebServer.cs
++++ b/Source/RunActivity/Viewer3D/WebServices/WebServer.cs
+@@ -134,6 +134,58 @@ public ORTSApiController(Viewer viewer)
+             Viewer = viewer;
+         }
+ 
++
++        #region /API/ORC
++        // This region is for the Open-Rails-Client for the ETCS project at FIT CTU
++        public struct OrcTable
++        {
++            public float DistanceTravelledInMeters;
++            public float SpeedInMetersPerSecond;
++            public float AccelerationInMeteresPerSecondSquared;
++            public float ThrottleLeverPercentage;
++            public float Direction;
++            public float BrakeCylinderPreasureInPsi;
++            public float MainPipeBrakePreasureInPsi;
++            public float MotiveForceInNewtons;
++        }
++
++        [Route(HttpVerbs.Get, "/ORC")]
++        public OrcTable GetOrcInfo()
++        {
++            var train = Viewer.Simulator.Trains[0];
++
++            return new OrcTable()
++            {
++                DistanceTravelledInMeters             = train.DistanceTravelledM,
++                SpeedInMetersPerSecond                = train.SpeedMpS,
++                AccelerationInMeteresPerSecondSquared = train.AccelerationMpSpS.Value,
++                ThrottleLeverPercentage               = train.MUThrottlePercent,
++                Direction                             = DirectionToFloat(train.MUDirection),
++                BrakeCylinderPreasureInPsi            = train.HUDLocomotiveBrakeCylinderPSI,
++                MainPipeBrakePreasureInPsi            = train.LeadPipePressurePSI,
++                MotiveForceInNewtons                  = train.Cars[0].MotiveForceN,
++            };
++        }
++
++        private float DirectionToFloat(Direction directionFromOpenRails)
++        {
++            // Open Rails stores Direction in an enum.
++            // But this gets converted to 0,1,2, which does not correspond to the POST of direction.
++            // This recalculates it to -1,0,+1.
++            switch (directionFromOpenRails)
++            {
++                case Direction.Forward: return +1;
++                case Direction.N: return 0;
++                case Direction.Reverse: return -1;
++
++                // Unrecheable - there are no other cases of the Direction enum
++                default: return 0;
++            }
++        }
++
++        #endregion
++
++
+         #region /API/APISAMPLE
+         public struct Embedded
+         {
