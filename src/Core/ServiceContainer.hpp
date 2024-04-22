@@ -19,7 +19,7 @@
 #include <map>
 #include <memory>
 #include <vector>
-#include "ILpcManagable.hpp"
+#include "ILpcManageable.hpp"
 #include "IService.hpp"
 
 class IStartable;
@@ -88,9 +88,9 @@ protected:
         std::shared_ptr<IInitializable> initializable = std::dynamic_pointer_cast<IInitializable>(service);
         if (initializable)
             initializableServices.push_back(initializable);
-        std::shared_ptr<ILpcManagable> lpcManagable = std::dynamic_pointer_cast<ILpcManagable>(service);
-        if (lpcManagable)
-            lpcManagableServices.push_back(lpcManagable);
+        std::shared_ptr<ILpcManageable> lpcManageable = std::dynamic_pointer_cast<ILpcManageable>(service);
+        if (lpcManageable)
+            lpcManageableServices.push_back(lpcManageable);
     }
 
     friend class Application;
@@ -99,5 +99,5 @@ protected:
     std::map<ServiceType, std::shared_ptr<IService>> services;
     std::vector<std::shared_ptr<IStartable>> startableServices;
     std::vector<std::shared_ptr<IInitializable>> initializableServices;
-    std::vector<std::shared_ptr<ILpcManagable>> lpcManagableServices;
+    std::vector<std::shared_ptr<ILpcManageable>> lpcManageableServices;
 };

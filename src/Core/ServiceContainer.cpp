@@ -36,19 +36,19 @@ void ServiceContainer::InitializeServices() {
 }
 
 void ServiceContainer::LpcSaidStart() {
-    for (auto& service : lpcManagableServices) {
+    for (auto& service : lpcManageableServices) {
         service->LpcSaidStart();
     }
 }
 
 void ServiceContainer::LpcSaidStop() {
-    for (auto& service : lpcManagableServices) {
+    for (auto& service : lpcManageableServices) {
         service->LpcSaidStop();
     }
 }
 
 void ServiceContainer::LpcSaidRestart() {
-    for (auto& service : lpcManagableServices) {
+    for (auto& service : lpcManageableServices) {
         service->LpcSaidRestart();
     }
 }

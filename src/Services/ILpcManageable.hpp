@@ -1,4 +1,4 @@
-/** @file ILpcManagable.hpp
+/** @file ILpcManageable.hpp
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
@@ -16,10 +16,10 @@
 /**
  * Interface for services that should respond to LPC commands
  */
-class ILpcManagable {
+class ILpcManageable {
 public:
-    explicit ILpcManagable() = default;
-    virtual ~ILpcManagable() = default;
+    explicit ILpcManageable() = default;
+    virtual ~ILpcManageable() = default;
     virtual void LpcSaidStart() = 0;
     virtual void LpcSaidStop() = 0;
     virtual void LpcSaidRestart() = 0;

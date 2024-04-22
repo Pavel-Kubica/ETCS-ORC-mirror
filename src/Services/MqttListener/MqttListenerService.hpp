@@ -34,7 +34,7 @@ class MqttListenerService : public MqttService,
                             public IMqttListenerService,
                             public IStartable,
                             public IInitializable,
-                            public ILpcManagable {
+                            public ILpcManageable {
 public:
     ~MqttListenerService();
     void Initialize(ServiceContainer& container) override;
