@@ -13,6 +13,7 @@
  *  zimaluk1
  *  maresj39
  *  hamaljan
+ *  pavlian5
  */
 
 #pragma once
@@ -49,9 +50,9 @@ public:
     /**
      * Configures itself after receiving Start from LPC
      */
-    void LpcSaidStart() override;
-    void LpcSaidStop() override;
-    void LpcSaidRestart() override;
+    bool LpcSaidStart() override;
+    bool LpcSaidStop() override;
+    bool LpcSaidRestart() override;
     bool GetStarted() const override;
     void AppExit() override;
 
