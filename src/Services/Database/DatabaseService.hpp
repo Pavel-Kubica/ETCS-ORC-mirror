@@ -34,17 +34,17 @@ public:
     /**
      * Connects to a database and loads data into trackDataService
      */
-    void LpcSaidStart() override;
+    bool LpcSaidStart() override;
 
     /**
      *  Disconnects from a database and clears data from trackDataService
      */
-    void LpcSaidStop() override;
+    bool LpcSaidStop() override;
 
     /**
      * Clears data from trackDataService and loads in fresh ones
      */
-    void LpcSaidRestart() override;
+    bool LpcSaidRestart() override;
 
     /**
      * Sets the login credentials to be different from the default ones

@@ -99,7 +99,7 @@ bool DatabaseService::LoadBaliseGroups() {
         }
         baliseGroups[telegram.NID_BG]->GetBalises().push_back(std::make_shared<Balise>(balise));  // add this balise to its balise group
 
-        if (isLast) {  // if this balise is last then we base this balisgroup position on this balise
+        if (isLast) {  // if this balise is last then we base this balise group position on this balise
             baliseGroups[telegram.NID_BG]->SetAbsPosition(absPos);
         }
     }
@@ -157,7 +157,7 @@ bool DatabaseService::LpcSaidStart() {
     if(connected) return false;
 
     if (defaultCredentials) {  // using default database setting if non were sent
-        jruLoggerService->Log(true, MessageType::Warning, "Rbc did not receive any db connection credentials, using default ones");
+        jruLoggerService->Log(true, MessageType::Warning, "ORC did not receive any db connection credentials, using default ones");
     }
     if(!Connect()) return false;
     if(!LoadDataFromDatabase()) return false;

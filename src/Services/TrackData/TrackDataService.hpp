@@ -37,9 +37,6 @@ public:
      */
     [[nodiscard]] std::vector<std::shared_ptr<BaliseGroup>> GetBaliseGroupsSortedByDistance() const override;
 
-
-
-
     /**
      * Clears all data stored in this service
      */
