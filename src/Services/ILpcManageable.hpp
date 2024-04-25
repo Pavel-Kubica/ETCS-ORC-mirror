@@ -10,6 +10,7 @@
  *  ### Contributors
  *  veselo21
  *  maresj39
+ *  pavlian5
  */
 
 #pragma once
@@ -20,7 +21,21 @@ class ILpcManageable {
 public:
     explicit ILpcManageable() = default;
     virtual ~ILpcManageable() = default;
-    virtual void LpcSaidStart() = 0;
-    virtual void LpcSaidStop() = 0;
-    virtual void LpcSaidRestart() = 0;
+    /**
+     * @retval true if successful
+     * @retval false if not
+     */
+    virtual bool LpcSaidStart() = 0;
+
+    /**
+     * @retval true if successful
+     * @retval false if not
+     */
+    virtual bool LpcSaidStop() = 0;
+
+    /**
+     * @retval true if successful
+     * @retval false if not
+     */
+    virtual bool LpcSaidRestart() = 0;
 };

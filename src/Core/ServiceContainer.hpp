@@ -12,6 +12,7 @@
  *  veselo21
  *  zimaluk1
  *  maresj39
+ *  pavlian5
  */
 
 #pragma once
@@ -41,17 +42,23 @@ public:
         return std::dynamic_pointer_cast<T>(services[T::Type]);
     }
     /**
-     * Lets all the lpcManageable services know that LPC sent a start message
+     * Calls LpsSaidStart on all registered ILpcManagable Services
+     * @retval true if LpcSaidStart was successful on all Services
+     * @retval false if not
      */
-    void LpcSaidStart();
+    bool LpcSaidStart();
     /**
-     * Lets all the lpcManageable services know that LPC sent a stop message
+     * Calls LpsSaidStop on all registered ILpcManagable Services
+     * @retval true if LpsSaidStop was successful on all Services
+     * @retval false if not
      */
-    void LpcSaidStop();
+    bool LpcSaidStop();
     /**
-     * Lets all the lpcManageable services know that LPC sent a restart message
+     * Calls LpsSaidRestart on all registered ILpcManagable Services
+     * @retval true if LpsSaidRestart was successful on all Services
+     * @retval false if not
      */
-    void LpcSaidRestart();
+     bool LpcSaidRestart();
 
 protected:
     /**

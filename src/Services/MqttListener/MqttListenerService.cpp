@@ -13,6 +13,7 @@
  *  zimaluk1
  *  maresj39
  *  hamaljan
+ *  pavlian5
  */
 
 // TODO: change LPCtoEVC to LPCtoORC in the whole file
@@ -78,36 +79,46 @@ void MqttListenerService::Wait() {
     work_thread.join();
 }
 
-void MqttListenerService::LpcSaidStart() {
+bool MqttListenerService::LpcSaidStart() {
+    if(started) return false; // If we are started why are staring again ?
+
     ListenerConfiguration config = configurationService->FetchConfiguration<ListenerConfiguration>();
 
     for (Topic t : config.topics) {
-        mosquitto_subscribe(komar, NULL, ConvertTopicToString(t).c_str(), 0);
+        if(mosquitto_subscribe(komar, NULL, ConvertTopicToString(t).c_str(), 0) != MOSQ_ERR_SUCCESS) {
+            throw std::runtime_error("Could not subscribe to a topic.");
+        }
         topicWorkers.insert(
             {t, std::make_shared<TopicWorker>(messageHandlersService->GetAllHandlers(), jruLoggerService, t)});
     }
 
     started = true;
+    return true;
 }
 
 bool MqttListenerService::GetStarted() const {
     return started;
 }
 
-void MqttListenerService::LpcSaidStop() {
-    if(!started) return;
+bool MqttListenerService::LpcSaidStop() {
+    if(!started) return false;
+
     std::shared_ptr<ListenerConfiguration> config = std::make_shared<ListenerConfiguration>();
     config->from_json(configurationService->FetchConfiguration<ListenerConfiguration>().to_json());
     for (Topic t : config->topics) {
         topicWorkers.at(t)->Stop();
-        mosquitto_unsubscribe(komar, NULL, ConvertTopicToString(t).c_str());
+        if(mosquitto_unsubscribe(komar, NULL, ConvertTopicToString(t).c_str()) != MOSQ_ERR_SUCCESS) {
+            throw std::runtime_error("Could not unsubscribe from a topic.");
+        }
         topicWorkers.erase(t);
     }
     started = false;
+    return true;
 }
 
-void MqttListenerService::LpcSaidRestart() {
+bool MqttListenerService::LpcSaidRestart() {
     // Does nothing
+    return true;
 }
 void MqttListenerService::AppExit() {
     topicWorkers[Topic::LPCtoEVC]->Stop();

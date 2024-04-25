@@ -11,6 +11,7 @@
  *  spakoro1
  *  veselo21
  *  zimaluk1
+ *  pavlian5
  */
 
 #include "ServiceContainer.hpp"
@@ -35,22 +36,42 @@ void ServiceContainer::InitializeServices() {
     }
 }
 
-void ServiceContainer::LpcSaidStart() {
+bool ServiceContainer::LpcSaidStart() {
+    std::vector<std::shared_ptr<ILpcManageable>> started;
+
     for (auto& service : lpcManageableServices) {
-        service->LpcSaidStart();
+        if(!service->LpcSaidStart()) {
+            for(auto& service : started) {
+                if(!service->LpcSaidStop()) {
+                    //If we reach this place, we are fu**ed
+                    throw std::runtime_error("During LPC start something went wrong and already stared services could not stop");
+                }
+            }
+            return false;
+        }
+        started.push_back(service);
     }
+
+    return true;
 }
 
-void ServiceContainer::LpcSaidStop() {
+bool ServiceContainer::LpcSaidStop() {
     for (auto& service : lpcManageableServices) {
-        service->LpcSaidStop();
+        if(!service->LpcSaidStop()){
+            return false;
+        }
     }
+
+    return true;
 }
 
-void ServiceContainer::LpcSaidRestart() {
+bool ServiceContainer::LpcSaidRestart() {
     for (auto& service : lpcManageableServices) {
-        service->LpcSaidRestart();
+        if(!service->LpcSaidRestart()){
+            return false;
+        }
     }
+    return true;
 }
 void ServiceContainer::AppExit() {
     LpcSaidStop();
