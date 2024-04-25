@@ -69,6 +69,9 @@ include_directories(lib
         src/Services/MqttPublisher
         src/Services/JRULogger
         src/Services/Time
+        src/Services/Database
+        src/Services/Database/Utils
+        src/Services/TrackData
         src/MessageHandlers
         src/Enums
         src/Configurations
@@ -83,6 +86,10 @@ if (WIN32)
     find_package(MOSQUITTO REQUIRED)
     include_directories(${PROJECT_SOURCE_DIR}/noCompileLibs/Mosquitto)
     target_link_libraries(${CMAKE_PROJECT_NAME}_run ${MOSQUITTO_LIBRARIES})
+    add_library(mysqlcppconn STATIC IMPORTED)
+    set_target_properties(mysqlcppconn PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/windows-libraries/mysql-connector-c++-8.0.33-win32/mysqlcppconn.lib)
+    # link the orc with mosquitto and mysql static (import) libraries
+    target_link_libraries(${CMAKE_PROJECT_NAME}_run mosquitto mysqlcppconn)
     # Find all DLLs in project
     file(GLOB_RECURSE DLLS "${PROJECT_SOURCE_DIR}/noCompileLibs/*.dll")
     # Copy DLLs next to the EXE file
@@ -96,6 +103,7 @@ else ()
     pkg_check_modules(Mosquitto REQUIRED IMPORTED_TARGET libmosquitto)
     target_link_libraries(${CMAKE_PROJECT_NAME}_run PRIVATE Threads::Threads)
     target_link_libraries(${CMAKE_PROJECT_NAME}_run PRIVATE PkgConfig::Mosquitto)
+    target_link_libraries(${CMAKE_PROJECT_NAME}_run PRIVATE Threads::Threads PkgConfig::Mosquitto mysqlcppconn)
 endif ()
 #================================================================================
 # testing part ==================================================================
@@ -113,6 +121,7 @@ if (WIN32)
             ${CMAKE_PROJECT_NAME}_test
             gtest_main
             ${MOSQUITTO_LIBRARIES}
+            mysqlcppconn
     )
 else ()
     target_link_libraries(
@@ -120,6 +129,7 @@ else ()
             gtest_main
             Threads::Threads
             PkgConfig::Mosquitto
+            mysqlcppconn
     )
 endif ()
 
