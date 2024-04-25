@@ -42,20 +42,20 @@ public:
         return std::dynamic_pointer_cast<T>(services[T::Type]);
     }
     /**
-     * Calls LpsSaidStart on all registered ILpcManagable Services
+     * Calls LpcSaidStart on all registered ILpcManageable Services
      * @retval true if LpcSaidStart was successful on all Services
      * @retval false if not
      */
     bool LpcSaidStart();
     /**
-     * Calls LpsSaidStop on all registered ILpcManagable Services
-     * @retval true if LpsSaidStop was successful on all Services
+     * Calls LpcSaidStop on all registered ILpcManageable Services
+     * @retval true if LpcSaidStop was successful on all Services
      * @retval false if not
      */
     bool LpcSaidStop();
     /**
-     * Calls LpsSaidRestart on all registered ILpcManagable Services
-     * @retval true if LpsSaidRestart was successful on all Services
+     * Calls LpcSaidRestart on all registered ILpcManageable Services
+     * @retval true if LpcSaidRestart was successful on all Services
      * @retval false if not
      */
      bool LpcSaidRestart();
