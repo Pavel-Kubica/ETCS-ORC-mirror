@@ -2,7 +2,7 @@
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
- *  RBC         | 2.3.0
+ *  ORC         | 2.3.0
  *
  *  ### Description
  *  List of sql statements to be used
@@ -28,34 +28,3 @@ const std::string loadBaliseInfo =
     "order by ap.deltaPosition";
 
 const std::string baliseGroupInfo = "select balise.defaultTelegram from balise";
-
-const std::string speedSectionPointA =
-    "select ss.id, ss.defaultMaximalSpeed, ap.deltaPosition from speedsection ss\n"
-    "join associatedlocationentity ale on ss.id=ale.id_NetEntity\t\n"
-    "join associatedlocationfeature alf on ale.id_AssociatedLocation=alf.id_AssociatedLocation\n"
-    "join associatedsection ass on alf.id_AssociatedFeature=ass.id\n"
-    "join associatedposition ap on ass.id_AssociatedPosition_A=ap.id\n"
-    "order by ap.deltaPosition";
-const std::string speedSectionPointB =
-    "select ss.id, ss.defaultMaximalSpeed, ap.deltaPosition from speedsection ss\n"
-    "join associatedlocationentity ale on ss.id=ale.id_NetEntity\t\n"
-    "join associatedlocationfeature alf on ale.id_AssociatedLocation=alf.id_AssociatedLocation\n"
-    "join associatedsection ass on alf.id_AssociatedFeature=ass.id\n"
-    "join associatedposition ap on ass.id_AssociatedPosition_B=ap.id\n"
-    "order by ap.deltaPosition";
-
-const std::string verticalCurvePointA =
-    "select vc.id, vc.horizontalLength, vc.elevation0, vc.deltaElevation, ap.deltaPosition from verticalcurve vc\n"
-    "join associatedlocationentity ale on vc.id=ale.id_NetEntity\n"
-    "join associatedlocationfeature alf on ale.id_AssociatedLocation=alf.id_AssociatedLocation\n"
-    "join associatedsection ass on alf.id_AssociatedFeature=ass.id\n"
-    "join associatedposition ap on ass.id_AssociatedPosition_A=ap.id\n"
-    "order by ap.deltaPosition;";
-
-const std::string verticalCurvePointB =
-    "select vc.id, vc.horizontalLength, vc.elevation0, vc.deltaElevation, ap.deltaPosition from verticalcurve vc\n"
-    "join associatedlocationentity ale on vc.id=ale.id_NetEntity\n"
-    "join associatedlocationfeature alf on ale.id_AssociatedLocation=alf.id_AssociatedLocation\n"
-    "join associatedsection ass on alf.id_AssociatedFeature=ass.id\n"
-    "join associatedposition ap on ass.id_AssociatedPosition_B=ap.id\n"
-    "order by ap.deltaPosition;";

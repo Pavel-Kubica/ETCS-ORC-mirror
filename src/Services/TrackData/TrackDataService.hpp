@@ -22,14 +22,17 @@
 class TrackDataService : public ITrackDataService, public IInitializable {
 public:
     void Initialize(ServiceContainer& container) override;
+
     /**
      * Saves balise groups loaded from database for later use by other services
      * @param baliseGps to be saved
      */
     void SetBaliseGroups(std::map<uint32_t, std::shared_ptr<BaliseGroup>> baliseGps) override;
 
-    std::map<uint32_t, std::shared_ptr<BaliseGroup>>& GetBaliseGroups()
-        override;  // WARNING!!! return value is a reference so handle with care
+    /**
+     * @warning return value is a reference so handle with care
+     */
+    std::map<uint32_t, std::shared_ptr<BaliseGroup>>& GetBaliseGroups() override;
 
     /**
      * Automatically copies and sorts balise groups conveniently by geographical distance

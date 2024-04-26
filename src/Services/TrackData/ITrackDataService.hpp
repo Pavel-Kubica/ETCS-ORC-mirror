@@ -16,11 +16,15 @@
 
 #include "BaliseGroup.hpp"
 #include "IService.hpp"
+
 class ITrackDataService : public IService {
 public:
     virtual void SetBaliseGroups(std::map<uint32_t, std::shared_ptr<BaliseGroup>> baliseGps) = 0;
-    virtual std::map<uint32_t, std::shared_ptr<BaliseGroup>>&
-    GetBaliseGroups() = 0;  // WARNING!!! return value is a reference so handle with care
+
+    /**
+     * @warning return value is a reference so handle with care
+     */
+    virtual std::map<uint32_t, std::shared_ptr<BaliseGroup>>& GetBaliseGroups() = 0;
 
     virtual std::vector<std::shared_ptr<BaliseGroup>> GetBaliseGroupsSortedByDistance() const = 0;
 
