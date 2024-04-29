@@ -92,8 +92,5 @@ private:
     uint32_t databaseTimeout;
 
     // sql library shenanigans
-    sql::Driver* sqlDriver;
-    sql::Connection* sqlConnection;
-    sql::Statement* sqlStatement;
-    sql::ResultSet* sqlResultSet;
+    std::unique_ptr<sql::Connection> sqlConnection;
 };

@@ -9,6 +9,7 @@
  *
  *  ### Contributors
  *  veselo21
+ *  pavlian5
  */
 
 #include "DatabaseService.hpp"
@@ -60,13 +61,13 @@ bool DatabaseService::LoadDataFromDatabase() {
 }
 
 bool DatabaseService::LoadBaliseGroups() {
+    std::unique_ptr<sql::Statement> sqlStatement;
+    std::unique_ptr<sql::ResultSet> sqlResultSet;
     try {
-        sqlStatement = sqlConnection->createStatement();
-        sqlResultSet = sqlStatement->executeQuery(loadBaliseInfo);
-    } catch (sql::SQLException& e) {
+        sqlStatement = std::unique_ptr<sql::Statement>(sqlConnection->createStatement());
+        sqlResultSet = std::unique_ptr<sql::ResultSet>(sqlStatement->executeQuery(loadBaliseInfo));
+    } catch (const sql::SQLException& e) {
         jruLoggerService->Log(true, MessageType::Error, e.what());
-        delete sqlStatement;
-        delete sqlResultSet;
         return false;
     }
 
@@ -85,8 +86,6 @@ bool DatabaseService::LoadBaliseGroups() {
             absPos.SetDistanceFromMeters(std::stol(pos));
         } catch (std::exception& e) {
             jruLoggerService->Log(true, MessageType::Error, e.what());
-            delete sqlStatement;
-            delete sqlResultSet;
             return false;
         }
 
@@ -108,8 +107,6 @@ bool DatabaseService::LoadBaliseGroups() {
 
     jruLoggerService->Log(true, MessageType::Info, "Successfully loaded balise groups from database");
 
-    delete sqlStatement;
-    delete sqlResultSet;
     return true;
 }
 
@@ -130,10 +127,12 @@ uint32_t DatabaseService::GetTimeout() const {
 }
 
 bool DatabaseService::ConnectToDatabase() {
-    sqlDriver = get_driver_instance();
+    // cannot be smart ptr because destructor is protected
+    // the library takes care of freeing the driver object
+    sql::Driver* sqlDriver = get_driver_instance();
     try {
-        sqlConnection = sqlDriver->connect(databaseAddress, databaseUsername, databasePassword);
-    } catch (sql::SQLException& e) {
+        sqlConnection = std::unique_ptr<sql::Connection>(sqlDriver->connect(databaseAddress, databaseUsername, databasePassword));
+    } catch (const sql::SQLException& e) {
         jruLoggerService->Log(true, MessageType::Error, e.what());
         return false;
     }
@@ -148,7 +147,6 @@ bool DatabaseService::Disconnect() {
     if(!connected) return false;
 
     connected = false;
-    delete sqlConnection;
 
     return true;
 }
