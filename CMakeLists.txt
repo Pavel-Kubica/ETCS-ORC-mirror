@@ -21,6 +21,15 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 #================================================================================
+
+
+# import and set up cpr-libary for HTTP requests =============================
+include(FetchContent)
+FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git
+        GIT_TAG 3b15fa82ea74739b574d705fea44959b58142eb8) # Replace with your desired git commit from: https://github.com/libcpr/cpr/releases
+FetchContent_MakeAvailable(cpr)
+#================================================================================
+
 # register all source files =====================================================
 file(GLOB_RECURSE SOURCE
         src/*
@@ -111,6 +120,8 @@ if (WIN32)
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
             ${DLLS}
             $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}_run>)
+
+    target_link_libraries(${CMAKE_PROJECT_NAME}_run PRIVATE cpr::cpr)
 else ()
     find_package(PkgConfig REQUIRED)
     find_package(Threads REQUIRED)
@@ -118,6 +129,7 @@ else ()
     target_link_libraries(${CMAKE_PROJECT_NAME}_run PRIVATE Threads::Threads)
     target_link_libraries(${CMAKE_PROJECT_NAME}_run PRIVATE PkgConfig::Mosquitto)
     target_link_libraries(${CMAKE_PROJECT_NAME}_run PRIVATE Threads::Threads PkgConfig::Mosquitto mysqlcppconn)
+    target_link_libraries(${CMAKE_PROJECT_NAME}_run PRIVATE cpr::cpr)
 endif ()
 #================================================================================
 # testing part ==================================================================
