@@ -26,5 +26,5 @@ enum class ServiceType {
     Logger,
     Time,
     Database,
-    TrackData
+    BaliseData
 };

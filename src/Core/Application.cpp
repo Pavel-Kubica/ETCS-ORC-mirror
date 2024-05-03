@@ -20,7 +20,7 @@
 #include "MqttPublisher/MqttPublisherService.hpp"
 #include "MessageHandlersService/MessageHandlersService.hpp"
 #include "MqttListener/MqttListenerService.hpp"
-#include "TrackDataService.hpp"
+#include "BaliseDataService.hpp"
 #include "DatabaseService.hpp"
 
 
@@ -43,7 +43,7 @@ void Application::Initialize(const std::string& mqttHostname, int mqttPort) {
     service_container->RegisterService<MqttPublisherService>();
     service_container->RegisterService<MessageHandlersService>();
     service_container->RegisterService<MqttListenerService>();
-    service_container->RegisterService<TrackDataService>();
+    service_container->RegisterService<BaliseDataService>();
     service_container->RegisterService<DatabaseService>();
     // set mqtt ip and port from method arguments
     service_container->FetchService<MqttPublisherService>()->SetMqttAddress(mqttHostname, mqttPort);

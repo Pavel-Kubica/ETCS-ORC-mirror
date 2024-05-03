@@ -1,4 +1,4 @@
-/** @file TrackDataService.hpp
+/** @file BaliseDataService.hpp
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
@@ -17,9 +17,9 @@
 #include <memory>
 #include <vector>
 #include "IInitializable.hpp"
-#include "ITrackDataService.hpp"
+#include "IBaliseDataService.hpp"
 
-class TrackDataService : public ITrackDataService, public IInitializable {
+class BaliseDataService : public IBaliseDataService, public IInitializable {
 public:
     void Initialize(ServiceContainer& container) override;
 

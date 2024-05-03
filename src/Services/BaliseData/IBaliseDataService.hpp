@@ -1,4 +1,4 @@
-/** @file ITrackDataService.hpp
+/** @file IBaliseDataService.hpp
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
@@ -17,7 +17,7 @@
 #include "BaliseGroup.hpp"
 #include "IService.hpp"
 
-class ITrackDataService : public IService {
+class IBaliseDataService : public IService {
 public:
     virtual void SetBaliseGroups(std::map<uint32_t, std::shared_ptr<BaliseGroup>> baliseGps) = 0;
 
@@ -30,5 +30,5 @@ public:
 
     virtual void ClearData() = 0;
 
-    static constexpr ServiceType Type = ServiceType::TrackData;
+    static constexpr ServiceType Type = ServiceType::BaliseData;
 };

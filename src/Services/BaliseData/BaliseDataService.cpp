@@ -1,4 +1,4 @@
-/** @file TrackDataService.cpp
+/** @file BaliseDataService.cpp
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
@@ -12,15 +12,15 @@
  *  pavlian5
  */
 
-#include "TrackDataService.hpp"
+#include "BaliseDataService.hpp"
 
-void TrackDataService::Initialize(ServiceContainer& container) {}
+void BaliseDataService::Initialize(ServiceContainer& container) {}
 
-void TrackDataService::SetBaliseGroups(std::map<uint32_t, std::shared_ptr<BaliseGroup>> baliseGps) {
+void BaliseDataService::SetBaliseGroups(std::map<uint32_t, std::shared_ptr<BaliseGroup>> baliseGps) {
     baliseGroups = std::move(baliseGps);
 }
 
-std::vector<std::shared_ptr<BaliseGroup>> TrackDataService::GetBaliseGroupsSortedByDistance() const {
+std::vector<std::shared_ptr<BaliseGroup>> BaliseDataService::GetBaliseGroupsSortedByDistance() const {
     std::vector<std::shared_ptr<BaliseGroup>> retVal;
     for (const auto& p: baliseGroups) {
         retVal.push_back(p.second);
@@ -33,10 +33,10 @@ std::vector<std::shared_ptr<BaliseGroup>> TrackDataService::GetBaliseGroupsSorte
     return retVal;
 }
 
-std::map<uint32_t, std::shared_ptr<BaliseGroup>>& TrackDataService::GetBaliseGroups() {
+std::map<uint32_t, std::shared_ptr<BaliseGroup>>& BaliseDataService::GetBaliseGroups() {
     return baliseGroups;
 }
 
-void TrackDataService::ClearData() {
+void BaliseDataService::ClearData() {
     baliseGroups.clear();
 }

@@ -24,7 +24,7 @@
 #endif
 
 void DatabaseService::Initialize(ServiceContainer& container) {
-    trackDataService = container.FetchService<ITrackDataService>().get();
+    baliseDataService = container.FetchService<IBaliseDataService>().get();
     jruLoggerService = container.FetchService<JRULoggerService>().get();
 
     SetDefaultCredentials();
@@ -103,7 +103,7 @@ bool DatabaseService::LoadBaliseGroups() {
         }
     }
 
-    trackDataService->SetBaliseGroups(baliseGroups);
+    baliseDataService->SetBaliseGroups(baliseGroups);
 
     jruLoggerService->Log(true, MessageType::Info, "Successfully loaded balise groups from database");
 
@@ -167,14 +167,14 @@ bool DatabaseService::LpcSaidStop() {
 
     if(!Disconnect()) return false;
     SetDefaultCredentials();
-    trackDataService->ClearData();
+    baliseDataService->ClearData();
     return true;
 }
 
 bool DatabaseService::LpcSaidRestart() {
     if(!connected) return false;
 
-    trackDataService->ClearData();
+    baliseDataService->ClearData();
     if(!LoadDataFromDatabase()) return false;
     return true;
 }
