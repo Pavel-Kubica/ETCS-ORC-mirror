@@ -69,9 +69,11 @@ include_directories(lib
         src/Services/MqttPublisher
         src/Services/JRULogger
         src/Services/Time
+        src/Services/SimulationStateData
         src/MessageHandlers
         src/Enums
         src/Configurations
+        src/Utils
 )
 
 if (WIN32)

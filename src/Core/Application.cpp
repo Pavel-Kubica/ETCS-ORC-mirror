@@ -19,6 +19,7 @@
 #include "MqttPublisher/MqttPublisherService.hpp"
 #include "MessageHandlersService/MessageHandlersService.hpp"
 #include "MqttListener/MqttListenerService.hpp"
+#include "SimulationStateData/SimulationStateDataService.hpp"
 
 
 #include <stdio.h> /* defines FILENAME_MAX */
@@ -40,6 +41,7 @@ void Application::Initialize(const std::string& mqttHostname, int mqttPort) {
     service_container->RegisterService<MqttPublisherService>();
     service_container->RegisterService<MessageHandlersService>();
     service_container->RegisterService<MqttListenerService>();
+    service_container->RegisterService<SimulationStateDataService>();
     // set mqtt ip and port from method arguments
     service_container->FetchService<MqttPublisherService>()->SetMqttAddress(mqttHostname, mqttPort);
     service_container->FetchService<MqttListenerService>()->SetMqttAddress(mqttHostname, mqttPort);
