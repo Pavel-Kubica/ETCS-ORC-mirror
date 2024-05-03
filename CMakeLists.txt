@@ -24,7 +24,16 @@ FetchContent_MakeAvailable(googletest)
 # register all source files =====================================================
 file(GLOB_RECURSE SOURCE
         src/*
-        cem/*
+        cem/Messages/Message.cpp
+        cem/Messages/Evc/Tiu/*
+        cem/Messages/Evc/Odo/*
+        cem/Messages/Btm/*
+        cem/Messages/Tiu/*
+        cem/Messages/Odo/*
+        cem/Messages/ToJRU/*
+        cem/Exceptions/*
+        cem/Packets/*
+        cem/Other/CommunicationData/*
 )
 # Exclude files in the 'cem/test' directory
 file(GLOB_RECURSE CEM_TEST_FILES
