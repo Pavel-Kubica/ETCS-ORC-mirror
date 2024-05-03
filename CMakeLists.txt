@@ -85,6 +85,7 @@ include_directories(lib
         src/Services/Database
         src/Services/Database/Utils
         src/Services/BaliseData
+        src/Services/SimulationStateApi
         src/MessageHandlers
         src/Enums
         src/Configurations
