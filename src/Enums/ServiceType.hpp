@@ -25,6 +25,7 @@ enum class ServiceType {
     MessageHandlers,
     Logger,
     Time,
+    SimulationStateData,
     Database,
     BaliseData
 };

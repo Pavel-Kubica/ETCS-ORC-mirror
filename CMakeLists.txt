@@ -34,6 +34,9 @@ file(GLOB_RECURSE SOURCE
         cem/Exceptions/*
         cem/Packets/*
         cem/Other/CommunicationData/*
+        cem/Other/BaliseGroup.cpp
+        cem/Other/Balise.cpp
+        cem/Other/Telegram.cpp
 )
 # Exclude files in the 'cem/test' directory
 file(GLOB_RECURSE CEM_TEST_FILES
@@ -78,12 +81,14 @@ include_directories(lib
         src/Services/MqttPublisher
         src/Services/JRULogger
         src/Services/Time
+        src/Services/SimulationStateData
         src/Services/Database
         src/Services/Database/Utils
         src/Services/BaliseData
         src/MessageHandlers
         src/Enums
         src/Configurations
+        src/Utils
 )
 
 if (WIN32)
