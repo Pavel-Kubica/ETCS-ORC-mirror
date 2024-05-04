@@ -105,23 +105,29 @@ if (WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP3")
     # set WINDOWS macro
     add_definitions(-DWINDOWS)
-    set(ENV{MOSQUITTODIR} ${PROJECT_SOURCE_DIR}/noCompileLibs/Mosquitto)
-    find_package(MOSQUITTO REQUIRED)
-    include_directories(${PROJECT_SOURCE_DIR}/noCompileLibs/Mosquitto)
-    target_link_libraries(${CMAKE_PROJECT_NAME}_run ${MOSQUITTO_LIBRARIES})
+
+    # provide additional path where the compiler looks for <...> header files
+    include_directories(${PROJECT_SOURCE_DIR}/windows-includes)
+
+    # Include Mosquitto
+    add_library(mosquitto STATIC IMPORTED)
+    set_target_properties(mosquitto PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/windows-libraries/Mosquitto/mosquitto.lib)
+
+    # Include
     add_library(mysqlcppconn STATIC IMPORTED)
     set_target_properties(mysqlcppconn PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/windows-libraries/mysql-connector-c++-8.0.33-win32/mysqlcppconn.lib)
-    # link the orc with mosquitto and mysql static (import) libraries
-    target_link_libraries(${CMAKE_PROJECT_NAME}_run mosquitto mysqlcppconn)
-    # Find all DLLs in project
-    file(GLOB_RECURSE DLLS "${PROJECT_SOURCE_DIR}/noCompileLibs/*.dll")
-    # Copy DLLs next to the EXE file
-    add_custom_command(TARGET ${CMAKE_PROJECT_NAME}_run POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            ${DLLS}
-            $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}_run>)
 
-    target_link_libraries(${CMAKE_PROJECT_NAME}_run PRIVATE cpr::cpr)
+    # TODO we need somehow get .dll of cpr
+
+    # Add all .dll files
+    file(GLOB_RECURSE DLLS "${PROJECT_SOURCE_DIR}/windows-libraries/*.dll")
+    add_custom_command(
+            TARGET ${CMAKE_PROJECT_NAME}_run POST_BUILD
+            COMMENT "Copy windows libraries' DLLs"
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${DLLS} $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}_run>)
+
+    # link the orc with mosquitto and mysql static (import) libraries
+    target_link_libraries(${CMAKE_PROJECT_NAME}_run mosquitto mysqlcppconn cpr::cpr)
 else ()
     find_package(PkgConfig REQUIRED)
     find_package(Threads REQUIRED)
