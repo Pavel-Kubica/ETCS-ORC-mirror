@@ -18,7 +18,7 @@
 #include "ILpcManageable.hpp"
 #include "DirectionLeverPosition.hpp"
 
-class ICabControlApiService : public ILpcManageable {
+class ICabControlApiService {
 public:
     virtual void Clear() = 0;
     virtual void SendAndClear() = 0;

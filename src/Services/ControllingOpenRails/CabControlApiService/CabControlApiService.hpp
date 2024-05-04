@@ -20,7 +20,8 @@
 #include "ICabControlApiService.hpp"
 #include "OpenRailsControlElement.hpp"
 
-class CabControlApiService : public ICabControlApiService {
+class CabControlApiService : public ICabControlApiService,
+                             public ILpcManageable {
 public:
     void Clear() override;
     void SendAndClear() override;
@@ -32,7 +33,7 @@ public:
     bool LpcSaidStart() override;
     bool LpcSaidStop() override;
     bool LpcSaidRestart() override;
-    
+
 private:
     struct RequestItem {
         OpenRailsControlElement controlType;
