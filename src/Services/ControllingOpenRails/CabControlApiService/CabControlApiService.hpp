@@ -25,9 +25,9 @@ class CabControlApiService : public ICabControlApiService,
 public:
     void Clear() override;
     void SendAndClear() override;
-    void SetThrottle(double percentage) override;
-    void SetBrake(double percentage) override;
-    void SetDirection(DirectionLevelPosition position) override;
+    CabControlApiService& SetThrottle(double percentage) override;
+    CabControlApiService& SetBrake(double percentage) override;
+    CabControlApiService& SetDirection(DirectionLevelPosition position) override;
     
     // LPC Management
     bool LpcSaidStart() override;

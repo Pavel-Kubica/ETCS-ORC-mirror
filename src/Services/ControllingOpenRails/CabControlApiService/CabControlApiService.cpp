@@ -26,15 +26,17 @@ void CabControlApiService::SendAndClear() {
     this->Clear();
 }
 
-void CabControlApiService::SetThrottle(double percentage) {
+CabControlApiService& CabControlApiService::SetThrottle(double percentage) {
     this->itemsToSend.emplace_back(OpenRailsControlElement::Throttle, percentage);
+    return *this;
 }
 
-void CabControlApiService::SetBrake(double percentage) {
+CabControlApiService& CabControlApiService::SetBrake(double percentage) {
     this->itemsToSend.emplace_back(OpenRailsControlElement::Brake, percentage);
+    return *this;
 }
 
-void CabControlApiService::SetDirection(DirectionLevelPosition position) {
+CabControlApiService& CabControlApiService::SetDirection(DirectionLevelPosition position) {
     double value;
     switch (position) {
         case DirectionLevelPosition::Neutral:
@@ -51,6 +53,7 @@ void CabControlApiService::SetDirection(DirectionLevelPosition position) {
     }
     
     this->itemsToSend.emplace_back(OpenRailsControlElement::Direction, value);
+    return *this;
 }
 
 std::string CabControlApiService::constructRequestBody() {
