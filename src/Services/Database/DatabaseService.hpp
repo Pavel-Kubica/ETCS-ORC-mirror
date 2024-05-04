@@ -76,7 +76,7 @@ private:
      */
     bool LoadDataFromDatabase();
 
-    bool LoadBaliseGroups();
+    bool LoadBalises();
 
     bool connected = false;
     bool defaultCredentials = true;
