@@ -23,12 +23,6 @@ FetchContent_MakeAvailable(googletest)
 #================================================================================
 
 
-# import and set up cpr-libary for HTTP requests =============================
-include(FetchContent)
-FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git
-        GIT_TAG 3b15fa82ea74739b574d705fea44959b58142eb8) # Replace with your desired git commit from: https://github.com/libcpr/cpr/releases
-FetchContent_MakeAvailable(cpr)
-#================================================================================
 
 # register all source files =====================================================
 file(GLOB_RECURSE SOURCE
@@ -113,11 +107,13 @@ if (WIN32)
     add_library(mosquitto STATIC IMPORTED)
     set_target_properties(mosquitto PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/windows-libraries/Mosquitto/mosquitto.lib)
 
-    # Include
+    # Include SQL library
     add_library(mysqlcppconn STATIC IMPORTED)
     set_target_properties(mysqlcppconn PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/windows-libraries/mysql-connector-c++-8.0.33-win32/mysqlcppconn.lib)
 
-    # TODO we need somehow get .dll of cpr
+    # Include cpr library
+    add_library(cpr STATIC IMPORTED)
+    set_target_properties(cpr PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/windows-libraries/cpr/cpr.lib)
 
     # Add all .dll files
     file(GLOB_RECURSE DLLS "${PROJECT_SOURCE_DIR}/windows-libraries/*.dll")
@@ -127,8 +123,16 @@ if (WIN32)
             COMMAND ${CMAKE_COMMAND} -E copy_if_different ${DLLS} $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}_run>)
 
     # link the orc with mosquitto and mysql static (import) libraries
-    target_link_libraries(${CMAKE_PROJECT_NAME}_run mosquitto mysqlcppconn cpr::cpr)
+    target_link_libraries(${CMAKE_PROJECT_NAME}_run mosquitto mysqlcppconn cpr)
 else ()
+
+    # import and set up cpr-libary for HTTP requests =============================
+    include(FetchContent)
+    FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git
+            GIT_TAG 3b15fa82ea74739b574d705fea44959b58142eb8) # Replace with your desired git commit from: https://github.com/libcpr/cpr/releases
+    FetchContent_MakeAvailable(cpr)
+    #================================================================================
+
     find_package(PkgConfig REQUIRED)
     find_package(Threads REQUIRED)
     pkg_check_modules(Mosquitto REQUIRED IMPORTED_TARGET libmosquitto)
