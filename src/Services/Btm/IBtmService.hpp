@@ -22,4 +22,5 @@ class IBtmService: public IService {
 public:
     virtual void CheckIfBaliseWasPassed(Distance previousDistance, Distance currentDistance) = 0;
 
+    static constexpr ServiceType Type = ServiceType::Btm;
 };

@@ -23,6 +23,7 @@
 #include "SimulationStateData/SimulationStateDataService.hpp"
 #include "BaliseDataService.hpp"
 #include "DatabaseService.hpp"
+#include "Btm/BtmService.hpp"
 
 
 #include <stdio.h> /* defines FILENAME_MAX */
@@ -47,6 +48,7 @@ void Application::Initialize(const std::string& mqttHostname, int mqttPort) {
     service_container->RegisterService<SimulationStateDataService>();
     service_container->RegisterService<BaliseDataService>();
     service_container->RegisterService<DatabaseService>();
+    service_container->RegisterService<BtmService>();
     // set mqtt ip and port from method arguments
     service_container->FetchService<MqttPublisherService>()->SetMqttAddress(mqttHostname, mqttPort);
     service_container->FetchService<MqttListenerService>()->SetMqttAddress(mqttHostname, mqttPort);
@@ -57,6 +59,7 @@ void Application::Run() {
     service_container->StartServices();
 
     service_container->LpcSaidStart();
+    service_container->FetchService<BtmService>()->CheckIfBaliseWasPassed(0, 100);
 
     service_container->WaitForServices();
 }
