@@ -1,4 +1,4 @@
-/** @file CabControlApiService.hpp
+/** @file CabControlApi.hpp
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
@@ -23,17 +23,19 @@
 class CabControlApiService : public ICabControlApiService,
                              public ILpcManageable {
 public:
+    
     void Clear() override;
     void SendAndClear() override;
-    CabControlApiService& SetThrottle(double percentage) override;
-    CabControlApiService& SetBrake(double percentage) override;
-    CabControlApiService& SetDirection(DirectionLevelPosition position) override;
+    void SetThrottle(double percentage) override;
+    void SetBrake(double percentage) override;
+    void SetDirection(DirectionLevelPosition position) override;
+    
     
     // LPC Management
     bool LpcSaidStart() override;
     bool LpcSaidStop() override;
     bool LpcSaidRestart() override;
-
+    
 private:
     struct RequestItem {
         OpenRailsControlElement controlType;

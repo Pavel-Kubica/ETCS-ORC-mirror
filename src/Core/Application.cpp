@@ -23,6 +23,7 @@
 #include "SimulationStateData/SimulationStateDataService.hpp"
 #include "BaliseDataService.hpp"
 #include "DatabaseService.hpp"
+#include "ControllingOpenRails/CabControlApiService/CabControlApiService.hpp"
 
 
 #include <stdio.h> /* defines FILENAME_MAX */
@@ -50,6 +51,9 @@ void Application::Initialize(const std::string& mqttHostname, int mqttPort) {
     // set mqtt ip and port from method arguments
     service_container->FetchService<MqttPublisherService>()->SetMqttAddress(mqttHostname, mqttPort);
     service_container->FetchService<MqttListenerService>()->SetMqttAddress(mqttHostname, mqttPort);
+    
+    // Services for controlling OpenRails
+    service_container->RegisterService<CabControlApiService>();
 }
 
 void Application::Run() {

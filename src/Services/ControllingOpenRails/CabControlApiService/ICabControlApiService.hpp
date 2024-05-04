@@ -15,14 +15,17 @@
 #pragma once
 
 
+#include "IService.hpp"
 #include "ILpcManageable.hpp"
 #include "DirectionLeverPosition.hpp"
 
-class ICabControlApiService {
+class ICabControlApiService : public IService {
 public:
     virtual void Clear() = 0;
     virtual void SendAndClear() = 0;
     virtual void SetThrottle(double percentage) = 0;
     virtual void SetBrake(double percentage) = 0;
     virtual void SetDirection(DirectionLevelPosition position) = 0;
+    
+    static constexpr ServiceType Type = ServiceType::CabControlApi;
 };
