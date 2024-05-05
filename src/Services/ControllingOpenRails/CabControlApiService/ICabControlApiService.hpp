@@ -16,7 +16,6 @@
 
 
 #include "IService.hpp"
-#include "ILpcManageable.hpp"
 #include "DirectionLeverPosition.hpp"
 
 class ICabControlApiService : public IService {
