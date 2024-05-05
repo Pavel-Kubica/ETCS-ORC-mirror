@@ -23,6 +23,7 @@
 #include "SimulationStateData/SimulationStateDataService.hpp"
 #include "BaliseDataService.hpp"
 #include "DatabaseService.hpp"
+#include "OpenRailsApiConfiguration.hpp"
 
 
 #include <stdio.h> /* defines FILENAME_MAX */
