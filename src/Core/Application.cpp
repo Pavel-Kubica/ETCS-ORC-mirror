@@ -57,9 +57,5 @@ void Application::Initialize(const std::string& mqttHostname, int mqttPort) {
 void Application::Run() {
     service_container->InitializeServices();
     service_container->StartServices();
-
-    service_container->LpcSaidStart();
-    service_container->FetchService<BtmService>()->CheckIfBaliseWasPassed(0, 100);
-
     service_container->WaitForServices();
 }

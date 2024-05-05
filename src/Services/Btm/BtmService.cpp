@@ -1,4 +1,4 @@
-/** @file BtmService.hpp
+/** @file BtmService.cpp
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
@@ -50,7 +50,6 @@ void BtmService::CheckIfBaliseWasPassed(Distance previousDistance, Distance curr
 }
 
 void BtmService::SendMessageThatBaliseWasPassed(const Balise& balise) {
-//    BaliseDirection qUpdown = balise.GetTelegram().Q_UPDOWN == 0 ? BaliseDirection::Reverse : BaliseDirection::Nominal;
     std::vector<std::shared_ptr<Packet>> packets = {std::make_shared<Packet>(EndOfInformation())};
     std::shared_ptr<BTMMessage> message = std::make_shared<BTMMessage>(
             balise.GetTelegram().Q_MEDIA,
