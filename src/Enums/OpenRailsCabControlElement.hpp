@@ -1,4 +1,4 @@
-/** @file OpenRailsControlElement.h
+/** @file OpenRailsCabControlElement.h
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
@@ -13,7 +13,7 @@
 
 #pragma once
 
-enum class OpenRailsControlElement {
+enum class OpenRailsCabControlElement {
     Throttle,
     Brake,
     Direction

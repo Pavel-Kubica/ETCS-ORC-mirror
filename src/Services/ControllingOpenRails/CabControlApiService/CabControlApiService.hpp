@@ -5,8 +5,7 @@
  *  ORC         | 2.3.0
  *
  *  ### Description
- *  Service for POSTing to the OpenRails API in order to manage
- *  the train's controls (brakes, throttle, ...).
+ *  Implementation of the ICabControlApiService interface (more info there).
  *
  *  ### Contributors
  *  rehorja8
@@ -19,7 +18,7 @@
 #include <vector>
 #include <ostream>
 #include "ICabControlApiService.hpp"
-#include "OpenRailsControlElement.hpp"
+#include "OpenRailsCabControlElement.hpp"
 #include "AsyncQueue.hpp"
 #include "IInitializable.hpp"
 #include "ILpcManageable.hpp"
@@ -53,13 +52,24 @@ private:
     
     JRULoggerService* jruLoggerService;
     
+    /**
+     * Struct for storing individual cab controls and their state, so they
+     * can be send in a bulk to the OpenRails API.
+     * These are stored in the `itemsToSend` vector.
+     */
     struct RequestItem {
-        OpenRailsControlElement controlType;
+        OpenRailsCabControlElement controlType;
         double value;
-        RequestItem(OpenRailsControlElement controlType, double value);
+        RequestItem(OpenRailsCabControlElement controlType, double value);
         void PrintToStream(std::ostream& stream) const;
     };
     
+    /**
+     * Struct for storing async responses to OpenRails API calls.
+     * These are stored in the `responseQueue`.
+     * There can also be an "empty" instance, signalling to the consumer thread (made from the ResolveResponses() method)
+     * that it should stop.
+     */
     struct HttpResponseWrapper {
         explicit HttpResponseWrapper(
                 cpr::AsyncWrapper<cpr::Response>&& response,
@@ -84,6 +94,14 @@ private:
     AsyncQueue<HttpResponseWrapper> responseQueue;
     std::thread threadForResolvingResponses;
     
+    /**
+     * Called in the consumer thread. Logs error from the HTTP responses.
+     */
     void ResolveResponses();
+    
+    /**
+     * Creates the body of an HTTP request based on `this->itemsToSend` vector.
+     * @return The crated body as a string.
+     */
     std::string ConstructRequestBody();
 };

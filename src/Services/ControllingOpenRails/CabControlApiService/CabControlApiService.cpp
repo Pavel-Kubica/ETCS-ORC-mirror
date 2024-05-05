@@ -45,16 +45,16 @@ void CabControlApiService::SendAndClear() {
 }
 
 void CabControlApiService::SetThrottle(double percentage) {
-    this->itemsToSend.emplace_back(OpenRailsControlElement::Throttle, percentage);
+    this->itemsToSend.emplace_back(OpenRailsCabControlElement::Throttle, percentage);
 }
 
 void CabControlApiService::SetBrake(double percentage) {
-    this->itemsToSend.emplace_back(OpenRailsControlElement::Brake, percentage);
+    this->itemsToSend.emplace_back(OpenRailsCabControlElement::Brake, percentage);
 }
 
 void CabControlApiService::SetDirection(DirectionLeverPosition position) {
     double value = DirectionLeverPositionMethods::ToDouble(position);
-    this->itemsToSend.emplace_back(OpenRailsControlElement::Direction, value);
+    this->itemsToSend.emplace_back(OpenRailsCabControlElement::Direction, value);
 }
 
 std::string CabControlApiService::ConstructRequestBody() {
@@ -108,13 +108,13 @@ void CabControlApiService::RequestItem::PrintToStream(std::ostream& stream) cons
     stream << "{TypeName: \"";
     
     switch (this->controlType) {
-        case OpenRailsControlElement::Throttle:
+        case OpenRailsCabControlElement::Throttle:
             stream << "THROTTLE";
             break;
-        case OpenRailsControlElement::Brake:
+        case OpenRailsCabControlElement::Brake:
             stream << "TRAIN_BRAKE";
             break;
-        case OpenRailsControlElement::Direction:
+        case OpenRailsCabControlElement::Direction:
             stream << "DIRECTION";
             break;
         default:
@@ -126,7 +126,7 @@ void CabControlApiService::RequestItem::PrintToStream(std::ostream& stream) cons
            << "}";
 }
 
-CabControlApiService::RequestItem::RequestItem(OpenRailsControlElement
+CabControlApiService::RequestItem::RequestItem(OpenRailsCabControlElement
                                                controlType, double
                                                value)
         : controlType(controlType), value(value) {}
