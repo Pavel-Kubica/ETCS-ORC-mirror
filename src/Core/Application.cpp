@@ -30,7 +30,9 @@
 
 
 #ifdef WINDOWS
+
 #include <direct.h>
+
 #define GetCurrentDir _getcwd
 #else
 #include <unistd.h>
@@ -60,7 +62,9 @@ void Application::Run() {
     ConfigurationService* configurationService = service_container->FetchService<ConfigurationService>().get();
     auto conf = configurationService->FetchConfiguration<OpenRailsApiConfiguration>();
     
-    std::cout << "waiting for enter..." << std::endl;
+    std::cout << "please check if there is a \"open-rails-api-configuration.json\" file \n"
+              << "it is probably located in the \"cmake-build-debug/Debug/configurations/\"\n"
+              << "waiting for enter..." << std::endl;
     getchar();
     
     service_container->WaitForServices();
