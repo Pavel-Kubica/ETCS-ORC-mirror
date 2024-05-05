@@ -28,6 +28,6 @@ private:
 
     void SendMessageThatBaliseWasPassed(const Balise& balise);
 
-    BaliseDataService* baliseDataService;
-    MqttPublisherService* mqttPublisherService;
+    IBaliseDataService* baliseDataService;
+    IMqttPublisherService* mqttPublisherService;
 };
