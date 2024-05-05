@@ -27,5 +27,6 @@ enum class ServiceType {
     Time,
     SimulationStateData,
     Database,
-    BaliseData
+    BaliseData,
+    Btm
 };
