@@ -22,31 +22,40 @@ void BtmService::Initialize(ServiceContainer& container) {
 }
 
 void BtmService::CheckIfBaliseWasPassed(Distance previousDistance, Distance currentDistance) {
-    if (previousDistance == currentDistance) {
-        return;
-    }
-    const std::vector<std::unique_ptr<Balise>>& balises = baliseDataService->GetBalisesSortedByDistance();
-    // finds the first balise which has higher position than previousDistance
-    auto baliseIter = std::lower_bound(balises.begin(), balises.end(), previousDistance,
-                                       [](Distance distance, const std::unique_ptr<Balise>& balise) {
-                                           return distance < balise->GetPos();
-                                       });
-    if (baliseIter == balises.end()) {
-        return;
-    }
-    for (; (*baliseIter)->GetPos() <= currentDistance; ++baliseIter) {
-        SendMessageThatBaliseWasPassed(**baliseIter);
-    }
+    if (previousDistance == currentDistance) return;
 
+    const std::vector<std::unique_ptr<Balise>>& balises = baliseDataService->GetBalisesSortedByDistance();
+
+    if (previousDistance < currentDistance) {   // train is moving forwards
+        //find the first balise which has higher position than previousDistance
+        auto baliseIter = std::upper_bound(balises.begin(), balises.end(), previousDistance,
+                                           [](Distance distance, const std::unique_ptr<Balise>& balise) {
+                                               return distance < balise->GetPos();
+                                           });
+        // send a message for every balise with position in the interval (previousDistance, currentDistance>
+        for (; baliseIter != balises.end() && (*baliseIter)->GetPos() <= currentDistance; ++baliseIter) {
+            SendMessageThatBaliseWasPassed(**baliseIter);
+        }
+    } else {    // train is moving backwards
+        //find the last balise which has lower position than previousDistance
+        auto baliseIter = std::upper_bound(balises.rbegin(), balises.rend(), previousDistance,
+                                           [](Distance distance, const std::unique_ptr<Balise>& balise) {
+                                               return distance > balise->GetPos();
+                                           });
+        // send a message for every balise with position in the interval <currentDistance, previousDistance)
+        for (; baliseIter != balises.rend() && (*baliseIter)->GetPos() >= currentDistance; ++baliseIter) {
+            SendMessageThatBaliseWasPassed(**baliseIter);
+        }
+    }
 }
 
 void BtmService::SendMessageThatBaliseWasPassed(const Balise& balise) {
-    BaliseDirection qUpdown = balise.GetTelegram().Q_UPDOWN == 0 ? BaliseDirection::Reverse : BaliseDirection::Nominal;
+//    BaliseDirection qUpdown = balise.GetTelegram().Q_UPDOWN == 0 ? BaliseDirection::Reverse : BaliseDirection::Nominal;
     std::vector<std::shared_ptr<Packet>> packets = {std::make_shared<Packet>(EndOfInformation())};
     std::shared_ptr<BTMMessage> message = std::make_shared<BTMMessage>(
             balise.GetTelegram().Q_MEDIA,
             balise.GetTelegram().M_VERSION,
-            qUpdown,
+            balise.GetTelegram().Q_UPDOWN,
             balise.GetTelegram().N_TOTAL,
             balise.GetTelegram().M_MCOUNT,
             balise.GetTelegram().M_DUP,
