@@ -30,7 +30,9 @@
 
 
 #ifdef WINDOWS
+
 #include <direct.h>
+
 #define GetCurrentDir _getcwd
 #else
 #include <unistd.h>
@@ -59,5 +61,42 @@ void Application::Initialize(const std::string& mqttHostname, int mqttPort) {
 void Application::Run() {
     service_container->InitializeServices();
     service_container->StartServices();
+    
+    ICabControlApiService* cabService = service_container->FetchService<ICabControlApiService>().get();
+    
+    char input = 0;
+    double value = 0;
+    std::string line;
+    while (true) {
+        line.clear();
+        std::getline(std::cin, line);
+        std::istringstream s{line};
+        input = (char) s.get();
+        s >> value;
+        if (input == 'q') break;
+        
+        switch (input) {
+            case 't':
+                cabService->SetThrottle(value);
+                break;
+            case 'b':
+                cabService->SetBrake(value);
+                break;
+            case 'd': {
+                DirectionLevelPosition p =
+                        value > 0 ? DirectionLevelPosition::Forwards : (value < 0 ? DirectionLevelPosition::Backwards
+                                                                                  : DirectionLevelPosition::Neutral);
+                cabService->SetDirection(p);
+                break;
+            }
+            default:
+                std::cout << "invalid input: '" << input << "'" << std::endl;
+                break;
+        }
+        cabService->SendAndClear();
+    }
+    std::cout << "ending input";
+    
+    
     service_container->WaitForServices();
 }
