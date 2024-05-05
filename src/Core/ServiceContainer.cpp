@@ -18,6 +18,8 @@
 #include "IInitializable.hpp"
 #include "IStartable.hpp"
 
+#include <stdexcept>
+
 void ServiceContainer::StartServices() {
     for (auto& startable : startableServices) {
         startable->Start(*this);
