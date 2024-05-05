@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-/** @file DirectionLevelPosition.h
+/** @file DirectionLeverPosition.h
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
@@ -15,7 +15,7 @@
  *  rehorja8
  */
 
-enum class DirectionLevelPosition : int8_t {
+enum class DirectionLeverPosition : int8_t {
     Neutral = 0,
     Forwards = 1,
     Backwards = -1,

@@ -52,16 +52,16 @@ void CabControlApiService::SetBrake(double percentage) {
     this->itemsToSend.emplace_back(OpenRailsControlElement::Brake, percentage);
 }
 
-void CabControlApiService::SetDirection(DirectionLevelPosition position) {
+void CabControlApiService::SetDirection(DirectionLeverPosition position) {
     double value;
     switch (position) {
-        case DirectionLevelPosition::Neutral:
+        case DirectionLeverPosition::Neutral:
             value = 0;
             break;
-        case DirectionLevelPosition::Forwards:
+        case DirectionLeverPosition::Forwards:
             value = 1;
             break;
-        case DirectionLevelPosition::Backwards:
+        case DirectionLeverPosition::Backwards:
             value = -1;
             break;
         default:

@@ -37,7 +37,7 @@ public:
     
     void SetThrottle(double percentage) override;
     void SetBrake(double percentage) override;
-    void SetDirection(DirectionLevelPosition position) override;
+    void SetDirection(DirectionLeverPosition position) override;
     
     // LPC Management
     bool LpcSaidStart() override;
