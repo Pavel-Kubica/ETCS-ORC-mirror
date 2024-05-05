@@ -56,5 +56,12 @@ void Application::Initialize(const std::string& mqttHostname, int mqttPort) {
 void Application::Run() {
     service_container->InitializeServices();
     service_container->StartServices();
+    
+    ConfigurationService* configurationService = service_container->FetchService<ConfigurationService>().get();
+    auto conf = configurationService->FetchConfiguration<OpenRailsApiConfiguration>();
+    
+    std::cout << "waiting for enter..." << std::endl;
+    getchar();
+    
     service_container->WaitForServices();
 }
