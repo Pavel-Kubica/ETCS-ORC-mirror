@@ -3,9 +3,7 @@
 #include "CabControlApiService.hpp"
 
 bool CabControlApiService::LpcSaidStart() {
-    this->threadForResolvingResponses = std::move(
-            std::thread(&CabControlApiService::ResolveResponses, this)
-    );
+    this->threadForResolvingResponses = std::thread(&CabControlApiService::ResolveResponses, this);
     return true;
 }
 
