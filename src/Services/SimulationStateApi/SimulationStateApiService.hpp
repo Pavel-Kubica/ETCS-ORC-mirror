@@ -15,13 +15,29 @@
 
 
 #include <atomic>
+#include "ISimulationStateApiService.hpp"
+#include "Btm/BtmService.hpp"
 #include "SimulationStateDataService.hpp"
+#include "ServiceContainer.hpp"
 
-class SimulationStateApiService {
+class SimulationStateApiService: public ISimulationStateApiService, public IInitializable, public ILpcManageable {
 public:
+    void Initialize(ServiceContainer& container) override;
+
+    bool LpcSaidStart() override;
+
+    bool LpcSaidStop() override;
+
+    bool LpcSaidRestart() override;
 
 private:
-    SimulationStateDataService* simulationStateDataService;
-//    BtmService* btmService;
+    void CallApiInALoop();
+
+    SimulationState SimulationStateFromJson(const nlohmann::json& json);
+
+    ISimulationStateDataService* simulationStateDataService;
+    IBtmService* btmService;
+    JRULoggerService* jruLoggerService;
     std::atomic_bool shouldStop;
+    std::chrono::milliseconds apiCallingInterval;
 };

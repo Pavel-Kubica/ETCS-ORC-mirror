@@ -28,5 +28,6 @@ enum class ServiceType {
     SimulationStateData,
     Database,
     BaliseData,
-    Btm
+    Btm,
+    SimulationStateApi
 };

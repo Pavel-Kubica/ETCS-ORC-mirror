@@ -17,6 +17,7 @@
 #include "ILpcManageable.hpp"
 #include "IService.hpp"
 
-class ISimulationStateApiService: public IService, public ILpcManageable {
-
+class ISimulationStateApiService: public IService {
+public:
+    static constexpr ServiceType Type = ServiceType::SimulationStateApi;
 };

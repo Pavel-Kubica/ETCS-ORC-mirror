@@ -24,6 +24,7 @@
 #include "BaliseDataService.hpp"
 #include "DatabaseService.hpp"
 #include "Btm/BtmService.hpp"
+#include "SimulationStateApi/SimulationStateApiService.hpp"
 
 
 #include <stdio.h> /* defines FILENAME_MAX */
@@ -49,6 +50,7 @@ void Application::Initialize(const std::string& mqttHostname, int mqttPort) {
     service_container->RegisterService<BaliseDataService>();
     service_container->RegisterService<DatabaseService>();
     service_container->RegisterService<BtmService>();
+    service_container->RegisterService<SimulationStateApiService>();
     // set mqtt ip and port from method arguments
     service_container->FetchService<MqttPublisherService>()->SetMqttAddress(mqttHostname, mqttPort);
     service_container->FetchService<MqttListenerService>()->SetMqttAddress(mqttHostname, mqttPort);
