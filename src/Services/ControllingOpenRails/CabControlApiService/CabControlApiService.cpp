@@ -53,21 +53,7 @@ void CabControlApiService::SetBrake(double percentage) {
 }
 
 void CabControlApiService::SetDirection(DirectionLeverPosition position) {
-    double value;
-    switch (position) {
-        case DirectionLeverPosition::Neutral:
-            value = 0;
-            break;
-        case DirectionLeverPosition::Forwards:
-            value = 1;
-            break;
-        case DirectionLeverPosition::Backwards:
-            value = -1;
-            break;
-        default:
-            throw std::runtime_error("unreachable branch");
-    }
-    
+    double value = DirectionLeverPositionMethods::ToDouble(position);
     this->itemsToSend.emplace_back(OpenRailsControlElement::Direction, value);
 }
 
@@ -107,7 +93,8 @@ void CabControlApiService::ResolveResponses() {
         } else {
             jruLoggerService->Log(
                     MessageType::Debug,
-                    "CabControlApiService: successful POST to OpenRails API. Original message: " + responseWrapper.originalRequestBody
+                    "CabControlApiService: successful POST to OpenRails API. Original message: " +
+                    responseWrapper.originalRequestBody
             );
         }
     }

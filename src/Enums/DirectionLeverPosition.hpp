@@ -20,3 +20,26 @@ enum class DirectionLeverPosition : int8_t {
     Forwards = 1,
     Backwards = -1,
 };
+
+/**
+ * Conversion methods to/from double.
+ * Used for communication with OpenRails API.
+*/
+namespace DirectionLeverPositionMethods {
+    DirectionLeverPosition FromDouble(double value) {
+        switch (static_cast<int>(value)) {
+            case 0:
+                return DirectionLeverPosition::Neutral;
+            case 1:
+                return DirectionLeverPosition::Forwards;
+            case -1:
+                return DirectionLeverPosition::Backwards;
+            default:
+                throw std::invalid_argument(std::to_string(value) + " does not correspond to a DirectionLeverPosition");
+        }
+    }
+    
+    double ToDouble(DirectionLeverPosition position) {
+        return static_cast<int>(position);
+    }
+}
