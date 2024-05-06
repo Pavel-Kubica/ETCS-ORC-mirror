@@ -23,6 +23,7 @@
 #include "IInitializable.hpp"
 #include "ILpcManageable.hpp"
 #include "JRULoggerService.hpp"
+#include "ConfigurationService.hpp"
 
 class CabControlApiService : public ICabControlApiService,
                              public IInitializable,
@@ -44,15 +45,13 @@ public:
     bool LpcSaidStop() override;
     bool LpcSaidRestart() override;
 
-
 private:
     
-    // TODO: put this in a config
-    const std::string url = "http://127.0.0.1:2150/API/";
-    const std::string end_point = "CABCONTROLS";
-    const int32_t requestTimeoutInMilliseconds = 1000;
+    std::string url;
+    std::chrono::milliseconds apiRequestTimeout;
     
     JRULoggerService* jruLoggerService;
+    ConfigurationService* configurationService;
     
     /**
      * Struct for storing individual cab controls and their state, so they

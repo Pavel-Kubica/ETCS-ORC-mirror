@@ -1,8 +1,13 @@
 #include <stdexcept>
 #include <sstream>
 #include "CabControlApiService.hpp"
+#include "OpenRailsApiConfiguration.hpp"
 
 bool CabControlApiService::LpcSaidStart() {
+    auto urlApiConfig = this->configurationService->FetchConfiguration<OpenRailsApiConfiguration>();
+    this->url = urlApiConfig.cabControlsUrl;
+    this->apiRequestTimeout = urlApiConfig.cabControlsTimeout;
+    
     this->threadForResolvingResponses = std::thread(&CabControlApiService::ResolveResponses, this);
     return true;
 }
@@ -29,9 +34,9 @@ void CabControlApiService::SendAndClear() {
                                 requestBody);
     
     auto response = cpr::PostAsync(
-            cpr::Url{this->url + this->end_point},
+            cpr::Url{this->url},
             cpr::Header{{"Content-Type", "application/json"}},
-            cpr::Timeout{this->requestTimeoutInMilliseconds},
+            cpr::Timeout{this->apiRequestTimeout},
             cpr::Body{std::string_view(requestBody)}
     );
     HttpResponseWrapper responseWrapper(
@@ -110,6 +115,7 @@ void CabControlApiService::ResolveResponses() {
 
 void CabControlApiService::Initialize(ServiceContainer& container) {
     this->jruLoggerService = container.FetchService<JRULoggerService>().get();
+    this->configurationService = container.FetchService<ConfigurationService>().get();
 }
 
 void CabControlApiService::RequestItem::PrintToStream(std::ostream& stream) const {
