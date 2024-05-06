@@ -57,8 +57,10 @@ void SimulationStateApiService::CallApiInALoop() {
         } else {
             try {
                 nlohmann::json j = nlohmann::json::parse(response.text);
-                SimulationState state = SimulationStateFromJson(j);
-                simulationStateDataService->SetSimulationState(state);
+                SimulationState currentState = SimulationStateFromJson(j);
+                SimulationState previousState = simulationStateDataService->GetSimulationState();
+                simulationStateDataService->SetSimulationState(currentState);
+                btmService->CheckIfBaliseWasPassed(previousState.distanceTravelledInMetres, currentState.distanceTravelledInMetres);
             } catch (const std::exception& e) {
                 std::ostringstream error;
                 error << "SimulationStateApiService: Error while parsing json response from OpenRails";
