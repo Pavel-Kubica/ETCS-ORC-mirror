@@ -30,7 +30,9 @@ public:
     virtual void Clear() = 0;
     virtual void SendAndClear() = 0;
     virtual void SetThrottle(double percentage) = 0;
-    virtual void SetBrake(double percentage) = 0;
+    virtual void SetTrainBrake(double percentage) = 0;
+    virtual void SetEngineBrake(double percentage) = 0;
+    virtual void SetDynamicBrake(double percentage) = 0;
     virtual void SetDirection(DirectionLeverPosition position) = 0;
     
     static constexpr ServiceType Type = ServiceType::CabControlApi;
