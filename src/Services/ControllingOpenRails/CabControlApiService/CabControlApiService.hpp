@@ -33,15 +33,17 @@ protected:
 public:
     void Clear() override;
     void SendAndClear() override;
-    
     void SetThrottle(double percentage) override;
-    void SetBrake(double percentage) override;
+    void SetTrainBrake(double percentage) override;
+    void SetEngineBrake(double percentage) override;
+    void SetDynamicBrake(double percentage) override;
     void SetDirection(DirectionLeverPosition position) override;
     
     // LPC Management
     bool LpcSaidStart() override;
     bool LpcSaidStop() override;
     bool LpcSaidRestart() override;
+
 
 private:
     

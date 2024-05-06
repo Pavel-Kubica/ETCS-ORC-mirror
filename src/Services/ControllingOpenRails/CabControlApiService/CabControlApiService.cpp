@@ -48,8 +48,16 @@ void CabControlApiService::SetThrottle(double percentage) {
     this->itemsToSend.emplace_back(OpenRailsCabControlElement::Throttle, percentage);
 }
 
-void CabControlApiService::SetBrake(double percentage) {
-    this->itemsToSend.emplace_back(OpenRailsCabControlElement::Brake, percentage);
+void CabControlApiService::SetTrainBrake(double percentage) {
+    this->itemsToSend.emplace_back(OpenRailsCabControlElement::TrainBrake, percentage);
+}
+
+void CabControlApiService::SetEngineBrake(double percentage) {
+    this->itemsToSend.emplace_back(OpenRailsCabControlElement::EngineBrake, percentage);
+}
+
+void CabControlApiService::SetDynamicBrake(double percentage) {
+    this->itemsToSend.emplace_back(OpenRailsCabControlElement::DynamicBrake, percentage);
 }
 
 void CabControlApiService::SetDirection(DirectionLeverPosition position) {
@@ -111,8 +119,14 @@ void CabControlApiService::RequestItem::PrintToStream(std::ostream& stream) cons
         case OpenRailsCabControlElement::Throttle:
             stream << "THROTTLE";
             break;
-        case OpenRailsCabControlElement::Brake:
+        case OpenRailsCabControlElement::TrainBrake:
             stream << "TRAIN_BRAKE";
+            break;
+        case OpenRailsCabControlElement::EngineBrake:
+            stream << "ENGINE_BRAKE";
+            break;
+        case OpenRailsCabControlElement::DynamicBrake:
+            stream << "DYNAMIC_BRAKE";
             break;
         case OpenRailsCabControlElement::Direction:
             stream << "DIRECTION";
