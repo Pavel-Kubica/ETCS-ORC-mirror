@@ -19,24 +19,23 @@
 #include "../../MachineControlData/MachineControlDataService.hpp"
 #include "../../TrainControlData/TrainControlDataService.hpp"
 #include "../../../cem/Messages/Tiu/Evc/FromTIUMessage.hpp"
+#include "MqttPublisherService.hpp"
 
 class TrainControlUpdateService : public ITrainControlUpdateService,
                                     public IInitializable
 {
+protected:
+    void Initialize(ServiceContainer &container) override;
 public:
-    TrainControlUpdateService();
-
     void Update() override;
 
 private:
     ICabControlApiService* cabControlApiService;
     ITrainControlDataService* trainControlDataService;
     IMachineControlDataService* machineControlDataService;
+    IMqttPublisherService* mqttPublisherService;
 
     void SendFromTiuMessageToEvc();
     void SendOpenRailsCabControlsRequest();
-
-protected:
-    void Initialize(ServiceContainer &container) override;
 
 };
