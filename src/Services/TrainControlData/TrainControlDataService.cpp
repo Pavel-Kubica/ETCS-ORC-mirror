@@ -44,3 +44,6 @@ DrivingLeverPosition TrainControlDataService::getDrivingLever() const {
 void TrainControlDataService::setDrivingLever(DrivingLeverPosition position) {
     drivingLeverPosition = position;
 }
+
+TrainControlDataService::TrainControlDataService() : battery(false), cab(false), trainDirection(DirectionLeverPosition::Neutral), drivingLeverPosition(DrivingLeverPosition::Neutral)
+{}

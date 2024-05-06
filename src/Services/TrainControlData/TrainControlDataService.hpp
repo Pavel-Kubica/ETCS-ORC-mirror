@@ -15,6 +15,8 @@
 
 class TrainControlDataService : public ITrainControlDataService {
 public:
+    TrainControlDataService();
+
     [[nodiscard]] bool getBattery() const override;
 
     void setBattery(bool battery) override;

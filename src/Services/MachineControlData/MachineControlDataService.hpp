@@ -17,6 +17,8 @@
 
 class MachineControlDataService : public IMachineControlDataService {
 public:
+    MachineControlDataService();
+
     [[nodiscard]] bool getEmergencyBrake() const override;
 
     void setEmergencyBrake(bool emergencyBrake) override;

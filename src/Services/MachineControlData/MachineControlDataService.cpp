@@ -30,3 +30,6 @@ bool MachineControlDataService::getServiceBrake() const {
 void MachineControlDataService::setServiceBrake(bool brake) {
     serviceBrake = brake;
 }
+
+MachineControlDataService::MachineControlDataService() : emergencyBrake(false), serviceBrake(false)
+{}
