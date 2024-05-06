@@ -29,5 +29,8 @@ enum class ServiceType {
     OdoToEvcSender,
     GuiSimulationStateSender,
     Database,
-    BaliseData
+    BaliseData,
+    
+    // Controlling OpenRails
+    CabControlApi,
 };

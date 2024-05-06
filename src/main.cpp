@@ -29,6 +29,7 @@ void parseArguments(int argc, char** argv, std::string& mqttHostname, int& mqttP
 }
 
 int main(int argc, char** argv) {
+    
     // these default values will be used only if the user does not enter different values as command line arguments
     std::string mqttHostname = "localhost";
     int mqttPort = 1883;
@@ -38,5 +39,6 @@ int main(int argc, char** argv) {
     Application application;
     application.Initialize(mqttHostname, mqttPort);
     application.Run();
+    
     return 0;
 }

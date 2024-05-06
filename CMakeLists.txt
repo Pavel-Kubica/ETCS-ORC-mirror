@@ -21,6 +21,9 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 #================================================================================
+
+
+
 # register all source files =====================================================
 file(GLOB_RECURSE SOURCE
         src/*
@@ -73,6 +76,7 @@ include_directories(lib
         cem/Packets/Factory
         src
         src/Core
+        src/ControllingOpenRails/
         src/Core/TopicWorker
         src/Messages
         src/Services
@@ -98,28 +102,47 @@ if (WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP3")
     # set WINDOWS macro
     add_definitions(-DWINDOWS)
-    set(ENV{MOSQUITTODIR} ${PROJECT_SOURCE_DIR}/noCompileLibs/Mosquitto)
-    find_package(MOSQUITTO REQUIRED)
-    include_directories(${PROJECT_SOURCE_DIR}/noCompileLibs/Mosquitto)
-    target_link_libraries(${CMAKE_PROJECT_NAME}_run ${MOSQUITTO_LIBRARIES})
+
+    # provide additional path where the compiler looks for <...> header files
+    include_directories(${PROJECT_SOURCE_DIR}/windows-includes)
+
+    # Include Mosquitto
+    add_library(mosquitto STATIC IMPORTED)
+    set_target_properties(mosquitto PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/windows-libraries/Mosquitto/mosquitto.lib)
+
+    # Include SQL library
     add_library(mysqlcppconn STATIC IMPORTED)
     set_target_properties(mysqlcppconn PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/windows-libraries/mysql-connector-c++-8.0.33-win32/mysqlcppconn.lib)
+
+    # Include cpr library
+    add_library(cpr STATIC IMPORTED)
+    set_target_properties(cpr PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/windows-libraries/cpr/cpr.lib)
+
+    # Add all .dll files
+    file(GLOB_RECURSE DLLS "${PROJECT_SOURCE_DIR}/windows-libraries/*.dll")
+    add_custom_command(
+            TARGET ${CMAKE_PROJECT_NAME}_run POST_BUILD
+            COMMENT "Copy windows libraries' DLLs"
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${DLLS} $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}_run>)
+
     # link the orc with mosquitto and mysql static (import) libraries
-    target_link_libraries(${CMAKE_PROJECT_NAME}_run mosquitto mysqlcppconn)
-    # Find all DLLs in project
-    file(GLOB_RECURSE DLLS "${PROJECT_SOURCE_DIR}/noCompileLibs/*.dll")
-    # Copy DLLs next to the EXE file
-    add_custom_command(TARGET ${CMAKE_PROJECT_NAME}_run POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            ${DLLS}
-            $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}_run>)
+    target_link_libraries(${CMAKE_PROJECT_NAME}_run mosquitto mysqlcppconn cpr)
 else ()
+
+    # import and set up cpr-libary for HTTP requests =============================
+    include(FetchContent)
+    FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git
+            GIT_TAG 3b15fa82ea74739b574d705fea44959b58142eb8) # Replace with your desired git commit from: https://github.com/libcpr/cpr/releases
+    FetchContent_MakeAvailable(cpr)
+    #================================================================================
+
     find_package(PkgConfig REQUIRED)
     find_package(Threads REQUIRED)
     pkg_check_modules(Mosquitto REQUIRED IMPORTED_TARGET libmosquitto)
     target_link_libraries(${CMAKE_PROJECT_NAME}_run PRIVATE Threads::Threads)
     target_link_libraries(${CMAKE_PROJECT_NAME}_run PRIVATE PkgConfig::Mosquitto)
     target_link_libraries(${CMAKE_PROJECT_NAME}_run PRIVATE Threads::Threads PkgConfig::Mosquitto mysqlcppconn)
+    target_link_libraries(${CMAKE_PROJECT_NAME}_run PRIVATE cpr::cpr)
 endif ()
 #================================================================================
 # testing part ==================================================================
