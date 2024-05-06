@@ -74,6 +74,7 @@ include_directories(lib
         src
         src/Core
         src/Core/TopicWorker
+        src/Messages
         src/Services
         src/Services/Configuration
         src/Services/MessageHandlersService
