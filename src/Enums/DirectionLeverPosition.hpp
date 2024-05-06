@@ -26,7 +26,7 @@ enum class DirectionLeverPosition : int8_t {
  * Used for communication with OpenRails API.
 */
 namespace DirectionLeverPositionMethods {
-    DirectionLeverPosition FromDouble(double value) {
+    inline DirectionLeverPosition FromDouble(double value) {
         switch (static_cast<int>(value)) {
             case 0:
                 return DirectionLeverPosition::Neutral;
@@ -39,7 +39,7 @@ namespace DirectionLeverPositionMethods {
         }
     }
     
-    double ToDouble(DirectionLeverPosition position) {
+    inline double ToDouble(DirectionLeverPosition position) {
         return static_cast<int>(position);
     }
 }
