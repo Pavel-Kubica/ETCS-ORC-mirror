@@ -1,3 +1,17 @@
+/** @file OpenRailsApiConfiguration.cpp
+ *
+ *  Component   | Subset version
+ *  :---------: | :-----------:
+ *  ORC         | 2.3.0
+ *
+ *  ### Description
+ *  Configuration of OpenRails' URL API endpoint.
+ *  See src/Services/Configuration/ConfigurationService for more info of how this works.
+ *
+ *  ### Contributors
+ *  rehorja8
+ */
+ 
 #include "OpenRailsApiConfiguration.hpp"
 
 constexpr char CABCONTROLS[] = "cabcontrols";
