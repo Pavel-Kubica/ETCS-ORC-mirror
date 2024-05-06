@@ -15,21 +15,20 @@
 
 #include "MachineControlDataService.hpp"
 
-bool MachineControlDataService::getEmergencyBrake() const {
+bool MachineControlDataService::GetEmergencyBrake() const {
     return emergencyBrake;
 }
 
-void MachineControlDataService::setEmergencyBrake(bool brake) {
+void MachineControlDataService::SetEmergencyBrake(bool brake) {
     emergencyBrake = brake;
 }
 
-bool MachineControlDataService::getServiceBrake() const {
+bool MachineControlDataService::GetServiceBrake() const {
     return serviceBrake;
 }
 
-void MachineControlDataService::setServiceBrake(bool brake) {
+void MachineControlDataService::SetServiceBrake(bool brake) {
     serviceBrake = brake;
 }
 
-MachineControlDataService::MachineControlDataService() : emergencyBrake(false), serviceBrake(false)
-{}
+MachineControlDataService::MachineControlDataService() : emergencyBrake(false), serviceBrake(false) {}

@@ -13,37 +13,38 @@
 
 #include "TrainControlDataService.hpp"
 
-bool TrainControlDataService::getBattery() const {
+bool TrainControlDataService::GetBattery() const {
     return battery;
 }
 
-void TrainControlDataService::setBattery(bool b) {
+void TrainControlDataService::SetBattery(bool b) {
     battery = b;
 }
 
-bool TrainControlDataService::getCab() const {
+bool TrainControlDataService::GetCab() const {
     return cab;
 }
 
-void TrainControlDataService::setCab(bool c) {
+void TrainControlDataService::SetCab(bool c) {
     cab = c;
 }
 
-DirectionLeverPosition TrainControlDataService::getTrainDirection() const {
+DirectionLeverPosition TrainControlDataService::GetTrainDirection() const {
     return trainDirection;
 }
 
-void TrainControlDataService::setTrainDirection(DirectionLeverPosition position) {
+void TrainControlDataService::SetTrainDirection(DirectionLeverPosition position) {
     trainDirection = position;
 }
 
-DrivingLeverPosition TrainControlDataService::getDrivingLever() const {
+DrivingLeverPosition TrainControlDataService::GetDrivingLever() const {
     return drivingLeverPosition;
 }
 
-void TrainControlDataService::setDrivingLever(DrivingLeverPosition position) {
+void TrainControlDataService::SetDrivingLever(DrivingLeverPosition position) {
     drivingLeverPosition = position;
 }
 
-TrainControlDataService::TrainControlDataService() : battery(false), cab(false), trainDirection(DirectionLeverPosition::Neutral), drivingLeverPosition(DrivingLeverPosition::Neutral)
-{}
+TrainControlDataService::TrainControlDataService() : battery(false), cab(false),
+                                                     trainDirection(DirectionLeverPosition::Neutral),
+                                                     drivingLeverPosition(DrivingLeverPosition::Neutral) {}

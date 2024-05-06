@@ -22,20 +22,21 @@
 #include "MqttPublisherService.hpp"
 
 class TrainControlUpdateService : public ITrainControlUpdateService,
-                                    public IInitializable
-{
+                                  public IInitializable {
 protected:
     void Initialize(ServiceContainer &container) override;
+
 public:
     void Update() override;
 
 private:
-    ICabControlApiService* cabControlApiService;
-    ITrainControlDataService* trainControlDataService;
-    IMachineControlDataService* machineControlDataService;
-    IMqttPublisherService* mqttPublisherService;
+    ICabControlApiService *cabControlApiService;
+    ITrainControlDataService *trainControlDataService;
+    IMachineControlDataService *machineControlDataService;
+    IMqttPublisherService *mqttPublisherService;
 
     void SendFromTiuMessageToEvc();
+
     void SendOpenRailsCabControlsRequest();
 
 };

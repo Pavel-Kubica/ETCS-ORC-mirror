@@ -17,21 +17,21 @@ class TrainControlDataService : public ITrainControlDataService {
 public:
     TrainControlDataService();
 
-    [[nodiscard]] bool getBattery() const override;
+    [[nodiscard]] bool GetBattery() const override;
 
-    void setBattery(bool battery) override;
+    void SetBattery(bool battery) override;
 
-    [[nodiscard]] bool getCab() const override;
+    [[nodiscard]] bool GetCab() const override;
 
-    void setCab(bool cab) override;
+    void SetCab(bool cab) override;
 
-    [[nodiscard]] DirectionLeverPosition getTrainDirection() const override;
+    [[nodiscard]] DirectionLeverPosition GetTrainDirection() const override;
 
-    void setTrainDirection(DirectionLeverPosition position) override;
+    void SetTrainDirection(DirectionLeverPosition position) override;
 
-    [[nodiscard]] DrivingLeverPosition getDrivingLever() const override;
+    [[nodiscard]] DrivingLeverPosition GetDrivingLever() const override;
 
-    void setDrivingLever(DrivingLeverPosition position) override;
+    void SetDrivingLever(DrivingLeverPosition position) override;
 
 private:
     bool battery;

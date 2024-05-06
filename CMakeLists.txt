@@ -53,7 +53,11 @@ file(GLOB_RECURSE TEST
 )
 #================================================================================
 # create ORC_run executable =====================================================
-add_executable(${CMAKE_PROJECT_NAME}_run ${SOURCE})
+add_executable(${CMAKE_PROJECT_NAME}_run ${SOURCE}
+        src/Services/ControllingOpenRails/TrainControlUpdateService/TrainControlUpdateService.cpp
+        src/Services/ControllingOpenRails/TrainControlUpdateService/TrainControlUpdateService.cpp
+        src/Services/ControllingOpenRails/TrainControlUpdateService/TrainControlUpdateService.hpp
+        src/Services/ControllingOpenRails/TrainControlUpdateService/ITrainControlUpdateService.hpp)
 # create "configurations" folder next to ORC_run binary file
 add_custom_command(TARGET ${CMAKE_PROJECT_NAME}_run POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}_run>/configurations

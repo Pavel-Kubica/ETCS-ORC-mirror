@@ -17,13 +17,13 @@
 
 class IMachineControlDataService : public IService {
 public:
-    [[nodiscard]] virtual bool getEmergencyBrake() const = 0;
+    [[nodiscard]] virtual bool GetEmergencyBrake() const = 0;
 
-    virtual void setEmergencyBrake(bool brake) = 0;
+    virtual void SetEmergencyBrake(bool brake) = 0;
 
-    [[nodiscard]] virtual bool getServiceBrake() const = 0;
+    [[nodiscard]] virtual bool GetServiceBrake() const = 0;
 
-    virtual void setServiceBrake(bool brake) = 0;
+    virtual void SetServiceBrake(bool brake) = 0;
 
     static constexpr ServiceType Type = ServiceType::MachineControlData;
 };

@@ -19,21 +19,21 @@
 
 class ITrainControlDataService : public IService {
 public:
-    [[nodiscard]] virtual bool getBattery() const = 0;
+    [[nodiscard]] virtual bool GetBattery() const = 0;
 
-    virtual void setBattery(bool battery) = 0;
+    virtual void SetBattery(bool battery) = 0;
 
-    [[nodiscard]] virtual bool getCab() const = 0;
+    [[nodiscard]] virtual bool GetCab() const = 0;
 
-    virtual void setCab(bool cab) = 0;
+    virtual void SetCab(bool cab) = 0;
 
-    [[nodiscard]] virtual DirectionLeverPosition getTrainDirection() const = 0;
+    [[nodiscard]] virtual DirectionLeverPosition GetTrainDirection() const = 0;
 
-    virtual void setTrainDirection(DirectionLeverPosition position) = 0;
+    virtual void SetTrainDirection(DirectionLeverPosition position) = 0;
 
-    [[nodiscard]] virtual DrivingLeverPosition getDrivingLever() const = 0;
+    [[nodiscard]] virtual DrivingLeverPosition GetDrivingLever() const = 0;
 
-    virtual void setDrivingLever(DrivingLeverPosition position) = 0;
+    virtual void SetDrivingLever(DrivingLeverPosition position) = 0;
 
     static constexpr ServiceType Type = ServiceType::TrainControlData;
 };

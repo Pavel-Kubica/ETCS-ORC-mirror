@@ -15,8 +15,7 @@
 
 #include "IService.hpp"
 
-class ITrainControlUpdateService : public IService
-{
+class ITrainControlUpdateService : public IService {
 public:
     virtual void Update() = 0;
 

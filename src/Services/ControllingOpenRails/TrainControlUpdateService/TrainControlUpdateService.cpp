@@ -27,14 +27,15 @@ void TrainControlUpdateService::Update() {
 }
 
 void TrainControlUpdateService::SendFromTiuMessageToEvc() {
-    FromTIUMessage message{trainControlDataService->getBattery(), trainControlDataService->getCab(),
-                           static_cast<Direction>(trainControlDataService->getTrainDirection())};
+    FromTIUMessage message{trainControlDataService->GetBattery(), trainControlDataService->GetCab(),
+                           static_cast<Direction>(trainControlDataService->GetTrainDirection())};
     mqttPublisherService->Publish(std::make_shared<FromTIUMessage>(message));
 }
 
 void TrainControlUpdateService::SendOpenRailsCabControlsRequest() {
-    if (!trainControlDataService->getBattery() || !trainControlDataService->getCab()) return; // Cannot control the train if we are switched off
-    cabControlApiService->SetDirection(trainControlDataService->getTrainDirection());
+    if (!trainControlDataService->GetBattery() || !trainControlDataService->GetCab())
+        return; // Cannot control the train if we are switched off
+    cabControlApiService->SetDirection(trainControlDataService->GetTrainDirection());
 
     // TODO interpret brake/throttle positions from DrivingLeverPosition
 

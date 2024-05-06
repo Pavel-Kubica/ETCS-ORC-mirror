@@ -19,13 +19,13 @@ class MachineControlDataService : public IMachineControlDataService {
 public:
     MachineControlDataService();
 
-    [[nodiscard]] bool getEmergencyBrake() const override;
+    [[nodiscard]] bool GetEmergencyBrake() const override;
 
-    void setEmergencyBrake(bool emergencyBrake) override;
+    void SetEmergencyBrake(bool emergencyBrake) override;
 
-    [[nodiscard]] bool getServiceBrake() const override;
+    [[nodiscard]] bool GetServiceBrake() const override;
 
-    void setServiceBrake(bool serviceBrake) override;
+    void SetServiceBrake(bool serviceBrake) override;
 
 private:
     bool emergencyBrake;
