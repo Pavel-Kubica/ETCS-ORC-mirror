@@ -76,6 +76,7 @@ include_directories(lib
         cem/Packets/Factory
         src
         src/Core
+        src/ControllingOpenRails/
         src/Core/TopicWorker
         src/Services
         src/Services/Configuration
