@@ -82,6 +82,7 @@ include_directories(lib
         src/Services/JRULogger
         src/Services/Time
         src/Services/SimulationStateData
+        src/Services/SimulationStateSender
         src/Services/Database
         src/Services/Database/Utils
         src/Services/BaliseData
