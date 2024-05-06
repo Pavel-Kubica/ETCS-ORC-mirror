@@ -23,16 +23,13 @@
 #include "SimulationStateData/SimulationStateDataService.hpp"
 #include "BaliseDataService.hpp"
 #include "DatabaseService.hpp"
-#include "OpenRailsApiConfiguration.hpp"
 
 
 #include <stdio.h> /* defines FILENAME_MAX */
 
 
 #ifdef WINDOWS
-
 #include <direct.h>
-
 #define GetCurrentDir _getcwd
 #else
 #include <unistd.h>
@@ -58,14 +55,5 @@ void Application::Initialize(const std::string& mqttHostname, int mqttPort) {
 void Application::Run() {
     service_container->InitializeServices();
     service_container->StartServices();
-    
-    ConfigurationService* configurationService = service_container->FetchService<ConfigurationService>().get();
-    auto conf = configurationService->FetchConfiguration<OpenRailsApiConfiguration>();
-    
-    std::cout << "please check if there is a \"open-rails-api-configuration.json\" file \n"
-              << "it is probably located in the \"cmake-build-debug/Debug/configurations/\"\n"
-              << "waiting for enter..." << std::endl;
-    getchar();
-    
     service_container->WaitForServices();
 }
