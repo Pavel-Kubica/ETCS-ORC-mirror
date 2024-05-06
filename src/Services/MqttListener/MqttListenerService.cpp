@@ -20,6 +20,7 @@
 
 #include "MqttListenerService.hpp"
 #include "ListenerConfiguration.hpp"
+#include "JsonTopicWorker.hpp"
 
 
 MqttListenerService::~MqttListenerService() {
@@ -44,8 +45,8 @@ void MqttListenerService::Initialize(ServiceContainer& container) {
     messageHandlersService = container.FetchService<IMessageHandlersService>().get();
 
     mosquitto_subscribe(komar, NULL, ConvertTopicToString(Topic::LPCtoEVC).c_str(), 0);
-    topicWorkers.insert({Topic::LPCtoEVC, std::make_shared<TopicWorker>(messageHandlersService->GetAllHandlers(),
-                                                                        jruLoggerService, Topic::LPCtoEVC)});
+    topicWorkers.insert({Topic::LPCtoEVC, std::make_shared<JsonTopicWorker>(messageHandlersService->GetAllHandlers(),
+                                                                            jruLoggerService, Topic::LPCtoEVC)});
 }
 
 void MqttListenerService::Start(ServiceContainer& container) {
@@ -53,15 +54,9 @@ void MqttListenerService::Start(ServiceContainer& container) {
 }
 
 void MqttListenerService::MQTTCallback(struct mosquitto* mosquitto, const struct mosquitto_message* message) {
-    nlohmann::json data = nlohmann::json::parse(static_cast<char*>(message->payload));
-    try {
-        data = nlohmann::json::parse(static_cast<char*>(message->payload));
-    } catch (nlohmann::json::parse_error e) {
-        jruLoggerService->Log(true, MessageType::Error, "Received message with invalid json format.");
-        return;
-    }
+    std::string data(static_cast<const char*>(message->payload), message->payloadlen);
     std::string topic(message->topic);
-    std::shared_ptr<TopicWorker> worker = topicWorkers[ConvertStringToTopic(topic)];
+    std::shared_ptr<TopicWorker> worker = topicWorkers.at(ConvertStringToTopic(topic));
     worker->AddToQueue(data);
 }
 
@@ -89,7 +84,7 @@ bool MqttListenerService::LpcSaidStart() {
             throw std::runtime_error("Could not subscribe to a topic.");
         }
         topicWorkers.insert(
-            {t, std::make_shared<TopicWorker>(messageHandlersService->GetAllHandlers(), jruLoggerService, t)});
+            {t, std::make_shared<JsonTopicWorker>(messageHandlersService->GetAllHandlers(), jruLoggerService, t)});
     }
 
     started = true;
