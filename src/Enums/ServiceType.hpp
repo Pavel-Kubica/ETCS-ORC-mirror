@@ -30,6 +30,7 @@ enum class ServiceType {
     BaliseData,
     TrainControlData,
     MachineControlData,
+    TrainControlUpdate,
     
     // Controlling OpenRails
     CabControlApi,

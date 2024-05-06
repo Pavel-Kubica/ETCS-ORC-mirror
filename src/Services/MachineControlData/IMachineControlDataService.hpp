@@ -25,5 +25,5 @@ public:
 
     virtual void setServiceBrake(bool brake) = 0;
 
-    static constexpr ServiceType Type() { return ServiceType::MachineControlData; }
+    static constexpr ServiceType Type = ServiceType::MachineControlData;
 };

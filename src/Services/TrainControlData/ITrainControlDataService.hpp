@@ -35,5 +35,5 @@ public:
 
     virtual void setDrivingLever(DrivingLeverPosition position) = 0;
 
-    static constexpr ServiceType Type() { return ServiceType::TrainControlData; }
+    static constexpr ServiceType Type = ServiceType::TrainControlData;
 };

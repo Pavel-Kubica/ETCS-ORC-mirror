@@ -24,6 +24,7 @@
 #include "BaliseDataService.hpp"
 #include "DatabaseService.hpp"
 #include "ControllingOpenRails/CabControlApiService/CabControlApiService.hpp"
+#include "ControllingOpenRails/TrainControlUpdateService/TrainControlUpdateService.hpp"
 
 
 #include <stdio.h> /* defines FILENAME_MAX */
@@ -54,6 +55,10 @@ void Application::Initialize(const std::string& mqttHostname, int mqttPort) {
     
     // Services for controlling OpenRails
     service_container->RegisterService<CabControlApiService>();
+    service_container->RegisterService<TrainControlDataService>();
+    service_container->RegisterService<MachineControlDataService>();
+    service_container->RegisterService<TrainControlUpdateService>();
+
 }
 
 void Application::Run() {
