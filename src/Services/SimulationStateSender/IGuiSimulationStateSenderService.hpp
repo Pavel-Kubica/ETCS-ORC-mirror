@@ -17,6 +17,5 @@
 class IGuiSimulationStateSenderService : public ISimulationStateSender,
                                          public IService {
 public:
-
     static constexpr ServiceType Type = ServiceType::GuiSimulationStateSender;
 };

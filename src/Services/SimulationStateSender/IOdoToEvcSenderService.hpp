@@ -19,6 +19,5 @@
 class IOdoToEvcSenderService : public ISimulationStateSender,
                                public IService {
 public:
-
     static constexpr ServiceType Type = ServiceType::OdoToEvcSender;
 };

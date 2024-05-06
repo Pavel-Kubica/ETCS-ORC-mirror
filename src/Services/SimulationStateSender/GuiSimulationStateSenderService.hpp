@@ -22,10 +22,10 @@
 class GuiSimulationStateSenderService : public IGuiSimulationStateSenderService,
                                         public IInitializable {
 public:
-    void Initialize(ServiceContainer&) override;
+    void Initialize(ServiceContainer& container) override;
 
-    void SendSimulationState(const SimulationState&) override;
+    void SendSimulationState(const SimulationState& simulationState) override;
 
 private:
-    IMqttPublisherService* mqttPublisher;
+    IMqttPublisherService* mqttPublisher{};
 };

@@ -14,6 +14,7 @@
 
 #include "OdoToEvcSenderService.hpp"
 #include "Odo/Evc/ODOMeasurementsMessage.hpp"
+#include "ODODirection.hpp"
 
 
 void OdoToEvcSenderService::Initialize(ServiceContainer &container) {
@@ -32,7 +33,7 @@ void OdoToEvcSenderService::SendSimulationState(const SimulationState& simulatio
         q_control = ODODirection::Stationary;
     }
 
-    std::shared_ptr<ODOMeasurementsMessage> odoMeasurements = std::make_shared<ODOMeasurementsMessage>(
+    ODOMeasurementsMessage odoMeasurements(
         Q_CONTROL,
         static_cast<uint32_t>(simulationState.distanceTravelledInMetres),
         simulationState.speedInMetresPerSecond,
@@ -46,5 +47,5 @@ void OdoToEvcSenderService::SendSimulationState(const SimulationState& simulatio
         q_control
     );
 
-    mqttPublisher->Publish(odoMeasurements);
+    mqttPublisher->Publish(std::make_shared<ODOMeasurementsMessage>(odoMeasurements));
 }

@@ -1,3 +1,15 @@
+/** @file OrcToGuiMessage.hpp
+ *
+ *  Component   | Subset version
+ *  :---------: | :-----------:
+ *  ORC         | 2.3.0
+ *
+ *  ###Description
+ *  Orc data message to Gui applications
+ *
+ *  ###Contributors
+ *  nguyem12
+ */
 
 #include "OrcToGuiMessage.hpp"
 
@@ -6,11 +18,15 @@ OrcToGuiMessage::OrcToGuiMessage() {
     NID_MESSAGE = MessageID::OpenRailsSimulationStateORCtoGUI;
 }
 
-OrcToGuiMessage::OrcToGuiMessage(double speedMpS,
-                                 double motiveForceN,
-                                 double brakeCylinderPSI,
-                                 double leadPipePSI) {
+OrcToGuiMessage::OrcToGuiMessage(double _speedMpS,
+                                 double _motiveForceN,
+                                 double _brakeCylinderPSI,
+                                 double _leadPipePSI) {
     NID_MESSAGE = MessageID::OpenRailsSimulationStateORCtoGUI;
+    speedMpS = _speedMpS;
+    motiveForceN = _motiveForceN;
+    brakeCylinderPSI = _brakeCylinderPSI;
+    leadPipePSI = _leadPipePSI;
 }
 
 nlohmann::json OrcToGuiMessage::to_json() const {

@@ -5,7 +5,7 @@
  *  ORC         | 2.3.0
  *
  *  ###Description
- *  Interface for simulation state sending services
+ *  Parent interface for simulation state sending interfaces
  *
  *  ###Contributors
  *  nguyem12
@@ -17,5 +17,5 @@
 
 class ISimulationStateSender {
 public:
-    virtual void SendSimulationState(const SimulationState&) = 0;
+    virtual void SendSimulationState(const SimulationState& simulationState) = 0;
 };

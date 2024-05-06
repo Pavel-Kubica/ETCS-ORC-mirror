@@ -13,12 +13,20 @@
 
 
 #include "GuiSimulationStateSenderService.hpp"
+#include "OrcToGuiMessage.hpp"
 
 
 void GuiSimulationStateSenderService::Initialize(ServiceContainer &container) {
-    this->mqttPublisher = container.FetchService<IMqttPublisherService>().get();
+    mqttPublisher = container.FetchService<IMqttPublisherService>().get();
 }
 
-void GuiSimulationStateSenderService::SendSimulationState(const SimulationState& simulationState) {
+void GuiSimulationStateSenderService::SendSimulationState(const SimulationState& simState) {
+    OrcToGuiMessage orcToGuiMessage(
+        simState.speedInMetresPerSecond,
+        simState.motiveForceInNewtons,
+        simState.brakeCylinderPressureInPsi,
+        simState.mainPipeBrakePressureInPsi
+    );
 
+    mqttPublisher->Publish(std::make_shared<OrcToGuiMessage>(orcToGuiMessage));
 }

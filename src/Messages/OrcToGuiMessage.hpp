@@ -1,8 +1,20 @@
+/** @file OrcToGuiMessage.hpp
+ *
+ *  Component   | Subset version
+ *  :---------: | :-----------:
+ *  ORC         | 2.3.0
+ *
+ *  ###Description
+ *  Orc data message to Gui applications
+ *
+ *  ###Contributors
+ *  nguyem12
+ */
 
 #include "Message.hpp"
 
 
-class OrcToGuiMessage : Message {
+class OrcToGuiMessage : public Message {
 public:
     explicit OrcToGuiMessage();
 
