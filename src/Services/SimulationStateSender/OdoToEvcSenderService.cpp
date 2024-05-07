@@ -18,7 +18,7 @@
 
 
 void OdoToEvcSenderService::Initialize(ServiceContainer &container) {
-    this->mqttPublisher = container.FetchService<IMqttPublisherService>().get();
+    mqttPublisher = container.FetchService<IMqttPublisherService>().get();
 }
 
 void OdoToEvcSenderService::SendSimulationState(const SimulationState& simulationState) {
@@ -36,7 +36,7 @@ void OdoToEvcSenderService::SendSimulationState(const SimulationState& simulatio
     ODOMeasurementsMessage odoMeasurements(
         Q_CONTROL,
         static_cast<uint32_t>(simulationState.distanceTravelledInMetres),
-        simulationState.speedInMetresPerSecond,
+        abs(simulationState.speedInMetresPerSecond),
         static_cast<uint16_t>(simulationState.accelerationInMetersPerSecondSquared),
         NID_C,
         NID_BG,

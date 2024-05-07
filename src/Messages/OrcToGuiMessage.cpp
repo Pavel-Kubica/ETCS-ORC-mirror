@@ -16,6 +16,7 @@
 
 OrcToGuiMessage::OrcToGuiMessage() {
     NID_MESSAGE = MessageID::OpenRailsSimulationStateORCtoGUI;
+    speedMpS = motiveForceN = brakeCylinderPSI = leadPipePSI = 0;
 }
 
 OrcToGuiMessage::OrcToGuiMessage(double _speedMpS,

@@ -23,6 +23,8 @@ public:
                     double brakeCylinderPSI,
                     double leadPipePSI);
 
+    ~OrcToGuiMessage() override = default;
+
     [[nodiscard]] nlohmann::json to_json() const override;
     void from_json(const nlohmann::json& j) override;
 
