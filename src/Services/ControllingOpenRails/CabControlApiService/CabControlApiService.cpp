@@ -4,12 +4,15 @@
 #include "OpenRailsApiConfiguration.hpp"
 
 bool CabControlApiService::LpcSaidStart() {
+    this->LoadConfig();
+    this->threadForResolvingResponses = std::thread(&CabControlApiService::ResolveResponses, this);
+    return true;
+}
+
+void CabControlApiService::LoadConfig() {
     auto urlApiConfig = this->configurationService->FetchConfiguration<OpenRailsApiConfiguration>();
     this->url = urlApiConfig.cabControlsUrl;
     this->apiRequestTimeout = urlApiConfig.cabControlsTimeout;
-    
-    this->threadForResolvingResponses = std::thread(&CabControlApiService::ResolveResponses, this);
-    return true;
 }
 
 bool CabControlApiService::LpcSaidStop() {
@@ -20,70 +23,6 @@ bool CabControlApiService::LpcSaidStop() {
 
 bool CabControlApiService::LpcSaidRestart() {
     return this->LpcSaidStop() && this->LpcSaidStart();
-}
-
-void CabControlApiService::Clear() {
-    this->itemsToSend.clear();
-}
-
-void CabControlApiService::SendAndClear() {
-    std::string requestBody = this->ConstructRequestBody();
-    
-    this->jruLoggerService->Log(MessageType::Debug,
-                                "CabControlApiService: doing post on OpenRails API with the request body: " +
-                                requestBody);
-    
-    auto response = cpr::PostAsync(
-            cpr::Url{this->url},
-            cpr::Header{{"Content-Type", "application/json"}},
-            cpr::Timeout{this->apiRequestTimeout},
-            cpr::Body{std::string_view(requestBody)}
-    );
-    HttpResponseWrapper responseWrapper(
-            std::move(response),
-            std::move(requestBody),
-            std::move(this->itemsToSend)
-    );
-    
-    this->responseQueue.Push(std::move(responseWrapper));
-    this->Clear();
-}
-
-void CabControlApiService::SetThrottle(double percentage) {
-    this->itemsToSend.emplace_back(OpenRailsCabControlElement::Throttle, percentage);
-}
-
-void CabControlApiService::SetTrainBrake(double percentage) {
-    this->itemsToSend.emplace_back(OpenRailsCabControlElement::TrainBrake, percentage);
-}
-
-void CabControlApiService::SetEngineBrake(double percentage) {
-    this->itemsToSend.emplace_back(OpenRailsCabControlElement::EngineBrake, percentage);
-}
-
-void CabControlApiService::SetDynamicBrake(double percentage) {
-    this->itemsToSend.emplace_back(OpenRailsCabControlElement::DynamicBrake, percentage);
-}
-
-void CabControlApiService::SetDirection(DirectionLeverPosition position) {
-    double value = DirectionLeverPositionMethods::ToDouble(position);
-    this->itemsToSend.emplace_back(OpenRailsCabControlElement::Direction, value);
-}
-
-std::string CabControlApiService::ConstructRequestBody() {
-    std::ostringstream stream;
-    stream << '[';
-    bool first = true;
-    for (const auto& item : this->itemsToSend) {
-        if (!first) {
-            stream << ',';
-        }
-        item.PrintToStream(stream);
-        first = false;
-    }
-    stream << ']';
-    
-    return stream.str();
 }
 
 void CabControlApiService::ResolveResponses() {
@@ -116,40 +55,34 @@ void CabControlApiService::ResolveResponses() {
 void CabControlApiService::Initialize(ServiceContainer& container) {
     this->jruLoggerService = container.FetchService<JRULoggerService>().get();
     this->configurationService = container.FetchService<ConfigurationService>().get();
+    
+    this->LoadConfig();
 }
 
-void CabControlApiService::RequestItem::PrintToStream(std::ostream& stream) const {
-    stream << "{TypeName: \"";
+void CabControlApiService::Send(const CabControlRequest& request) {
+    std::string requestBody = request.AsRequestBody();
     
-    switch (this->controlType) {
-        case OpenRailsCabControlElement::Throttle:
-            stream << "THROTTLE";
-            break;
-        case OpenRailsCabControlElement::TrainBrake:
-            stream << "TRAIN_BRAKE";
-            break;
-        case OpenRailsCabControlElement::EngineBrake:
-            stream << "ENGINE_BRAKE";
-            break;
-        case OpenRailsCabControlElement::DynamicBrake:
-            stream << "DYNAMIC_BRAKE";
-            break;
-        case OpenRailsCabControlElement::Direction:
-            stream << "DIRECTION";
-            break;
-        default:
-            throw std::runtime_error("unreachable branch");
-    }
+    std::cerr << requestBody << std::endl;
     
-    stream << "\", Value: "
-           << this->value
-           << "}";
+    this->jruLoggerService->Log(MessageType::Debug,
+                                "CabControlApiService: doing post on OpenRails API with the request body: " +
+                                requestBody);
+    
+    auto response = cpr::PostAsync(
+            cpr::Url{this->url},
+            cpr::Header{{"Content-Type", "application/json"}},
+            cpr::Timeout{this->apiRequestTimeout},
+            cpr::Body{requestBody}
+    );
+    HttpResponseWrapper responseWrapper(
+            std::move(response),
+            std::move(requestBody)
+    );
+    
+    this->responseQueue.Push(std::move(responseWrapper));
 }
 
-CabControlApiService::RequestItem::RequestItem(OpenRailsCabControlElement
-                                               controlType, double
-                                               value)
-        : controlType(controlType), value(value) {}
+
 
 bool CabControlApiService::HttpResponseWrapper::RepresentsFinalMessage() const {
     return !(this->asyncResponse.has_value());
@@ -159,17 +92,13 @@ cpr::Response CabControlApiService::HttpResponseWrapper::GetResponse() {
     return this->asyncResponse->get();
 }
 
-CabControlApiService::HttpResponseWrapper::HttpResponseWrapper(
-        cpr::AsyncWrapper<cpr::Response>&& response,
-        std::string originalRequestBody,
-        std::vector<RequestItem> originalRequestCabControls)
-        : asyncResponse(std::move(response)),
-          originalRequestBody(std::move(originalRequestBody)),
-          originalRequestCabControls(std::move(originalRequestCabControls)) {}
-
 CabControlApiService::HttpResponseWrapper
 CabControlApiService::HttpResponseWrapper::CreateWrapperRepresentingFinalMessage() {
     return {};
 }
+
+CabControlApiService::HttpResponseWrapper::HttpResponseWrapper(
+        cpr::AsyncWrapper<cpr::Response>&& response, std::string originalRequestBody)
+        : asyncResponse(std::move(response)), originalRequestBody(std::move(originalRequestBody)) {}
 
 
