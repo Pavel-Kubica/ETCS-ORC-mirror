@@ -15,6 +15,8 @@
 
 enum class OpenRailsCabControlElement {
     Throttle,
-    Brake,
+    TrainBrake,
+    EngineBrake,
+    DynamicBrake,
     Direction
 };
