@@ -21,27 +21,33 @@ void IncrementalCabControlService::Initialize(ServiceContainer &container) {
     localCabControlsDataService->SetEngineBrakeStep(BRAKE_STEP);
 }
 void IncrementalCabControlService::StartIncreasingThrottle() {
-
+    throttleIncrement = Increment::Positive;
+    cv.notify_one();
 }
 
 void IncrementalCabControlService::StopChangingThrottle() {
-
+    throttleIncrement = Increment::None;
+    cv.notify_one();
 }
 
 void IncrementalCabControlService::StartDecreasingThrottle() {
-
+    throttleIncrement = Increment::Negative;
+    cv.notify_one();
 }
 
 void IncrementalCabControlService::StartIncreasingEngineBrake() {
-
+    brakeIncrement = Increment::Positive;
+    cv.notify_one();
 }
 
 void IncrementalCabControlService::StopChangingEngineBrake() {
-
+    brakeIncrement = Increment::None;
+    cv.notify_one();
 }
 
 void IncrementalCabControlService::StartDecreasingEngineBrake() {
-
+    brakeIncrement = Increment::Negative;
+    cv.notify_one();
 }
 
 bool IncrementalCabControlService::LpcSaidStart() {
@@ -52,6 +58,7 @@ bool IncrementalCabControlService::LpcSaidStart() {
 
 bool IncrementalCabControlService::LpcSaidStop() {
     shouldRun = false;
+    cv.notify_one();
     incrementingThread.join();
     return true;
 }
