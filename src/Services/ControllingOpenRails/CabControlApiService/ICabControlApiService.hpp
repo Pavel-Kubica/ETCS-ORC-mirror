@@ -5,8 +5,14 @@
  *  ORC         | 2.3.0
  *
  *  ### Description
- *  Service for POSTing to the OpenRails API in order to manage
+ *  Service for POSTing to the Open Rails API in order to manage
  *  the train's controls (brakes, throttle, ...).
+ *
+ *
+ *  ### Usage
+ *  1) Create a new instance of CabControlRequest.
+ *  2) Fill this object with desired changes through its SetXxx() methods.
+ *  3) Send this object to the Open Rails API via ICabControlApiService::Send(request).
  *
  *  ### Contributors
  *  rehorja8
