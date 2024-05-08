@@ -26,7 +26,11 @@
 class SimulationStatusMessageHandler : public MessageHandler {
 public:
     explicit SimulationStatusMessageHandler(ServiceContainer& container);
-    void HandleMessageBody(const nlohmann::json& data) override;
+
+protected:
+    void HandleMessageBody(const Message& data) override;
+
+    [[nodiscard]] std::unique_ptr<Message> GetEmptyMessage() const override;
 
 private:
     IMqttListenerService* mqttListener;
