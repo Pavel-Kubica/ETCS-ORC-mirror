@@ -67,8 +67,8 @@ private:
     std::condition_variable cv;
 
     void DoChanges();
-    void ChangeThrottle();
-    void ChangeBrake();
+    void ChangeThrottle(CabControlRequest& request);
+    void ChangeBrake(CabControlRequest& request);
     bool WorkDone() const;
 
 };

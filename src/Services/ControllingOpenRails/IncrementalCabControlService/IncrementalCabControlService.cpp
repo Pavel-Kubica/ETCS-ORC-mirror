@@ -12,6 +12,7 @@
  */
 
 #include "IncrementalCabControlService.hpp"
+#include "CabControlRequest.hpp"
 #include <stdexcept>
 
 void IncrementalCabControlService::Initialize(ServiceContainer &container) {
@@ -79,23 +80,27 @@ void IncrementalCabControlService::DoChanges() {
         cv.wait(lk);
         while (!WorkDone())
         {
-            ChangeThrottle();
-            ChangeBrake();
+            CabControlRequest request;
+            ChangeThrottle(request);
+            ChangeBrake(request);
+            cabControlApiService->Send(request);
             std::this_thread::sleep_for(TIMEOUT_BETWEEN_INCREMENTS);
         }
     }
 }
 
-void IncrementalCabControlService::ChangeThrottle() {
+void IncrementalCabControlService::ChangeThrottle(CabControlRequest& request) {
     switch (throttleIncrement) {
         case Increment::Positive: {
             bool finished = !localCabControlsDataService->IncreaseThrottle();
+            request.SetThrottle(localCabControlsDataService->GetThrottle());
             if (finished)
                 throttleIncrement = Increment::None;
             break;
         }
         case Increment::Negative: {
             bool finished = !localCabControlsDataService->DecreaseThrottle();
+            request.SetThrottle(localCabControlsDataService->GetThrottle());
             if (finished)
                 throttleIncrement = Increment::None;
             break;
@@ -107,16 +112,18 @@ void IncrementalCabControlService::ChangeThrottle() {
     }
 }
 
-void IncrementalCabControlService::ChangeBrake() {
+void IncrementalCabControlService::ChangeBrake(CabControlRequest& request) {
     switch (brakeIncrement) {
         case Increment::Positive: {
             bool finished = !localCabControlsDataService->IncreaseEngineBrake();
+            request.SetEngineBrake(localCabControlsDataService->GetEngineBrake());
             if (finished)
                 brakeIncrement = Increment::None;
             break;
         }
         case Increment::Negative: {
             bool finished = !localCabControlsDataService->DecreaseEngineBrake();
+            request.SetEngineBrake(localCabControlsDataService->GetEngineBrake());
             if (finished)
                 brakeIncrement = Increment::None;
             break;
