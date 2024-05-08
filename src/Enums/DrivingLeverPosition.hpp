@@ -1,4 +1,4 @@
-/** @file DirectionLeverPosition.h
+/** @file DrivingLeverPosition.hpp
  *
  *  Component   | Subset version
  *  :---------: | :-----------:

@@ -1,4 +1,4 @@
-/** @file ITrainControlDataService.hpp
+/** @file TrainControlDataService.hpp
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
