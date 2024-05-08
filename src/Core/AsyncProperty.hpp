@@ -88,6 +88,51 @@ public:
         std::lock_guard<std::mutex> lock(*mutex);
         return this->value = new_value;
     }
+    
+    /**
+     * Operator that performs the += operation on the inner value
+     * @param rhs - right hand side of the operation
+     */
+    void operator+=(const T& rhs) {
+        std::lock_guard<std::mutex> lock(*mutex);
+        this->value += rhs;
+    }
+    
+    /**
+     * Operator that performs the -= operation on the inner value
+     * @param rhs - right hand side of the operation
+     */
+    void operator-=(const T& rhs) {
+        std::lock_guard<std::mutex> lock(*mutex);
+        this->value -= rhs;
+    }
+    
+    /**
+     * Operator that performs the *= operation on the inner value
+     * @param rhs - right hand side of the operation
+     */
+    void operator*=(const T& rhs) {
+        std::lock_guard<std::mutex> lock(*mutex);
+        this->value *= rhs;
+    }
+    
+    /**
+     * Operator that performs the /= operation on the inner value
+     * @param rhs - right hand side of the operation
+     */
+    void operator/=(const T& rhs) {
+        std::lock_guard<std::mutex> lock(*mutex);
+        this->value /= rhs;
+    }
+    
+    /**
+     * Operator that performs the %= operation on the inner value
+     * @param rhs - right hand side of the operation
+     */
+    void operator%=(const T& rhs) {
+        std::lock_guard<std::mutex> lock(*mutex);
+        this->value %= rhs;
+    }
 
 private:
     std::mutex own_mutex;

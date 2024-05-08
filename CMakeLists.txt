@@ -34,6 +34,7 @@ file(GLOB_RECURSE SOURCE
         cem/Messages/Tiu/*
         cem/Messages/Odo/*
         cem/Messages/ToJRU/*
+        cem/Messages/Lpc/Orc/*
         cem/Exceptions/*
         cem/Packets/*
         cem/Other/CommunicationData/*
@@ -67,6 +68,7 @@ include_directories(lib
         cem/Enums/Communication
         cem/Messages
         cem/Messages/ToJRU
+        cem/Messages/Lpc/Orc
         cem/Exceptions
         cem/Exceptions/InternalStateMessageExceptions
         cem/Other
@@ -79,6 +81,7 @@ include_directories(lib
         src/Services/ControllingOpenRails/CabControlApiService/CabControlRequest
         src/Services/ControllingOpenRails/CabControlApiService
         src/Core/TopicWorker
+        src/Messages
         src/Services
         src/Services/ControllingOpenRails/
         src/Services/ControllingOpenRails/LocalCabControlsDataService
@@ -94,10 +97,12 @@ include_directories(lib
         src/Services/Time
         src/Services/TrainControlData
         src/Services/SimulationStateData
+        src/Services/SimulationStateSender
         src/Services/Database
         src/Services/Database/Utils
         src/Services/BaliseData
         src/MessageHandlers
+        src/MessageHandlers/LPC
         src/Enums
         src/Configurations
         src/Utils
