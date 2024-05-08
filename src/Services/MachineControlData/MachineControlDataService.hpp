@@ -12,6 +12,7 @@
  */
 
 #pragma once
+#include <atomic>
 
 #include "IMachineControlDataService.hpp"
 
@@ -28,6 +29,6 @@ public:
     void SetServiceBrake(bool serviceBrake) override;
 
 private:
-    bool emergencyBrake;
-    bool serviceBrake;
+    std::atomic_bool emergencyBrake;
+    std::atomic_bool serviceBrake;
 };

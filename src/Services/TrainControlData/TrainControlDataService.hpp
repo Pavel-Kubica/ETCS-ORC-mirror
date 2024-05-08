@@ -12,6 +12,8 @@
  */
 
 #include "ITrainControlDataService.hpp"
+#include <atomic>
+#include "AsyncProperty.hpp"
 
 class TrainControlDataService : public ITrainControlDataService {
 public:
@@ -34,8 +36,8 @@ public:
     void SetDrivingLever(DrivingLeverPosition position) override;
 
 private:
-    bool battery;
-    bool cab;
-    DirectionLeverPosition trainDirection;
-    DrivingLeverPosition drivingLeverPosition;
+    std::atomic_bool battery;
+    std::atomic_bool cab;
+    AsyncProperty<DirectionLeverPosition> trainDirection;
+    AsyncProperty<DrivingLeverPosition> drivingLeverPosition;
 };
