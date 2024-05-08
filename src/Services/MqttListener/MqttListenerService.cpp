@@ -16,7 +16,6 @@
  *  pavlian5
  */
 
-// TODO: change LPCtoEVC to LPCtoORC in the whole file
 
 #include "MqttListenerService.hpp"
 #include "ListenerConfiguration.hpp"
@@ -44,9 +43,9 @@ void MqttListenerService::Initialize(ServiceContainer& container) {
 
     messageHandlersService = container.FetchService<IMessageHandlersService>().get();
 
-    mosquitto_subscribe(komar, NULL, ConvertTopicToString(Topic::LPCtoEVC).c_str(), 0);
-    topicWorkers.insert({Topic::LPCtoEVC, std::make_shared<JsonTopicWorker>(messageHandlersService->GetAllHandlers(),
-                                                                            jruLoggerService, Topic::LPCtoEVC)});
+    mosquitto_subscribe(komar, NULL, ConvertTopicToString(Topic::LPCtoORC).c_str(), 0);
+    topicWorkers.insert({Topic::LPCtoORC, std::make_shared<JsonTopicWorker>(messageHandlersService->GetAllHandlers(),
+                                                                        jruLoggerService, Topic::LPCtoORC)});
 }
 
 void MqttListenerService::Start(ServiceContainer& container) {
@@ -116,8 +115,8 @@ bool MqttListenerService::LpcSaidRestart() {
     return true;
 }
 void MqttListenerService::AppExit() {
-    topicWorkers[Topic::LPCtoEVC]->Stop();
-    mosquitto_unsubscribe(komar, NULL, ConvertTopicToString(Topic::LPCtoEVC).c_str());  // TODO: change LPCtoEVC to LPCtoORC
-    topicWorkers.erase(Topic::LPCtoEVC);
+    topicWorkers[Topic::LPCtoORC]->Stop();
+    mosquitto_unsubscribe(komar, NULL, ConvertTopicToString(Topic::LPCtoORC).c_str());
+    topicWorkers.erase(Topic::LPCtoORC);
     mosquitto_disconnect(komar);
 }

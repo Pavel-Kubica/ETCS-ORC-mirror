@@ -52,7 +52,7 @@ public:
         if (toConsole) {
             InternalStateMessage toConsoleMsg;
             toConsoleMsg.from_json(msg.get()->to_json());
-            std::cout << GetColor(msgType) << toConsoleMsg.GetMessage() << resetColor << std::endl;
+            std::cout << GetColor(msgType) << toConsoleMsg.RetrieveMessage() << resetColor << std::endl;
         }
 #endif
         publisher->Publish(msg);
@@ -65,7 +65,7 @@ public:
         if (toConsole) {
             InternalStateMessage toConsoleMsg;
             toConsoleMsg.from_json(msg.get()->to_json());
-            std::cout << GetColor(msgType) << toConsoleMsg.GetMessage() << resetColor << std::endl;
+            std::cout << GetColor(msgType) << toConsoleMsg.RetrieveMessage() << resetColor << std::endl;
         }
 #endif
         publisher->Publish(msg);
