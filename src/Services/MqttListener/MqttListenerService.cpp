@@ -16,10 +16,10 @@
  *  pavlian5
  */
 
-// TODO: change LPCtoEVC to LPCtoORC in the whole file
 
 #include "MqttListenerService.hpp"
 #include "ListenerConfiguration.hpp"
+#include "JsonTopicWorker.hpp"
 
 
 MqttListenerService::~MqttListenerService() {
@@ -43,9 +43,9 @@ void MqttListenerService::Initialize(ServiceContainer& container) {
 
     messageHandlersService = container.FetchService<IMessageHandlersService>().get();
 
-    mosquitto_subscribe(komar, NULL, ConvertTopicToString(Topic::LPCtoEVC).c_str(), 0);
-    topicWorkers.insert({Topic::LPCtoEVC, std::make_shared<TopicWorker>(messageHandlersService->GetAllHandlers(),
-                                                                        jruLoggerService, Topic::LPCtoEVC)});
+    mosquitto_subscribe(komar, NULL, ConvertTopicToString(Topic::LPCtoORC).c_str(), 0);
+    topicWorkers.insert({Topic::LPCtoORC, std::make_shared<JsonTopicWorker>(messageHandlersService->GetAllHandlers(),
+                                                                        jruLoggerService, Topic::LPCtoORC)});
 }
 
 void MqttListenerService::Start(ServiceContainer& container) {
@@ -53,15 +53,9 @@ void MqttListenerService::Start(ServiceContainer& container) {
 }
 
 void MqttListenerService::MQTTCallback(struct mosquitto* mosquitto, const struct mosquitto_message* message) {
-    nlohmann::json data = nlohmann::json::parse(static_cast<char*>(message->payload));
-    try {
-        data = nlohmann::json::parse(static_cast<char*>(message->payload));
-    } catch (nlohmann::json::parse_error e) {
-        jruLoggerService->Log(true, MessageType::Error, "Received message with invalid json format.");
-        return;
-    }
+    std::string data(static_cast<const char*>(message->payload), message->payloadlen);
     std::string topic(message->topic);
-    std::shared_ptr<TopicWorker> worker = topicWorkers[ConvertStringToTopic(topic)];
+    std::shared_ptr<TopicWorker> worker = topicWorkers.at(ConvertStringToTopic(topic));
     worker->AddToQueue(data);
 }
 
@@ -89,7 +83,7 @@ bool MqttListenerService::LpcSaidStart() {
             throw std::runtime_error("Could not subscribe to a topic.");
         }
         topicWorkers.insert(
-            {t, std::make_shared<TopicWorker>(messageHandlersService->GetAllHandlers(), jruLoggerService, t)});
+            {t, std::make_shared<JsonTopicWorker>(messageHandlersService->GetAllHandlers(), jruLoggerService, t)});
     }
 
     started = true;
@@ -121,8 +115,8 @@ bool MqttListenerService::LpcSaidRestart() {
     return true;
 }
 void MqttListenerService::AppExit() {
-    topicWorkers[Topic::LPCtoEVC]->Stop();
-    mosquitto_unsubscribe(komar, NULL, ConvertTopicToString(Topic::LPCtoEVC).c_str());  // TODO: change LPCtoEVC to LPCtoORC
-    topicWorkers.erase(Topic::LPCtoEVC);
+    topicWorkers[Topic::LPCtoORC]->Stop();
+    mosquitto_unsubscribe(komar, NULL, ConvertTopicToString(Topic::LPCtoORC).c_str());
+    topicWorkers.erase(Topic::LPCtoORC);
     mosquitto_disconnect(komar);
 }

@@ -26,8 +26,13 @@ enum class ServiceType {
     Logger,
     Time,
     SimulationStateData,
+    OdoToEvcSender,
+    GuiSimulationStateSender,
     Database,
     BaliseData,
     Btm,
-    SimulationStateApi
+    SimulationStateApi,
+    
+    // Controlling OpenRails
+    CabControlApi,
 };
