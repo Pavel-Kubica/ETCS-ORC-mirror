@@ -76,7 +76,8 @@ include_directories(lib
         cem/Packets/Factory
         src
         src/Core
-        src/ControllingOpenRails/
+        src/Services/ControllingOpenRails/CabControlApiService/CabControlRequest
+        src/Services/ControllingOpenRails/CabControlApiService
         src/Core/TopicWorker
         src/Services
         src/Services/Configuration
