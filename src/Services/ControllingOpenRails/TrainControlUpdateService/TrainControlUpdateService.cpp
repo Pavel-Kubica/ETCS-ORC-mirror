@@ -27,18 +27,30 @@ void TrainControlUpdateService::Update() {
 }
 
 void TrainControlUpdateService::SendFromTiuMessageToEvc() {
+    Direction dir;
+    switch (trainControlDataService->GetTrainDirection()) {
+        case DirectionLeverPosition::Neutral:
+            dir = Direction::Unknown;
+            break;
+        case DirectionLeverPosition::Forwards:
+            dir = Direction::Nominal;
+            break;
+        case DirectionLeverPosition::Backwards:
+            dir = Direction::Reverse;
+            break;
+        default:
+            throw std::runtime_error("unreachable branch");
+    }
     FromTIUMessage message{trainControlDataService->GetBattery(), trainControlDataService->GetCab(),
-                           static_cast<Direction>(trainControlDataService->GetTrainDirection())};
+                           dir};
     mqttPublisherService->Publish(std::make_shared<FromTIUMessage>(message));
 }
 
 void TrainControlUpdateService::SendOpenRailsCabControlsRequest() {
     if (!trainControlDataService->GetBattery() || !trainControlDataService->GetCab())
         return; // Cannot control the train if we are switched off
-    cabControlApiService->SetDirection(trainControlDataService->GetTrainDirection());
 
     // TODO interpret brake/throttle positions from DrivingLeverPosition
 
-    cabControlApiService->SendAndClear();
 }
 
