@@ -1,4 +1,4 @@
-/** @file IncrementalCabControlService.hpp
+/** @file IncrementalCabControlService.cpp
  *
  *  Component   | Subset version
  *  :---------: | :-----------:

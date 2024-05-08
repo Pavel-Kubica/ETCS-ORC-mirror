@@ -9,6 +9,7 @@
  *
  *  ###Contributors
  *  kubicpa3
+ *  rehorja8
  */
 
 #pragma once
@@ -28,8 +29,7 @@
 
 class IncrementalCabControlService : public IInitializable,
                                      public ILpcManageable,
-                                     public IIncrementalCabControlService
-{
+                                     public IIncrementalCabControlService {
 private:
     // TODO load all of these from config?
     static constexpr double THROTTLE_STEP = 0.02;
@@ -37,38 +37,38 @@ private:
     static constexpr std::chrono::duration TIMEOUT_BETWEEN_INCREMENTS = std::chrono::milliseconds(100);
 
 protected:
-    void Initialize(ServiceContainer &container) override;
+    void Initialize(ServiceContainer& container) override;
 public:
     void StartIncreasingThrottle() override;
     void StopChangingThrottle() override;
     void StartDecreasingThrottle() override;
-
+    
     void StartIncreasingEngineBrake() override;
     void StopChangingEngineBrake() override;
     void StartDecreasingEngineBrake() override;
-
+    
     bool LpcSaidStart() override;
-
+    
     bool LpcSaidStop() override;
-
+    
     bool LpcSaidRestart() override;
 
 
 private:
     ICabControlApiService* cabControlApiService;
     ILocalCabControlsDataService* localCabControlsDataService;
-
-    AsyncProperty<Increment> throttleIncrement;
-    AsyncProperty<Increment> brakeIncrement;
-
+    
+    std::atomic<Increment> throttleIncrement;
+    std::atomic<Increment> brakeIncrement;
+    
     std::atomic_bool shouldRun;
     std::thread incrementingThread;
     std::mutex mtx;
     std::condition_variable cv;
-
+    
     void DoChanges();
     void ChangeThrottle(CabControlRequest& request);
     void ChangeBrake(CabControlRequest& request);
-    bool WorkDone() const;
-
+    [[nodiscard]] bool WorkDone() const;
+    
 };

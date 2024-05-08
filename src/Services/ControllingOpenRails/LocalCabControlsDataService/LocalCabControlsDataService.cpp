@@ -1,15 +1,20 @@
-/** @file LocalCabControlsDataService.hpp
+/** @file LocalCabControlsDataService.cpp
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
  *  ORC         | 2.3.0
  *
  *  ###Description
+ *  This service is used as a storage of member variables of IncrementalCabControlService.
+ *
  *  This data service stores the local state of cab controls.
- *  It does not represent the current numbers in Open Rails, only what we think they should be
+ *  It does not represent the current numbers in Open Rails, only what we think they should be.
+ *  At the beginning, these values are zero initialised and then we "blindly" increase/decrease them
+ *  (meaning we do not lookup these values from the Open Rails).
  *
  *  ###Contributors
  *  kubicpa3
+ *  rehorja8
  */
 
 #include "LocalCabControlsDataService.hpp"
@@ -44,14 +49,14 @@ double LocalCabControlsDataService::GetThrottle() const {
 }
 
 bool LocalCabControlsDataService::IncreaseThrottle() {
-    throttle = throttle.GetValue() + throttleStep;
+    throttle += throttleStep;
     if (throttle > 1.0)
         throttle = 1.0;
     return throttle < 1.0;
 }
 
 bool LocalCabControlsDataService::DecreaseThrottle() {
-    throttle = throttle.GetValue() - throttleStep;
+    throttle -= throttleStep;
     if (throttle < 0)
         throttle = 0;
     return throttle > 0;
@@ -66,14 +71,14 @@ double LocalCabControlsDataService::GetEngineBrake() const {
 }
 
 bool LocalCabControlsDataService::IncreaseEngineBrake() {
-    engineBrake = engineBrake.GetValue() + engineBrakeStep;
+    engineBrake += engineBrakeStep;
     if (engineBrake > 1.0)
         engineBrake = 1.0;
     return engineBrake < 1.0;
 }
 
 bool LocalCabControlsDataService::DecreaseEngineBrake() {
-    engineBrake = engineBrake.GetValue() - engineBrakeStep;
+    engineBrake -= engineBrakeStep;
     if (engineBrake < 0.0)
         engineBrake = 0.0;
     return engineBrake > 0.0;

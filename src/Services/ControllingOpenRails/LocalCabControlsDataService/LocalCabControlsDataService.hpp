@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include <atomic>
 #include "ILocalCabControlsDataService.hpp"
 #include "AsyncProperty.hpp"
 
@@ -45,10 +46,9 @@ public:
     [[nodiscard]] OpenRailsTrainBrakeState GetTrainBrake() const override;
 
 private:
-    AsyncProperty<double> throttleStep;
-    AsyncProperty<double> engineBrakeStep;
-
-    AsyncProperty<double> throttle;
-    AsyncProperty<double> engineBrake;
-    AsyncProperty<OpenRailsTrainBrakeState> trainBrakeState;
+    std::atomic<double> throttleStep;
+    std::atomic<double> engineBrakeStep;
+    std::atomic<double> throttle;
+    std::atomic<double> engineBrake;
+    std::atomic<OpenRailsTrainBrakeState> trainBrakeState;
 };
