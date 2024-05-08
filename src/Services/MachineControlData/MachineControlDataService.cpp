@@ -1,4 +1,4 @@
-/** @file ITrainControlDataService.hpp
+/** @file ITrainControlDataService.cpp
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
@@ -10,8 +10,6 @@
  *  ###Contributors
  *  kubicpa3
  */
-
-#pragma once
 
 #include "MachineControlDataService.hpp"
 
