@@ -81,6 +81,7 @@ include_directories(lib
         src/Services/ControllingOpenRails/CabControlApiService/CabControlRequest
         src/Services/ControllingOpenRails/CabControlApiService
         src/Core/TopicWorker
+        src/Messages
         src/Services
         src/Services/Configuration
         src/Services/MessageHandlersService
@@ -89,6 +90,7 @@ include_directories(lib
         src/Services/JRULogger
         src/Services/Time
         src/Services/SimulationStateData
+        src/Services/SimulationStateSender
         src/Services/Database
         src/Services/Database/Utils
         src/Services/BaliseData
