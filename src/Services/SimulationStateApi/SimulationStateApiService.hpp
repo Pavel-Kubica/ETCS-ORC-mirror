@@ -19,6 +19,7 @@
 #include "Btm/BtmService.hpp"
 #include "SimulationStateDataService.hpp"
 #include "ServiceContainer.hpp"
+#include "ConfigurationService.hpp"
 
 class SimulationStateApiService: public ISimulationStateApiService, public IInitializable, public ILpcManageable {
 public:
@@ -38,6 +39,9 @@ private:
     ISimulationStateDataService* simulationStateDataService;
     IBtmService* btmService;
     JRULoggerService* jruLoggerService;
+    ConfigurationService* configurationService;
     std::atomic_bool shouldStop;
+    std::string url;
+    std::chrono::milliseconds httpRequestTimeout;
     std::chrono::milliseconds apiCallingInterval;
 };

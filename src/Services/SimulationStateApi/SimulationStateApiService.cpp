@@ -14,18 +14,26 @@
 #include "SimulationStateApiService.hpp"
 #include "cpr/response.h"
 #include "cpr/api.h"
+#include "OpenRailsApiConfiguration.hpp"
 
 
 void SimulationStateApiService::Initialize(ServiceContainer& container) {
     simulationStateDataService = container.FetchService<SimulationStateDataService>().get();
     btmService = container.FetchService<BtmService>().get();
     jruLoggerService = container.FetchService<JRULoggerService>().get();
+    configurationService = container.FetchService<ConfigurationService>().get();
 
-    apiCallingInterval = std::chrono::milliseconds(1000);
+    configurationService->FetchConfiguration<OpenRailsApiConfiguration>();
 }
 
 bool SimulationStateApiService::LpcSaidStart() {
     shouldStop = false;
+
+    auto configuration = configurationService->FetchConfiguration<OpenRailsApiConfiguration>();
+    url = configuration.orcUrl;
+    apiCallingInterval = configuration.apiGetOrcCallingInterval;
+    httpRequestTimeout = configuration.orcTimeout;
+
     std::thread(&SimulationStateApiService::CallApiInALoop, this);
     return true;
 }
@@ -36,16 +44,13 @@ bool SimulationStateApiService::LpcSaidStop() {
 }
 
 bool SimulationStateApiService::LpcSaidRestart() {
-    return true;
+    return LpcSaidStop() && LpcSaidStart();
 }
 
 void SimulationStateApiService::CallApiInALoop() {
-    const std::string URL = "http://172.19.192.1:2150";
-    const std::string ENDPOINT = "/API/ORC";
-
     while (!shouldStop) {
         auto start = std::chrono::steady_clock::now();
-        cpr::Response response = cpr::Get(cpr::Url{URL + ENDPOINT});
+        cpr::Response response = cpr::Get(cpr::Url{url}, cpr::Timeout(httpRequestTimeout));
 
         if (response.status_code / 100 != 2) {
             // Detected error
