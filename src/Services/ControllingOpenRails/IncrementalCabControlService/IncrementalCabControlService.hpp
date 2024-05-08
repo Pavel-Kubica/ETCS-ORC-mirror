@@ -58,17 +58,34 @@ private:
     ICabControlApiService* cabControlApiService;
     ILocalCabControlsDataService* localCabControlsDataService;
     
-    std::atomic<Increment> throttleIncrement;
-    std::atomic<Increment> brakeIncrement;
+    Increment throttleIncrement;
+    Increment brakeIncrement;
     
+    // Says if the incrementing thread should be running or not
     std::atomic_bool shouldRun;
-    std::thread incrementingThread;
     std::mutex mtx;
     std::condition_variable cv;
+    std::thread incrementingThread;
     
-    void DoChanges();
+    void IncrementingThreadEntryPoint();
+    
+    /**
+     * @warning THIS METHOD IS NO SYNCHRONISED - IT DOES NOT LOCK `this->mtx`
+     * @param [in, out] request - request that this method adds throttle changes to, which should be sent to Open Rails API
+     */
     void ChangeThrottle(CabControlRequest& request);
+    
+    /**
+     * @warning THIS METHOD IS NO SYNCHRONISED - IT DOES NOT LOCK `this->mtx`
+     * @param [in, out] request - request that this method adds brake changes to, which should be sent to Open Rails API
+     */
     void ChangeBrake(CabControlRequest& request);
+    
+    /**
+     * @warning THIS METHOD IS NO SYNCHRONISED - IT DOES NOT LOCK `this->mtx`
+     * @return true if incrementing thread has no more work to do
+     * (meaning `this->throttleIncrement` and `this->brakeIncrement` are `Increment::None`).
+     */
     [[nodiscard]] bool WorkDone() const;
     
 };

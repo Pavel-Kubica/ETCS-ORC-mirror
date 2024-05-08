@@ -23,44 +23,58 @@ void IncrementalCabControlService::Initialize(ServiceContainer& container) {
 }
 
 void IncrementalCabControlService::StartIncreasingThrottle() {
+    std::lock_guard lck(this->mtx);
     throttleIncrement = Increment::Positive;
     cv.notify_one();
 }
 
 void IncrementalCabControlService::StopChangingThrottle() {
+    std::lock_guard lck(this->mtx); // TODO: this might not be here
     throttleIncrement = Increment::None;
     cv.notify_one();
 }
 
 void IncrementalCabControlService::StartDecreasingThrottle() {
+    std::lock_guard lck(this->mtx);
     throttleIncrement = Increment::Negative;
     cv.notify_one();
 }
 
 void IncrementalCabControlService::StartIncreasingEngineBrake() {
+    std::lock_guard lck(this->mtx);
     brakeIncrement = Increment::Positive;
     cv.notify_one();
 }
 
 void IncrementalCabControlService::StopChangingEngineBrake() {
+    std::lock_guard lck(this->mtx); // TODO: this might not be here
     brakeIncrement = Increment::None;
     cv.notify_one();
 }
 
 void IncrementalCabControlService::StartDecreasingEngineBrake() {
+    std::lock_guard lck(this->mtx);
     brakeIncrement = Increment::Negative;
     cv.notify_one();
 }
 
 bool IncrementalCabControlService::LpcSaidStart() {
+    if (shouldRun) {
+        return false;
+    }
     shouldRun = true;
-    incrementingThread = std::thread(&IncrementalCabControlService::DoChanges, this);
+    incrementingThread = std::thread(&IncrementalCabControlService::IncrementingThreadEntryPoint, this);
     return true;
 }
 
 bool IncrementalCabControlService::LpcSaidStop() {
-    shouldRun = false;
-    cv.notify_one();
+    {
+        std::lock_guard lck(this->mtx);
+        shouldRun = false;
+        cv.notify_one();
+    }
+    
+    // `this->mtx` has to be unlocked when `.join()` is called
     incrementingThread.join();
     return true;
 }
@@ -69,27 +83,29 @@ bool IncrementalCabControlService::LpcSaidRestart() {
     return LpcSaidStop() && LpcSaidStart();
 }
 
-// Returns true if incrementing thread has no more work to do
 bool IncrementalCabControlService::WorkDone() const {
-    return (throttleIncrement == Increment::None && brakeIncrement == Increment::None)
-           || !shouldRun;
+    // No mutex since we call this method when this->mtx is locked
+    return (throttleIncrement == Increment::None && brakeIncrement == Increment::None);
 }
 
-void IncrementalCabControlService::DoChanges() {
+void IncrementalCabControlService::IncrementingThreadEntryPoint() {
     while (shouldRun) {
-        std::unique_lock lk(mtx);
-        cv.wait(lk);
-        while (!WorkDone()) {
-            CabControlRequest request;
-            ChangeThrottle(request);
-            ChangeBrake(request);
-            cabControlApiService->Send(request);
-            std::this_thread::sleep_for(TIMEOUT_BETWEEN_INCREMENTS);
-        }
+        CabControlRequest request;
+        
+        std::unique_lock lk(this->mtx);
+        cv.wait(lk, [this]() { return !shouldRun || !WorkDone(); });
+        
+        this->ChangeThrottle(request);
+        this->ChangeBrake(request);
+        lk.unlock();
+        
+        cabControlApiService->Send(request);
+        std::this_thread::sleep_for(TIMEOUT_BETWEEN_INCREMENTS);
     }
 }
 
 void IncrementalCabControlService::ChangeThrottle(CabControlRequest& request) {
+    // No mutex since we call this method when this->mtx is locked
     switch (throttleIncrement) {
         case Increment::Positive: {
             bool finished = !localCabControlsDataService->IncreaseThrottle();
@@ -113,6 +129,7 @@ void IncrementalCabControlService::ChangeThrottle(CabControlRequest& request) {
 }
 
 void IncrementalCabControlService::ChangeBrake(CabControlRequest& request) {
+    // No mutex since we call this method when this->mtx is locked
     switch (brakeIncrement) {
         case Increment::Positive: {
             bool finished = !localCabControlsDataService->IncreaseEngineBrake();
