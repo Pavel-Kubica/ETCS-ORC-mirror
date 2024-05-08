@@ -57,6 +57,7 @@ void Application::Initialize(const std::string& mqttHostname, int mqttPort) {
     service_container->RegisterService<CabControlApiService>();
     service_container->RegisterService<TrainControlDataService>();
     service_container->RegisterService<MachineControlDataService>();
+    service_container->RegisterService<LocalCabControlsDataService>();
     service_container->RegisterService<TrainControlUpdateService>();
 
 }
