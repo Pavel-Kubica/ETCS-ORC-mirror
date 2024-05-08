@@ -109,7 +109,7 @@ public:
     
     /**
      * Operator that performs the *= operation on the inner value
-     * @param rhs * right hand side of the operation
+     * @param rhs - right hand side of the operation
      */
     void operator*=(const T& rhs) {
         std::lock_guard<std::mutex> lock(*mutex);
@@ -118,7 +118,7 @@ public:
     
     /**
      * Operator that performs the /= operation on the inner value
-     * @param rhs * right hand side of the operation
+     * @param rhs - right hand side of the operation
      */
     void operator/=(const T& rhs) {
         std::lock_guard<std::mutex> lock(*mutex);
@@ -127,7 +127,7 @@ public:
     
     /**
      * Operator that performs the %= operation on the inner value
-     * @param rhs % right hand side of the operation
+     * @param rhs - right hand side of the operation
      */
     void operator%=(const T& rhs) {
         std::lock_guard<std::mutex> lock(*mutex);
