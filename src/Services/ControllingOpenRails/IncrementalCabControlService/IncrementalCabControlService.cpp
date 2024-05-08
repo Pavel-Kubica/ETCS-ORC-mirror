@@ -81,6 +81,7 @@ void IncrementalCabControlService::DoChanges() {
         {
             ChangeThrottle();
             ChangeBrake();
+            std::this_thread::sleep_for(TIMEOUT_BETWEEN_INCREMENTS);
         }
     }
 }
