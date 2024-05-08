@@ -15,12 +15,13 @@
 #include "CabControlRequest.hpp"
 #include <stdexcept>
 
-void IncrementalCabControlService::Initialize(ServiceContainer &container) {
+void IncrementalCabControlService::Initialize(ServiceContainer& container) {
     cabControlApiService = container.FetchService<ICabControlApiService>().get();
     localCabControlsDataService = container.FetchService<ILocalCabControlsDataService>().get();
     localCabControlsDataService->SetThrottleStep(THROTTLE_STEP);
     localCabControlsDataService->SetEngineBrakeStep(BRAKE_STEP);
 }
+
 void IncrementalCabControlService::StartIncreasingThrottle() {
     throttleIncrement = Increment::Positive;
     cv.notify_one();
@@ -65,8 +66,7 @@ bool IncrementalCabControlService::LpcSaidStop() {
 }
 
 bool IncrementalCabControlService::LpcSaidRestart() {
-    LpcSaidStop();
-    LpcSaidStart();
+    return LpcSaidStop() && LpcSaidStart();
 }
 
 // Returns true if incrementing thread has no more work to do
@@ -78,8 +78,7 @@ void IncrementalCabControlService::DoChanges() {
     while (shouldRun) {
         std::unique_lock lk(mtx);
         cv.wait(lk);
-        while (!WorkDone())
-        {
+        while (!WorkDone()) {
             CabControlRequest request;
             ChangeThrottle(request);
             ChangeBrake(request);
