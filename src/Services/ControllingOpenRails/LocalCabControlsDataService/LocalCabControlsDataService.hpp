@@ -5,11 +5,16 @@
  *  ORC         | 2.3.0
  *
  *  ###Description
+ *  This service is used as a storage of member variables of IncrementalCabControlService.
+ *
  *  This data service stores the local state of cab controls.
- *  It does not represent the current numbers in Open Rails, only what we think they should be
+ *  It does not represent the current numbers in Open Rails, only what we think they should be.
+ *  At the beginning, these values are zero initialised and then we "blindly" increase/decrease them
+ *  (meaning we do not lookup these values from the Open Rails).
  *
  *  ###Contributors
  *  kubicpa3
+ *  rehorja8
  */
 
 #pragma once
