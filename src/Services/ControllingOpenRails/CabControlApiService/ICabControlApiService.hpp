@@ -5,14 +5,14 @@
  *  ORC         | 2.3.0
  *
  *  ### Description
- *  Service for POSTing to the OpenRails API in order to manage
+ *  Service for POSTing to the Open Rails API in order to manage
  *  the train's controls (brakes, throttle, ...).
  *
+ *
  *  ### Usage
- *  The service should send multiple controls in a single request.
- *  For setting of individual controls, you use the SetXxx() methods. Then you call the SendAndClear() method.
- *  This POSTs the controls and clears the internal state of the service (the state is controls set by the SetXxx() methods).
- *  You can also clear the state by calling Clear().
+ *  1) Create a new instance of CabControlRequest.
+ *  2) Fill this object with desired changes through its SetXxx() methods.
+ *  3) Send this object to the Open Rails API via ICabControlApiService::Send(request).
  *
  *  ### Contributors
  *  rehorja8
@@ -24,16 +24,11 @@
 
 #include "IService.hpp"
 #include "DirectionLeverPosition.hpp"
+#include "ControllingOpenRails/CabControlApiService/CabControlRequest/CabControlRequest.hpp"
 
 class ICabControlApiService : public IService {
 public:
-    virtual void Clear() = 0;
-    virtual void SendAndClear() = 0;
-    virtual void SetThrottle(double percentage) = 0;
-    virtual void SetTrainBrake(double percentage) = 0;
-    virtual void SetEngineBrake(double percentage) = 0;
-    virtual void SetDynamicBrake(double percentage) = 0;
-    virtual void SetDirection(DirectionLeverPosition position) = 0;
+    virtual void Send(const CabControlRequest& request) = 0;
     
     static constexpr ServiceType Type = ServiceType::CabControlApi;
 };
