@@ -54,11 +54,12 @@ void Application::Initialize(const std::string& mqttHostname, int mqttPort) {
     service_container->FetchService<MqttListenerService>()->SetMqttAddress(mqttHostname, mqttPort);
     
     // Services for controlling OpenRails
-    service_container->RegisterService<CabControlApiService>();
     service_container->RegisterService<TrainControlDataService>();
     service_container->RegisterService<MachineControlDataService>();
     service_container->RegisterService<LocalCabControlsDataService>();
+    service_container->RegisterService<IncrementalCabControlsDataService>();
     service_container->RegisterService<TrainControlUpdateService>();
+    service_container->RegisterService<CabControlApiService>();
 
 }
 

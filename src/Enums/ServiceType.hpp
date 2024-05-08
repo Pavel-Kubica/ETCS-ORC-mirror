@@ -28,11 +28,12 @@ enum class ServiceType {
     SimulationStateData,
     Database,
     BaliseData,
+    
+    // Controlling OpenRails
+    CabControlApi,
     TrainControlData,
     MachineControlData,
     TrainControlUpdate,
     LocalCabControlsData,
-    
-    // Controlling OpenRails
-    CabControlApi,
+    IncrementalCabControl
 };

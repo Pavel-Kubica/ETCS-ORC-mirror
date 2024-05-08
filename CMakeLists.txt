@@ -81,6 +81,8 @@ include_directories(lib
         src/Core/TopicWorker
         src/Services
         src/Services/ControllingOpenRails/
+        src/Services/ControllingOpenRails/LocalCabControlsDataService
+        src/Services/ControllingOpenRails/IncrementalCabControlService
         src/Services/ControllingOpenRails/CabControlApiService
         src/Services/ControllingOpenRails/TrainControlUpdateService
         src/Services/Configuration
