@@ -71,7 +71,8 @@ bool IncrementalCabControlService::LpcSaidRestart() {
 
 // Returns true if incrementing thread has no more work to do
 bool IncrementalCabControlService::WorkDone() const {
-    return throttleIncrement == Increment::None && brakeIncrement == Increment::None;
+    return (throttleIncrement == Increment::None && brakeIncrement == Increment::None)
+           || !shouldRun;
 }
 
 void IncrementalCabControlService::DoChanges() {
