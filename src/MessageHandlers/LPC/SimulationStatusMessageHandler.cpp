@@ -16,7 +16,7 @@
 
 #include "SimulationStatusMessageHandler.hpp"
 #include <iostream>
- #include "OrcSimulationStatusMessage.hpp"
+#include "OrcSimulationStatusMessage.hpp"
 
 SimulationStatusMessageHandler::SimulationStatusMessageHandler(ServiceContainer& container)
     : MessageHandler(container), serviceContainer(container) {
