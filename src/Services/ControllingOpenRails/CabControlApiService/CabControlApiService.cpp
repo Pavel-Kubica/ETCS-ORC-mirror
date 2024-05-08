@@ -1,3 +1,16 @@
+/** @file CabControlApi.cpp
+ *
+ *  Component   | Subset version
+ *  :---------: | :-----------:
+ *  ORC         | 2.3.0
+ *
+ *  ### Description
+ *  Implementation of the ICabControlApiService interface (more info there).
+ *
+ *  ### Contributors
+ *  rehorja8
+ */
+
 #include <stdexcept>
 #include <sstream>
 #include "CabControlApiService.hpp"
@@ -25,6 +38,57 @@ bool CabControlApiService::LpcSaidRestart() {
     return this->LpcSaidStop() && this->LpcSaidStart();
 }
 
+void CabControlApiService::Initialize(ServiceContainer& container) {
+    this->jruLoggerService = container.FetchService<JRULoggerService>().get();
+    this->configurationService = container.FetchService<ConfigurationService>().get();
+    
+    // TODO: remove call to this method once the ORC is able to resolve messages from LPC.
+    this->LoadConfig();
+}
+
+void CabControlApiService::Send(const CabControlRequest& request) {
+    std::string requestBody = request.AsRequestBody();
+    
+    // TODO remove:
+    std::cerr << requestBody << std::endl;
+    
+    this->jruLoggerService->Log(true,
+                                MessageType::Debug,
+                                "CabControlApiService: doing post on OpenRails API with the request body: " +
+                                requestBody);
+    
+    auto response = cpr::PostAsync(
+            cpr::Url{this->url},
+            cpr::Header{{"Content-Type", "application/json"}},
+            cpr::Timeout{this->apiRequestTimeout},
+            cpr::Body{requestBody}
+    );
+    HttpResponseWrapper responseWrapper(
+            std::move(response),
+            std::move(requestBody)
+    );
+    
+    this->responseQueue.Push(std::move(responseWrapper));
+}
+
+bool CabControlApiService::HttpResponseWrapper::RepresentsFinalMessage() const {
+    return !(this->asyncResponse.has_value());
+}
+
+cpr::Response CabControlApiService::HttpResponseWrapper::GetResponse() {
+    return this->asyncResponse.value().get();
+}
+
+CabControlApiService::HttpResponseWrapper
+CabControlApiService::HttpResponseWrapper::CreateWrapperRepresentingFinalMessage() {
+    return {};
+}
+
+CabControlApiService::HttpResponseWrapper::HttpResponseWrapper(
+        cpr::AsyncWrapper<cpr::Response>&& response, std::string originalRequestBody)
+        : asyncResponse(std::move(response)), originalRequestBody(std::move(originalRequestBody)) {}
+
+
 void CabControlApiService::ResolveResponses() {
     while (true) {
         HttpResponseWrapper responseWrapper = this->responseQueue.Pop();
@@ -44,61 +108,10 @@ void CabControlApiService::ResolveResponses() {
             jruLoggerService->Log(true, MessageType::Error, error.str());
         } else {
             jruLoggerService->Log(
-                    MessageType::Debug,
+                    MessageType::Note,
                     "CabControlApiService: successful POST to OpenRails API. Original message: " +
                     responseWrapper.originalRequestBody
             );
         }
     }
 }
-
-void CabControlApiService::Initialize(ServiceContainer& container) {
-    this->jruLoggerService = container.FetchService<JRULoggerService>().get();
-    this->configurationService = container.FetchService<ConfigurationService>().get();
-    
-    this->LoadConfig();
-}
-
-void CabControlApiService::Send(const CabControlRequest& request) {
-    std::string requestBody = request.AsRequestBody();
-    
-    std::cerr << requestBody << std::endl;
-    
-    this->jruLoggerService->Log(MessageType::Debug,
-                                "CabControlApiService: doing post on OpenRails API with the request body: " +
-                                requestBody);
-    
-    auto response = cpr::PostAsync(
-            cpr::Url{this->url},
-            cpr::Header{{"Content-Type", "application/json"}},
-            cpr::Timeout{this->apiRequestTimeout},
-            cpr::Body{requestBody}
-    );
-    HttpResponseWrapper responseWrapper(
-            std::move(response),
-            std::move(requestBody)
-    );
-    
-    this->responseQueue.Push(std::move(responseWrapper));
-}
-
-
-
-bool CabControlApiService::HttpResponseWrapper::RepresentsFinalMessage() const {
-    return !(this->asyncResponse.has_value());
-}
-
-cpr::Response CabControlApiService::HttpResponseWrapper::GetResponse() {
-    return this->asyncResponse->get();
-}
-
-CabControlApiService::HttpResponseWrapper
-CabControlApiService::HttpResponseWrapper::CreateWrapperRepresentingFinalMessage() {
-    return {};
-}
-
-CabControlApiService::HttpResponseWrapper::HttpResponseWrapper(
-        cpr::AsyncWrapper<cpr::Response>&& response, std::string originalRequestBody)
-        : asyncResponse(std::move(response)), originalRequestBody(std::move(originalRequestBody)) {}
-
-

@@ -1,6 +1,10 @@
 #include "CabControlRequest.hpp"
 
 std::string CabControlRequest::AsRequestBody() const {
+    // Crafting the JSON manually, since Open Rails API does not recognize
+    // a valid JSON object, but a JavaScript object.
+    // See the function below this one for more info about this.
+    
     std::ostringstream stream;
     stream << '[';
     bool first = true;
@@ -14,6 +18,16 @@ std::string CabControlRequest::AsRequestBody() const {
     stream << ']';
     
     return stream.str();
+}
+
+std::ostream& operator<<(std::ostream& stream, CabControlRequest::RequestItem item) {
+    // Example of a correct representation: {TypeName: "THROTTLE", Value:0.4}
+    // NOTE: This is not a valid JSON object. Correct one should be {"TypeName": "THROTTLE", "Value":0.4};
+    //       This is the reason we have to create our own objects and don't use nlohmann::json.
+    
+    stream << "{TypeName: \"" << CabControlTypeToRequestString(item.controlType)
+           << "\", Value:" << item.value << '}';
+    return stream;
 }
 
 CabControlRequest& CabControlRequest::SetThrottle(double percentage) {
@@ -43,11 +57,3 @@ CabControlRequest& CabControlRequest::SetDirection(DirectionLeverPosition positi
     );
     return *this;
 }
-
-std::ostream& operator<<(std::ostream& stream, CabControlRequest::RequestItem item) {
-    // Example: {TypeName: "THROTTLE", Value:0.4}
-    stream << "{TypeName: \"" << CabControlTypeToRequestString(item.controlType)
-           << "\", Value:" << item.value << '}';
-    return stream;
-}
-// [{TypeName: "DIRECTION", Value: 1}]
