@@ -49,9 +49,6 @@ void CabControlApiService::Initialize(ServiceContainer& container) {
 void CabControlApiService::Send(const CabControlRequest& request) {
     std::string requestBody = request.AsRequestBody();
     
-    // TODO remove:
-    std::cerr << requestBody << std::endl;
-    
     this->jruLoggerService->Log(true,
                                 MessageType::Debug,
                                 "CabControlApiService: doing post on OpenRails API with the request body: " +
