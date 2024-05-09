@@ -16,8 +16,13 @@
 
 #include "ILpcManageable.hpp"
 #include "IService.hpp"
+#include "Distance.hpp"
 
 class ISimulationStateApiService: public IService {
 public:
     static constexpr ServiceType Type = ServiceType::SimulationStateApi;
+
+    virtual void SetStartingPoint(const Distance& startingPoint) = 0;
+
+    virtual void StartSendingOdoMessages(const std::chrono::milliseconds& interval) = 0;
 };

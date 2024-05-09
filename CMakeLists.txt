@@ -69,6 +69,7 @@ include_directories(lib
         cem/Messages
         cem/Messages/ToJRU
         cem/Messages/Lpc/Orc
+        cem/Messages/Evc/Odo
         cem/Exceptions
         cem/Exceptions/InternalStateMessageExceptions
         cem/Other
@@ -95,9 +96,10 @@ include_directories(lib
         src/Services/Database/Utils
         src/Services/BaliseData
         src/Services/SimulationStateApi
-        src/Serivces/Btm
+        src/Services/Btm
         src/MessageHandlers
         src/MessageHandlers/LPC
+        src/MessageHandlers/EVC
         src/Enums
         src/Configurations
         src/Utils

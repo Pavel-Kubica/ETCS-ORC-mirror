@@ -23,6 +23,7 @@
 #include "ConfigurationService.hpp"
 #include "ISimulationStateSender.hpp"
 #include "JRULoggerService.hpp"
+#include "Distance.hpp"
 
 class SimulationStateApiService: public ISimulationStateApiService, public IInitializable, public ILpcManageable {
 public:
@@ -33,6 +34,10 @@ public:
     bool LpcSaidStop() override;
 
     bool LpcSaidRestart() override;
+
+    void SetStartingPoint(const Distance& startingPoint) override;
+
+    void StartSendingOdoMessages(const std::chrono::milliseconds& interval) override;
 
 private:
     void CallApiInALoop();
@@ -54,4 +59,5 @@ private:
     std::thread simulationStateGettingThread;
     std::thread orcToGuiSenderThread;
     std::thread odoToEvcSenderThread;
+    Distance startingPoint = 0;
 };

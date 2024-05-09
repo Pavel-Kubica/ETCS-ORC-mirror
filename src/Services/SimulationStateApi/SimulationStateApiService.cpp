@@ -71,6 +71,7 @@ void SimulationStateApiService::CallApiInALoop() {
                 nlohmann::json j = nlohmann::json::parse(response.text);
                 jruLoggerService->Log(true, MessageType::Debug, "SimulationStateApiService: Response from Open Rails: " + j.dump());
                 SimulationState currentState = SimulationStateFromJson(j);
+                currentState.distanceTravelledInMetres += startingPoint.GetMeters();    // add the starting offset received from EVC
                 SimulationState previousState = simulationStateDataService->GetSimulationState();
                 simulationStateDataService->SetSimulationState(currentState);
                 btmService->CheckIfBaliseWasPassed(previousState.distanceTravelledInMetres, currentState.distanceTravelledInMetres);
@@ -107,5 +108,15 @@ void SimulationStateApiService::SendMessagesToAComponent(ISimulationStateSender*
         std::this_thread::sleep_until(start + interval);
         start = std::chrono::steady_clock::now();
         sender->SendSimulationState(simulationStateDataService->GetSimulationState());
+    }
+}
+
+void SimulationStateApiService::SetStartingPoint(const Distance& _startingPoint) {
+    startingPoint = _startingPoint;
+}
+
+void SimulationStateApiService::StartSendingOdoMessages(const std::chrono::milliseconds& interval) {
+    if (odoToEvcSenderThread.get_id() == std::thread::id()) {   // thread is not running yet
+        odoToEvcSenderThread = std::thread(&SimulationStateApiService::SendMessagesToAComponent, this, odoToEvcSender, interval);
     }
 }
