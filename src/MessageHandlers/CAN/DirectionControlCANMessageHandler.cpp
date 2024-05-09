@@ -18,6 +18,8 @@ DirectionControlCANMessageHandler::DirectionControlCANMessageHandler(
     ServiceContainer& services
 ) : MessageHandler(services) {
     jruLoggerService = services.FetchService<JRULoggerService>().get();
+    humanControlDataService = services.FetchService<IHumanControlDataService>().get();
+    trainControlUpdateService = services.FetchService<ITrainControlUpdateService>().get();
 }
 
 void DirectionControlCANMessageHandler::HandleMessageBody(const Message& message) {
@@ -25,6 +27,9 @@ void DirectionControlCANMessageHandler::HandleMessageBody(const Message& message
 
     jruLoggerService->Log(true, MessageType::Note, "[CAN] ----> [ORC] || Control: %battery%, Direction: %direction%",
                           msg.GetControl(), msg.GetDirectionLeverPosition());
+    humanControlDataService->SetTrainDirection(msg.GetDirectionLeverPosition());
+    humanControlDataService->SetCab(msg.GetControl());
+    trainControlUpdateService->Update();
 }
 
 std::unique_ptr<Message> DirectionControlCANMessageHandler::GetEmptyMessage() const {

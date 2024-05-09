@@ -108,6 +108,7 @@ include_directories(lib
         src/Services/BalisesFromJson
         src/MessageHandlers
         src/MessageHandlers/LPC
+        src/MessageHandlers/CAN
         src/Enums
         src/Configurations
         src/Utils

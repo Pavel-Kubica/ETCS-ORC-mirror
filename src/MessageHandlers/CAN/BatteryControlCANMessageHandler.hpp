@@ -15,6 +15,8 @@
 
 #include "MessageHandler.hpp"
 #include "JRULoggerService.hpp"
+#include "IHumanControlDataService.hpp"
+#include "ITrainControlUpdateService.hpp"
 
 class BatteryControlCANMessageHandler : public MessageHandler {
 public:
@@ -25,4 +27,6 @@ private:
     std::unique_ptr<Message> GetEmptyMessage() const override;
 
     JRULoggerService* jruLoggerService;
+    IHumanControlDataService* humanControlDataService;
+    ITrainControlUpdateService* trainControlUpdateService;
 };
