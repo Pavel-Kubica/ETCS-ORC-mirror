@@ -83,12 +83,19 @@ include_directories(lib
         src/Core/TopicWorker
         src/Messages
         src/Services
+        src/Services/ControllingOpenRails/
+        src/Services/ControllingOpenRails/LocalCabControlsDataService
+        src/Services/ControllingOpenRails/IncrementalCabControlService
+        src/Services/ControllingOpenRails/CabControlApiService
+        src/Services/ControllingOpenRails/TrainControlUpdateService
         src/Services/Configuration
+        src/Services/ControllingOpenRails/MachineControlData
         src/Services/MessageHandlersService
         src/Services/MqttListener
         src/Services/MqttPublisher
         src/Services/JRULogger
         src/Services/Time
+        src/Services/ControllingOpenRails/HumanControlData
         src/Services/SimulationStateData
         src/Services/SimulationStateSender
         src/Services/Database
