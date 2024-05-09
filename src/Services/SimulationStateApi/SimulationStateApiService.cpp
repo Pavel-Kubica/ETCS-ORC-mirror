@@ -93,14 +93,14 @@ void SimulationStateApiService::CallApiInALoop() {
 
 SimulationState SimulationStateApiService::SimulationStateFromJson(const nlohmann::json& json) {
     SimulationState state;
-    state.distanceTravelledInMetres = json.at("distanceTravelledInMetres");
-    state.speedInMetresPerSecond = json.at("speedInMetresPerSecond");
-    state.accelerationInMetersPerSecondSquared = json.at("accelerationInMetersPerSecondSquared");
-    state.throttleLeverPercentage = json.at("throttleLeverPercentage");
-    state.direction = json.at("direction");
-    state.motiveForceInNewtons = json.at("motiveForceInNewtons");
-    state.brakeCylinderPressureInPsi = json.at("brakeCylinderPressureInPsi");
-    state.mainPipeBrakePressureInPsi = json.at("mainPipeBrakePressureInPsi");
+    state.distanceTravelledInMetres = json.at("DistanceTravelledInMetres");
+    state.speedInMetresPerSecond = json.at("SpeedInMetresPerSecond");
+    state.accelerationInMetersPerSecondSquared = json.at("AccelerationInMetersPerSecondSquared");
+    state.throttleLeverPercentage = json.at("ThrottleLeverPercentage");
+    state.direction = json.at("Direction");
+    state.motiveForceInNewtons = json.at("MotiveForceInNewtons");
+    state.brakeCylinderPressureInPsi = json.at("BrakeCylinderPressureInPsi");
+    state.mainPipeBrakePressureInPsi = json.at("MainPipeBrakePressureInPsi");
 
     return state;
 }
