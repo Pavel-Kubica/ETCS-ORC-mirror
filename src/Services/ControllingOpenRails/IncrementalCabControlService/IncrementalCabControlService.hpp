@@ -23,7 +23,7 @@
 
 #include "AsyncProperty.hpp"
 #include "Increment.hpp"
-#include "IncrementCabControlConfiguration.hpp"
+#include "IncrementalCabControlConfiguration.hpp"
 #include <chrono>
 #include <atomic>
 #include <thread>
@@ -58,7 +58,7 @@ private:
     Increment brakeIncrement;
     
     // Loading from config files
-    IncrementCabControlConfiguration config;
+    IncrementalCabControlConfiguration config;
     ConfigurationService* configurationService;
     
     // Says if the incrementing thread should be running or not

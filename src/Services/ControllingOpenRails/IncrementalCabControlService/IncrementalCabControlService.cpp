@@ -21,7 +21,7 @@ void IncrementalCabControlService::Initialize(ServiceContainer& container) {
     localCabControlsDataService = container.FetchService<ILocalCabControlsDataService>().get();
     configurationService = container.FetchService<ConfigurationService>().get();
     
-    this->config = configurationService->FetchConfiguration<IncrementCabControlConfiguration>();
+    this->config = configurationService->FetchConfiguration<IncrementalCabControlConfiguration>();
     
     localCabControlsDataService->SetThrottleStep(config.throttleStep);
     localCabControlsDataService->SetEngineBrakeStep(config.brakeStep);

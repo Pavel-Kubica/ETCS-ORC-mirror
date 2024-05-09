@@ -1,4 +1,4 @@
-/** @file IncrementCabControlConfiguration.hpp
+/** @file IncrementalCabControlConfiguration.hpp
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
@@ -16,9 +16,9 @@
 #include <chrono>
 #include "json.hpp"
 
-class IncrementCabControlConfiguration {
+class IncrementalCabControlConfiguration {
 public:
-    static constexpr char FileName[] = "increment-cab-controls-configuration.json";
+    static constexpr char FileName[] = "incremental-cab-controls-configuration.json";
     
     void from_json(const nlohmann::json& j);
     [[nodiscard]] nlohmann::json to_json() const;
