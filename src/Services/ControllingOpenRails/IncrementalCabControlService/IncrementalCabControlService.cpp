@@ -19,8 +19,12 @@
 void IncrementalCabControlService::Initialize(ServiceContainer& container) {
     cabControlApiService = container.FetchService<ICabControlApiService>().get();
     localCabControlsDataService = container.FetchService<ILocalCabControlsDataService>().get();
-    localCabControlsDataService->SetThrottleStep(THROTTLE_STEP);
-    localCabControlsDataService->SetEngineBrakeStep(BRAKE_STEP);
+    configurationService = container.FetchService<ConfigurationService>().get();
+    
+    this->config = configurationService->FetchConfiguration<IncrementCabControlConfiguration>();
+    
+    localCabControlsDataService->SetThrottleStep(config.throttleStep);
+    localCabControlsDataService->SetEngineBrakeStep(config.brakeStep);
 }
 
 void IncrementalCabControlService::StartIncreasingThrottle() {
@@ -100,7 +104,7 @@ void IncrementalCabControlService::IncrementingThreadEntryPoint() {
         lk.unlock();
         
         cabControlApiService->Send(request);
-        std::this_thread::sleep_for(TIMEOUT_BETWEEN_INCREMENTS);
+        std::this_thread::sleep_for(config.timeBetweenIncrements);
     }
 }
 

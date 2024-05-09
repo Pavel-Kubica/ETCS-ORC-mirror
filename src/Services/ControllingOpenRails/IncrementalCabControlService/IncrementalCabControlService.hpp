@@ -15,6 +15,7 @@
 #pragma once
 
 #include "IIncrementalCabControlService.hpp"
+#include "ConfigurationService.hpp"
 #include "IInitializable.hpp"
 #include "ILpcManageable.hpp"
 #include "ILocalCabControlsDataService.hpp"
@@ -22,6 +23,7 @@
 
 #include "AsyncProperty.hpp"
 #include "Increment.hpp"
+#include "IncrementCabControlConfiguration.hpp"
 #include <chrono>
 #include <atomic>
 #include <thread>
@@ -30,12 +32,6 @@
 class IncrementalCabControlService : public IInitializable,
                                      public ILpcManageable,
                                      public IIncrementalCabControlService {
-private:
-    // TODO load all of these from config?
-    static constexpr double THROTTLE_STEP = 0.01;
-    static constexpr double BRAKE_STEP = 0.01;
-    static constexpr std::chrono::duration TIMEOUT_BETWEEN_INCREMENTS = std::chrono::milliseconds(300);
-
 protected:
     void Initialize(ServiceContainer& container) override;
 public:
@@ -60,6 +56,10 @@ private:
     
     Increment throttleIncrement;
     Increment brakeIncrement;
+    
+    // Loading from config files
+    IncrementCabControlConfiguration config;
+    ConfigurationService* configurationService;
     
     // Says if the incrementing thread should be running or not
     std::atomic_bool shouldRun;
