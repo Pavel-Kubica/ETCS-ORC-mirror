@@ -72,7 +72,7 @@ public:
     }
 
 private:
-    MessageID id = MessageID::EVCtoJRU;     // TODO: change to ORCtoJRU
+    MessageID id = MessageID::ORCtoJRU;
     IMqttPublisherService* publisher;
     std::string resetColor = "\033[0m";
 
