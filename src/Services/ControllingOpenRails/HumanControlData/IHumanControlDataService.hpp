@@ -1,11 +1,11 @@
-/** @file ITrainControlDataService.hpp
+/** @file IHumanControlDataService.hpp
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
  *  ORC         | 2.3.0
  *
  *  ###Description
- *  Interface for TrainControlDataService
+ *  Interface for HumanControlDataService
  *
  *  ###Contributors
  *  kubicpa3
@@ -17,7 +17,7 @@
 #include "DirectionLeverPosition.hpp"
 #include "DrivingLeverPosition.hpp"
 
-class ITrainControlDataService : public IService {
+class IHumanControlDataService : public IService {
 public:
     [[nodiscard]] virtual bool GetBattery() const = 0;
 

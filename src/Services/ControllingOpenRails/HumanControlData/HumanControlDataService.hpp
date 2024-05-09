@@ -1,4 +1,4 @@
-/** @file TrainControlDataService.hpp
+/** @file HumanControlDataService.hpp
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
@@ -11,13 +11,13 @@
  *  kubicpa3
  */
 
-#include "ITrainControlDataService.hpp"
+#include "IHumanControlDataService.hpp"
 #include <atomic>
 #include "AsyncProperty.hpp"
 
-class TrainControlDataService : public ITrainControlDataService {
+class HumanControlDataService : public IHumanControlDataService {
 public:
-    TrainControlDataService();
+    HumanControlDataService();
 
     [[nodiscard]] bool GetBattery() const override;
 

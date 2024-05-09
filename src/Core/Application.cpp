@@ -29,6 +29,7 @@
 #include "ControllingOpenRails/TrainControlUpdateService/TrainControlUpdateService.hpp"
 #include "ControllingOpenRails/IncrementalCabControlService/IncrementalCabControlService.hpp"
 #include "LocalCabControlsDataService.hpp"
+#include "HumanControlDataService.hpp"
 
 
 #include <stdio.h> /* defines FILENAME_MAX */
@@ -38,7 +39,9 @@
 #include <direct.h>
 #define GetCurrentDir _getcwd
 #else
+
 #include <unistd.h>
+
 #define GetCurrentDir getcwd
 #endif
 
@@ -60,13 +63,12 @@ void Application::Initialize(const std::string& mqttHostname, int mqttPort) {
     service_container->FetchService<MqttListenerService>()->SetMqttAddress(mqttHostname, mqttPort);
     
     // Services for controlling OpenRails
-    service_container->RegisterService<TrainControlDataService>();
+    service_container->RegisterService<HumanControlDataService>();
     service_container->RegisterService<MachineControlDataService>();
     service_container->RegisterService<LocalCabControlsDataService>();
     service_container->RegisterService<IncrementalCabControlService>();
     service_container->RegisterService<TrainControlUpdateService>();
     service_container->RegisterService<CabControlApiService>();
-
 }
 
 void Application::Run() {

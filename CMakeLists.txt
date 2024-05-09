@@ -95,7 +95,7 @@ include_directories(lib
         src/Services/MqttPublisher
         src/Services/JRULogger
         src/Services/Time
-        src/Services/ControllingOpenRails/TrainControlData
+        src/Services/ControllingOpenRails/HumanControlData
         src/Services/SimulationStateData
         src/Services/SimulationStateSender
         src/Services/Database

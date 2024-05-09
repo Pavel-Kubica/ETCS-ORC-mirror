@@ -1,4 +1,4 @@
-/** @file TrainControlDataService.hpp
+/** @file HumanControlDataService.hpp
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
@@ -19,10 +19,10 @@
 #include "IInitializable.hpp"
 #include "../CabControlApiService/CabControlApiService.hpp"
 #include "../../MachineControlData/MachineControlDataService.hpp"
-#include "../../TrainControlData/TrainControlDataService.hpp"
 #include "../../../cem/Messages/Tiu/Evc/FromTIUMessage.hpp"
 #include "MqttPublisherService.hpp"
 #include "ILocalCabControlsDataService.hpp"
+#include "IHumanControlDataService.hpp"
 
 class TrainControlUpdateService : public ITrainControlUpdateService,
                                   public IInitializable {
@@ -34,7 +34,7 @@ public:
 
 private:
     ICabControlApiService* cabControlApiService;
-    ITrainControlDataService* trainControlDataService;
+    IHumanControlDataService* humanControlDataService;
     IMachineControlDataService* machineControlDataService;
     IMqttPublisherService* mqttPublisherService;
     IIncrementalCabControlService* incrementApiService;
@@ -47,4 +47,18 @@ private:
     void SetThrottleInternal(double value, CabControlRequest& request);
     
     void SetEngineBrakeInternal(double value, CabControlRequest& request);
+    
+    /**
+     * Handles the state of `this->machineControlDataService`.
+     * @return True if some handling was necessary, false otherwise.
+     * If (and only if) this function returns false, the state of the `this->humanControlDataService`
+     * should be handled.
+     */
+    bool HandleMachineInstructions(CabControlRequest & request);
+    
+    /**
+     * Handles the state of `this->humanControlDataService`.
+     */
+    void HandleHumanInstructions(CabControlRequest & request);
+    
 };
