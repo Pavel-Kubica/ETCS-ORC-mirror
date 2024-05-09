@@ -47,6 +47,9 @@ bool SimulationStateApiService::LpcSaidStop() {
     shouldStop = true;
     simulationStateGettingThread.join();
     orcToGuiSenderThread.join();
+    if (odoToEvcSenderThread.get_id() != std::thread::id()) {   // thread is running
+        odoToEvcSenderThread.join();
+    }
     return true;
 }
 
