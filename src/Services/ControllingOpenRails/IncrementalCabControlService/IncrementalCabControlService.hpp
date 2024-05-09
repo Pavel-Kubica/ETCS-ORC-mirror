@@ -32,9 +32,9 @@ class IncrementalCabControlService : public IInitializable,
                                      public IIncrementalCabControlService {
 private:
     // TODO load all of these from config?
-    static constexpr double THROTTLE_STEP = 0.02;
-    static constexpr double BRAKE_STEP = 0.02;
-    static constexpr std::chrono::duration TIMEOUT_BETWEEN_INCREMENTS = std::chrono::milliseconds(100);
+    static constexpr double THROTTLE_STEP = 0.01;
+    static constexpr double BRAKE_STEP = 0.01;
+    static constexpr std::chrono::duration TIMEOUT_BETWEEN_INCREMENTS = std::chrono::milliseconds(300);
 
 protected:
     void Initialize(ServiceContainer& container) override;

@@ -22,6 +22,7 @@
 #include "../../TrainControlData/TrainControlDataService.hpp"
 #include "../../../cem/Messages/Tiu/Evc/FromTIUMessage.hpp"
 #include "MqttPublisherService.hpp"
+#include "ILocalCabControlsDataService.hpp"
 
 class TrainControlUpdateService : public ITrainControlUpdateService,
                                   public IInitializable {
@@ -36,10 +37,14 @@ private:
     ITrainControlDataService* trainControlDataService;
     IMachineControlDataService* machineControlDataService;
     IMqttPublisherService* mqttPublisherService;
-    IIncrementalCabControlService* incrementalCabControlsService;
+    IIncrementalCabControlService* incrementApiService;
+    ILocalCabControlsDataService* openRailsState;
     
     void SendFromTiuMessageToEvc();
     
     void SendOpenRailsCabControlsRequest();
     
+    void SetThrottleInternal(double value, CabControlRequest& request);
+    
+    void SetEngineBrakeInternal(double value, CabControlRequest& request);
 };

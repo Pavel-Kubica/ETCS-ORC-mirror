@@ -20,7 +20,8 @@ void TrainControlUpdateService::Initialize(ServiceContainer& container) {
     trainControlDataService = container.FetchService<ITrainControlDataService>().get();
     machineControlDataService = container.FetchService<IMachineControlDataService>().get();
     mqttPublisherService = container.FetchService<IMqttPublisherService>().get();
-    incrementalCabControlsService = container.FetchService<IIncrementalCabControlService>().get();
+    incrementApiService = container.FetchService<IIncrementalCabControlService>().get();
+    openRailsState = container.FetchService<ILocalCabControlsDataService>().get();
 }
 
 void TrainControlUpdateService::Update() {
@@ -49,10 +50,54 @@ void TrainControlUpdateService::SendFromTiuMessageToEvc() {
 }
 
 void TrainControlUpdateService::SendOpenRailsCabControlsRequest() {
-    if (!trainControlDataService->GetBattery() || !trainControlDataService->GetCab())
+    if (!trainControlDataService->GetBattery() || !trainControlDataService->GetCab()) {
         return; // Cannot control the train if we are switched off
+    }
+    
+    CabControlRequest apiRequest;
+    apiRequest.SetDirection(trainControlDataService->GetTrainDirection());
+    
+    // TODO: brake, train brake
+    
+    switch (trainControlDataService->GetDrivingLever()) {
+        case DrivingLeverPosition::Accelerate:
+            this->incrementApiService->StartIncreasingThrottle();
+            this->SetEngineBrakeInternal(0, apiRequest);
+            break;
+        case DrivingLeverPosition::Continue:
+            this->incrementApiService->StopChangingThrottle();
+            this->incrementApiService->StartDecreasingEngineBrake();
+            break;
+        case DrivingLeverPosition::Neutral:
+            this->incrementApiService->StartDecreasingThrottle();
+            this->incrementApiService->StopChangingEngineBrake();
+            break;
+        case DrivingLeverPosition::ElectrodynamicBrake:
+            this->SetThrottleInternal(0, apiRequest);
+            this->incrementApiService->StartIncreasingEngineBrake();
+            break;
+        case DrivingLeverPosition::PneumaticBrake:
+            this->SetThrottleInternal(0, apiRequest);
+            this->incrementApiService->StartIncreasingEngineBrake();
+            break;
+        case DrivingLeverPosition::QuickBrake:
+            this->SetThrottleInternal(0, apiRequest);
+            this->SetEngineBrakeInternal(1, apiRequest);
+            break;
+    }
+    
+    this->cabControlApiService->Send(apiRequest);
+}
 
-    // TODO interpret brake/throttle positions from DrivingLeverPosition
+void TrainControlUpdateService::SetThrottleInternal(double value, CabControlRequest& request) {
+    this->incrementApiService->StopChangingThrottle();
+    request.SetThrottle(value);
+    this->openRailsState->SetThrottle(value);
+}
 
+void TrainControlUpdateService::SetEngineBrakeInternal(double value, CabControlRequest& request) {
+    this->incrementApiService->StopChangingEngineBrake();
+    request.SetEngineBrake(value);
+    this->openRailsState->SetEngineBrake(value);
 }
 
