@@ -71,6 +71,7 @@ include_directories(lib
         cem/Messages/ToJRU
         cem/Messages/Lpc/Orc
         cem/Messages/Tiu/Evc
+        cem/Messages/Evc/Tiu
         cem/Exceptions
         cem/Exceptions/InternalStateMessageExceptions
         cem/Other
@@ -108,6 +109,7 @@ include_directories(lib
         src/Services/BalisesFromJson
         src/MessageHandlers
         src/MessageHandlers/LPC
+        src/MessageHandlers/TIU
         src/Enums
         src/Configurations
         src/Utils

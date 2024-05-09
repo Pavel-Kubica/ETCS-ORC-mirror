@@ -14,10 +14,12 @@
  */
 
 #include "MessageHandlersService.hpp"
+#include "TiuMessageHandler.hpp"
 #include "SimulationStatusMessageHandler.hpp"
 
 void MessageHandlersService::Initialize(ServiceContainer& container) {
     messageHandlers[MessageID::SimulationStatusLPCtoORC] = std::make_shared<SimulationStatusMessageHandler>(container);
+    messageHandlers[MessageID::ToTIU] = std::make_shared<TiuMessageHandler>(container);
 }
 
 std::map<MessageID, std::shared_ptr<MessageHandler>> MessageHandlersService::GetAllHandlers() const {
