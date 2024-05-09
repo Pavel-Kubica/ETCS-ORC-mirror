@@ -69,6 +69,7 @@ include_directories(lib
         cem/Messages
         cem/Messages/ToJRU
         cem/Messages/Lpc/Orc
+        cem/Messages/Tiu/Evc
         cem/Exceptions
         cem/Exceptions/InternalStateMessageExceptions
         cem/Other
