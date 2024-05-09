@@ -41,6 +41,7 @@ file(GLOB_RECURSE SOURCE
         cem/Other/BaliseGroup.cpp
         cem/Other/Balise.cpp
         cem/Other/Telegram.cpp
+        cem/Utils/Bitstring.cpp
 )
 # Exclude files in the 'cem/test' directory
 file(GLOB_RECURSE CEM_TEST_FILES
@@ -77,6 +78,7 @@ include_directories(lib
         cem/Other/CommunicationData/Dmi
         cem/Packets
         cem/Packets/Factory
+        cem/Utils
         src
         src/Core
         src/Services/ControllingOpenRails/CabControlApiService/CabControlRequest
