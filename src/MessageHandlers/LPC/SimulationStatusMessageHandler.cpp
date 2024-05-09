@@ -23,15 +23,8 @@ SimulationStatusMessageHandler::SimulationStatusMessageHandler(ServiceContainer&
     mqttListener = container.FetchService<IMqttListenerService>().get();
     jruLoggerService = container.FetchService<JRULoggerService>().get();
 }
-void SimulationStatusMessageHandler::HandleMessageBody(const nlohmann::json& data) {
-    // Try to get the message
-    OrcSimulationStatusMessage msg;
-    try {
-        msg.from_json(data);
-    } catch (nlohmann::json::out_of_range& e) {
-        jruLoggerService->Log(true, MessageType::Error, "Message received was in wrong format. e: %e%", e.what());
-        return;
-    }
+void SimulationStatusMessageHandler::HandleMessageBody(const Message& message) {
+    const auto& msg = static_cast<const OrcSimulationStatusMessage&>(message);
 
     // Log that the message has been received
     jruLoggerService->Log(true, MessageType::Note, "[LPC] ----> [ORC] |1150| Simulation status: %status%",
@@ -56,4 +49,8 @@ void SimulationStatusMessageHandler::HandleMessageBody(const nlohmann::json& dat
     } else {
         serviceContainer.LpcSaidRestart();
     }
+}
+
+std::unique_ptr<Message> SimulationStatusMessageHandler::GetEmptyMessage() const {
+    return std::make_unique<OrcSimulationStatusMessage>();
 }

@@ -12,13 +12,17 @@
  *  zimaluk1
  *  veselo21
  *  hamaljan
+ *  cajantom
  */
 
 #pragma once
 
- #include "ServiceContainer.hpp"
- #include "ITimeService.hpp"
+#include <memory>
 
+#include "ServiceContainer.hpp"
+#include "ITimeService.hpp"
+
+#include "Message.hpp"
 #include "MessageID.hpp"
 #include "json.hpp"
 
@@ -31,13 +35,17 @@ public:
         timeService = container.FetchService<ITimeService>().get();
     }
     /**
-     * Deserializes the json into it's corresponding message and handles the message
-     * @param data Message in nlohmann:json data
+     * Handles the message
+     * @param message The message. Must be the same runtime type as the message returned by GetEmptyMessage
      */
-    void HandleMessage(const nlohmann::json& data) { HandleMessageBody(data); }
+    void HandleMessage(const Message& data) { HandleMessageBody(data); }
+    /**
+     * Creates an empty message of the type accepted by the handler
+     */
+    virtual std::unique_ptr<Message> GetEmptyMessage() const = 0;
 
 protected:
-    virtual void HandleMessageBody(const nlohmann::json& data) = 0;
+    virtual void HandleMessageBody(const Message& data) = 0;
 
     ITimeService* timeService;
 };

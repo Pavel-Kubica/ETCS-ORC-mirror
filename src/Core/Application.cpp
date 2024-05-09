@@ -23,6 +23,7 @@
 #include "SimulationStateData/SimulationStateDataService.hpp"
 #include "BaliseDataService.hpp"
 #include "DatabaseService.hpp"
+#include "BtmService.hpp"
 #include "GuiSimulationStateSenderService.hpp"
 #include "OdoToEvcSenderService.hpp"
 #include "ControllingOpenRails/CabControlApiService/CabControlApiService.hpp"
@@ -30,6 +31,7 @@
 #include "ControllingOpenRails/IncrementalCabControlService/IncrementalCabControlService.hpp"
 #include "LocalCabControlsDataService.hpp"
 #include "HumanControlDataService.hpp"
+
 
 
 #include <stdio.h> /* defines FILENAME_MAX */
@@ -56,6 +58,7 @@ void Application::Initialize(const std::string& mqttHostname, int mqttPort) {
     service_container->RegisterService<SimulationStateDataService>();
     service_container->RegisterService<BaliseDataService>();
     service_container->RegisterService<DatabaseService>();
+    service_container->RegisterService<BtmService>();
     service_container->RegisterService<GuiSimulationStateSenderService>();
     service_container->RegisterService<OdoToEvcSenderService>();
     // set mqtt ip and port from method arguments

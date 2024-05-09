@@ -53,14 +53,14 @@ bool DatabaseService::Connect() {
 }
 
 bool DatabaseService::LoadDataFromDatabase() {
-    if (!LoadBaliseGroups()) {
+    if (!LoadBalises()) {
         jruLoggerService->Log(MessageType::Fatal, "Could not load balises from database");
         return false;
     }
     return true;
 }
 
-bool DatabaseService::LoadBaliseGroups() {
+bool DatabaseService::LoadBalises() {
     std::unique_ptr<sql::Statement> sqlStatement;
     std::unique_ptr<sql::ResultSet> sqlResultSet;
     try {
@@ -71,7 +71,7 @@ bool DatabaseService::LoadBaliseGroups() {
         return false;
     }
 
-    std::map<uint32_t, std::shared_ptr<BaliseGroup>> baliseGroups;
+    std::vector<std::unique_ptr<Balise>> balises;
 
     while (sqlResultSet->next()) {
         // Getting the data from this result row
@@ -91,21 +91,12 @@ bool DatabaseService::LoadBaliseGroups() {
 
         Balise balise(baliseID, telegram, absPos);
 
-        bool isLast = (telegram.N_PIG == telegram.N_TOTAL);  // this determines if this balise is last in its group
-
-        if (baliseGroups.find(telegram.NID_BG) == baliseGroups.end()) {  // if bgID is not known yet, create new group
-            baliseGroups.insert({telegram.NID_BG, std::make_shared<BaliseGroup>(BaliseGroup(telegram.NID_BG))});
-        }
-        baliseGroups[telegram.NID_BG]->GetBalises().push_back(std::make_shared<Balise>(balise));  // add this balise to its balise group
-
-        if (isLast) {  // if this balise is last then we base this balise group position on this balise
-            baliseGroups[telegram.NID_BG]->SetAbsPosition(absPos);
-        }
+        balises.push_back(std::make_unique<Balise>(balise));
     }
 
-    baliseDataService->SetBaliseGroups(baliseGroups);
+    baliseDataService->SetBalises(std::move(balises));
 
-    jruLoggerService->Log(true, MessageType::Info, "Successfully loaded balise groups from database");
+    jruLoggerService->Log(true, MessageType::Info, "Successfully loaded balises from database");
 
     return true;
 }
