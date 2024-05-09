@@ -27,6 +27,7 @@
 #include "GuiSimulationStateSenderService.hpp"
 #include "OdoToEvcSenderService.hpp"
 #include "ControllingOpenRails/CabControlApiService/CabControlApiService.hpp"
+#include "BalisesFromJsonService.hpp"
 
 
 
@@ -51,7 +52,7 @@ void Application::Initialize(const std::string& mqttHostname, int mqttPort) {
     service_container->RegisterService<MqttListenerService>();
     service_container->RegisterService<SimulationStateDataService>();
     service_container->RegisterService<BaliseDataService>();
-    service_container->RegisterService<DatabaseService>();
+    service_container->RegisterService<BalisesFromJsonService>();
     service_container->RegisterService<BtmService>();
     service_container->RegisterService<GuiSimulationStateSenderService>();
     service_container->RegisterService<OdoToEvcSenderService>();
