@@ -89,13 +89,13 @@ include_directories(lib
         src/Services/ControllingOpenRails/CabControlApiService
         src/Services/ControllingOpenRails/TrainControlUpdateService
         src/Services/Configuration
-        src/Services/MachineControlData
+        src/Services/ControllingOpenRails/MachineControlData
         src/Services/MessageHandlersService
         src/Services/MqttListener
         src/Services/MqttPublisher
         src/Services/JRULogger
         src/Services/Time
-        src/Services/TrainControlData
+        src/Services/ControllingOpenRails/TrainControlData
         src/Services/SimulationStateData
         src/Services/SimulationStateSender
         src/Services/Database
