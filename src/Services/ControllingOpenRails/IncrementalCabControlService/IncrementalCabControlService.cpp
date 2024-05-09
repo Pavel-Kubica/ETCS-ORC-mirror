@@ -30,7 +30,7 @@ void IncrementalCabControlService::StartIncreasingThrottle() {
 }
 
 void IncrementalCabControlService::StopChangingThrottle() {
-    std::lock_guard lck(this->mtx); // TODO: this might not be here
+    std::lock_guard lck(this->mtx);
     throttleIncrement = Increment::None;
     cv.notify_one();
 }
@@ -48,7 +48,7 @@ void IncrementalCabControlService::StartIncreasingEngineBrake() {
 }
 
 void IncrementalCabControlService::StopChangingEngineBrake() {
-    std::lock_guard lck(this->mtx); // TODO: this might not be here
+    std::lock_guard lck(this->mtx);
     brakeIncrement = Increment::None;
     cv.notify_one();
 }
@@ -69,12 +69,11 @@ bool IncrementalCabControlService::LpcSaidStart() {
 }
 
 bool IncrementalCabControlService::LpcSaidStop() {
-    {
-        std::lock_guard lck(this->mtx);
-        shouldRun = false;
-        cv.notify_one();
-    }
-    
+    std::unique_lock lck(this->mtx);
+    shouldRun = false;
+    cv.notify_one();
+    lck.unlock();
+
     // `this->mtx` has to be unlocked when `.join()` is called
     incrementingThread.join();
     return true;
