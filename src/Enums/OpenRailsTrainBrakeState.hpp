@@ -22,7 +22,6 @@ enum class OpenRailsTrainBrakeState : int8_t {
     EMERGENCY = 110
 };
 
-inline double toDouble(OpenRailsTrainBrakeState brakeState)
-{
+inline double toDouble(OpenRailsTrainBrakeState brakeState) {
     return static_cast<double>(brakeState) / 100.0;
 }

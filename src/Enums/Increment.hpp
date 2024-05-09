@@ -14,8 +14,7 @@
 #pragma once
 #include <cstdint>
 
-enum class Increment : int8_t
-{
+enum class Increment : int8_t {
     Positive = 1,
     None = 0,
     Negative = -1
