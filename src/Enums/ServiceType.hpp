@@ -31,6 +31,7 @@ enum class ServiceType {
     Database,
     BaliseData,
     Btm,
+    BalisesFromJson,
     
     // Controlling OpenRails
     CabControlApi,

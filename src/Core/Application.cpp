@@ -31,6 +31,7 @@
 #include "ControllingOpenRails/IncrementalCabControlService/IncrementalCabControlService.hpp"
 #include "LocalCabControlsDataService.hpp"
 #include "HumanControlDataService.hpp"
+#include "BalisesFromJsonService.hpp"
 
 
 
@@ -41,9 +42,7 @@
 #include <direct.h>
 #define GetCurrentDir _getcwd
 #else
-
 #include <unistd.h>
-
 #define GetCurrentDir getcwd
 #endif
 
@@ -57,7 +56,7 @@ void Application::Initialize(const std::string& mqttHostname, int mqttPort) {
     service_container->RegisterService<MqttListenerService>();
     service_container->RegisterService<SimulationStateDataService>();
     service_container->RegisterService<BaliseDataService>();
-    service_container->RegisterService<DatabaseService>();
+    service_container->RegisterService<BalisesFromJsonService>();
     service_container->RegisterService<BtmService>();
     service_container->RegisterService<GuiSimulationStateSenderService>();
     service_container->RegisterService<OdoToEvcSenderService>();

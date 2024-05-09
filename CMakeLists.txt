@@ -102,6 +102,7 @@ include_directories(lib
         src/Services/Database/Utils
         src/Services/BaliseData
         src/Services/Btm
+        src/Services/BalisesFromJson
         src/MessageHandlers
         src/MessageHandlers/LPC
         src/Enums

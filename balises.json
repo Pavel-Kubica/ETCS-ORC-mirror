@@ -1,0 +1,706 @@
+[
+    {
+        "baliseId": "9da483cb-9261-4fce-9b03-38d802585935",
+        "balisePosInMeters": 190,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 50,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "902dcdf8-7eb9-4444-af86-33193215bd88",
+        "balisePosInMeters": 194,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 50,
+            "NID_C": 513,
+            "N_PIG": 1,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "4db19623-8331-4c81-9b7c-e8aebc03033b",
+        "balisePosInMeters": 580,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 51,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 0,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "7949c5ca-400b-48cc-88ed-ced6c24a63b5",
+        "balisePosInMeters": 656,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 52,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "50b05f70-ca53-4964-9a79-37222d7b275d",
+        "balisePosInMeters": 660,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 52,
+            "NID_C": 513,
+            "N_PIG": 1,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "4e0848bd-e5b3-4b67-bcc7-d0eaa666bfd0",
+        "balisePosInMeters": 998,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 53,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "f666ade4-0a4f-4c21-ba00-f7bf2860c1b1",
+        "balisePosInMeters": 1002,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 53,
+            "NID_C": 513,
+            "N_PIG": 1,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "db5ffd82-7cc3-4969-a5a2-3171f46b120c",
+        "balisePosInMeters": 1340,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 54,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "b797f47e-a543-4bf4-979a-4083aba0000b",
+        "balisePosInMeters": 1344,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 54,
+            "NID_C": 513,
+            "N_PIG": 1,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "47529a09-a1cc-4ebf-8955-a16c39303eae",
+        "balisePosInMeters": 1420,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 55,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 0,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "e7e87dcd-3043-4c7a-ad8f-8d00fa537498",
+        "balisePosInMeters": 1806,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 56,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "0cdbbfb5-c081-4dc5-a2ba-734c8123170b",
+        "balisePosInMeters": 1810,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 56,
+            "NID_C": 513,
+            "N_PIG": 1,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "27f9d7c5-a439-47b4-9f38-1177586cbe19",
+        "balisePosInMeters": 2300,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 57,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "8e41fcbf-aeae-4c9d-acc6-1e65f52ca7ca",
+        "balisePosInMeters": 2304,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 57,
+            "NID_C": 513,
+            "N_PIG": 1,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "588b9192-e349-4031-bd8e-49dc16f19ff9",
+        "balisePosInMeters": 2900,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 58,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "a516a241-330e-4da9-bb2f-9ddcb0a8a617",
+        "balisePosInMeters": 2904,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 58,
+            "NID_C": 513,
+            "N_PIG": 1,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "7e1a4ce7-0234-457e-b3c2-caea25bbc39e",
+        "balisePosInMeters": 3500,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 59,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "364e6b35-3705-4390-8bd7-9c4c069540a9",
+        "balisePosInMeters": 3504,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 59,
+            "NID_C": 513,
+            "N_PIG": 1,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "eab7199d-6752-4d03-bf26-09241d91aa4c",
+        "balisePosInMeters": 4100,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 61,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "26e05d9a-5f77-4fc8-bab2-9910b373c083",
+        "balisePosInMeters": 4104,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 61,
+            "NID_C": 513,
+            "N_PIG": 1,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "1e351385-524e-4fd5-b3e3-eab03383143f",
+        "balisePosInMeters": 4700,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 62,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "1985bab8-1465-4ac3-bfa5-800d7890028c",
+        "balisePosInMeters": 4704,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 62,
+            "NID_C": 513,
+            "N_PIG": 1,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "80147fbc-876f-43ae-8df5-fa3d3be8ecc5",
+        "balisePosInMeters": 5300,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 63,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "8102be24-f1cc-4eb6-a8cb-9b4d8cdc559d",
+        "balisePosInMeters": 5304,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 63,
+            "NID_C": 513,
+            "N_PIG": 1,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "887075e1-e3f7-4e5a-bea9-6f8ff03f6abb",
+        "balisePosInMeters": 5900,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 64,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "3ad1de23-c02e-41e1-bec6-c625933d14e9",
+        "balisePosInMeters": 5904,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 64,
+            "NID_C": 513,
+            "N_PIG": 1,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "852f242d-cca6-4f21-b84b-9b9467ec7c65",
+        "balisePosInMeters": 6500,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 65,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "a9ad6b1b-5e11-4864-bc8b-794cc5d5df0f",
+        "balisePosInMeters": 6504,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 65,
+            "NID_C": 513,
+            "N_PIG": 1,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "667477b7-e08a-4abe-906e-86bebc26b3bb",
+        "balisePosInMeters": 7100,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 66,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "1e9a5717-0aa3-479a-8969-57e3af52b542",
+        "balisePosInMeters": 7104,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 66,
+            "NID_C": 513,
+            "N_PIG": 1,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "1e81c9b2-c2f8-40e6-8bea-fd94fe3aeabf",
+        "balisePosInMeters": 7700,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 67,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "8e1f35a9-aab3-449e-8f30-a08e1174ae17",
+        "balisePosInMeters": 7704,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 67,
+            "NID_C": 513,
+            "N_PIG": 1,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "38069531-1026-4b46-a572-b128c18ec18c",
+        "balisePosInMeters": 8190,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 68,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "4b096cf3-4b8f-4075-b049-33927c60cc0d",
+        "balisePosInMeters": 8194,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 68,
+            "NID_C": 513,
+            "N_PIG": 1,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "c2e508ab-139c-4601-84fe-6e534344ce92",
+        "balisePosInMeters": 8270,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 69,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 0,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "8b7dcd59-82a0-4f3f-b91c-276b96f8dd0d",
+        "balisePosInMeters": 8656,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 70,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "0755058c-99ca-4a02-8f95-5e2ae1bcb75c",
+        "balisePosInMeters": 8660,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 70,
+            "NID_C": 513,
+            "N_PIG": 1,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "7c4accd2-c038-4d5e-a7f9-40daf277b9f8",
+        "balisePosInMeters": 8998,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 71,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "2ae4be72-ebde-4fb3-8ac8-e743dc8e0918",
+        "balisePosInMeters": 9002,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 71,
+            "NID_C": 513,
+            "N_PIG": 1,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "b384513c-6bf6-4591-ba8f-3161ae1bba4c",
+        "balisePosInMeters": 9340,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 72,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "07be4875-623f-4b25-8e32-e79bbf929a08",
+        "balisePosInMeters": 9344,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 72,
+            "NID_C": 513,
+            "N_PIG": 1,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "a7e51ff3-0c30-4d95-86ca-e2998a41d014",
+        "balisePosInMeters": 9420,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 73,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 0,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "767b79cf-a053-4a00-b820-d093d68fd8b6",
+        "balisePosInMeters": 9806,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 74,
+            "NID_C": 513,
+            "N_PIG": 0,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    },
+    {
+        "baliseId": "dad6ecbd-73e0-40ad-9fa4-4c61339f57be",
+        "balisePosInMeters": 9810,
+        "telegram": {
+            "M_DUP": 0,
+            "M_MCOUNT": 255,
+            "M_VERSION": 16,
+            "NID_BG": 74,
+            "NID_C": 513,
+            "N_PIG": 1,
+            "N_TOTAL": 1,
+            "Q_LINK": 1,
+            "Q_MEDIA": 0,
+            "Q_UPDOWN": 1
+        }
+    }
+]
