@@ -60,4 +60,5 @@ private:
     std::thread orcToGuiSenderThread;
     std::thread odoToEvcSenderThread;
     Distance startingPoint = 0;
+    bool waitForOdoConfigMessage;
 };

@@ -17,6 +17,7 @@
 #include "OpenRailsApiConfiguration.hpp"
 #include "IGuiSimulationStateSenderService.hpp"
 #include "IOdoToEvcSenderService.hpp"
+#include "SimulationStateSendingConfiguration.hpp"
 
 
 void SimulationStateApiService::Initialize(ServiceContainer& container) {
@@ -28,18 +29,25 @@ void SimulationStateApiService::Initialize(ServiceContainer& container) {
     odoToEvcSender = container.FetchService<IOdoToEvcSenderService>().get();
 
     configurationService->FetchConfiguration<OpenRailsApiConfiguration>();
+    configurationService->FetchConfiguration<SimulationStateSendingConfiguration>();
 }
 
 bool SimulationStateApiService::LpcSaidStart() {
     shouldStop = false;
 
-    auto configuration = configurationService->FetchConfiguration<OpenRailsApiConfiguration>();
-    url = configuration.orcUrl;
-    apiCallingInterval = configuration.apiGetOrcCallingInterval;
-    httpRequestTimeout = configuration.orcTimeout;
+    const auto& apiConfiguration = configurationService->FetchConfiguration<OpenRailsApiConfiguration>();
+    url = apiConfiguration.orcUrl;
+    apiCallingInterval = apiConfiguration.apiGetOrcCallingInterval;
+    httpRequestTimeout = apiConfiguration.orcTimeout;
+
+    const auto& sendingConfiguration = configurationService->FetchConfiguration<SimulationStateSendingConfiguration>();
+    waitForOdoConfigMessage = sendingConfiguration.waitForOdoConfigMessage;
 
     simulationStateGettingThread = std::thread(&SimulationStateApiService::CallApiInALoop, this);
-    orcToGuiSenderThread = std::thread(&SimulationStateApiService::SendMessagesToAComponent, this, orcToGuiSender, std::chrono::milliseconds(400));
+    orcToGuiSenderThread = std::thread(&SimulationStateApiService::SendMessagesToAComponent, this, orcToGuiSender, sendingConfiguration.orcToGuiSendingInterval);
+    if (!waitForOdoConfigMessage) {
+        StartSendingOdoMessages(sendingConfiguration.odoToEvcSendingInterval);
+    }
     return true;
 }
 
