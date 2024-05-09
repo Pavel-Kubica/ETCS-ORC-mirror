@@ -15,13 +15,17 @@
 #include "cpr/response.h"
 #include "cpr/api.h"
 #include "OpenRailsApiConfiguration.hpp"
+#include "IGuiSimulationStateSenderService.hpp"
+#include "IOdoToEvcSenderService.hpp"
 
 
 void SimulationStateApiService::Initialize(ServiceContainer& container) {
-    simulationStateDataService = container.FetchService<SimulationStateDataService>().get();
-    btmService = container.FetchService<BtmService>().get();
+    simulationStateDataService = container.FetchService<ISimulationStateDataService>().get();
+    btmService = container.FetchService<IBtmService>().get();
     jruLoggerService = container.FetchService<JRULoggerService>().get();
     configurationService = container.FetchService<ConfigurationService>().get();
+    orcToGuiSender = container.FetchService<IGuiSimulationStateSenderService>().get();
+    odoToEvcSender = container.FetchService<IOdoToEvcSenderService>().get();
 
     configurationService->FetchConfiguration<OpenRailsApiConfiguration>();
 }
@@ -34,12 +38,15 @@ bool SimulationStateApiService::LpcSaidStart() {
     apiCallingInterval = configuration.apiGetOrcCallingInterval;
     httpRequestTimeout = configuration.orcTimeout;
 
-    std::thread(&SimulationStateApiService::CallApiInALoop, this);
+    simulationStateGettingThread = std::thread(&SimulationStateApiService::CallApiInALoop, this);
+    orcToGuiSenderThread = std::thread(&SimulationStateApiService::SendMessagesToAComponent, this, orcToGuiSender, std::chrono::milliseconds(400));
     return true;
 }
 
 bool SimulationStateApiService::LpcSaidStop() {
     shouldStop = true;
+    simulationStateGettingThread.join();
+    orcToGuiSenderThread.join();
     return true;
 }
 
@@ -62,6 +69,7 @@ void SimulationStateApiService::CallApiInALoop() {
         } else {
             try {
                 nlohmann::json j = nlohmann::json::parse(response.text);
+                jruLoggerService->Log(true, MessageType::Debug, "SimulationStateApiService: Response from Open Rails: " + j.dump());
                 SimulationState currentState = SimulationStateFromJson(j);
                 SimulationState previousState = simulationStateDataService->GetSimulationState();
                 simulationStateDataService->SetSimulationState(currentState);
@@ -91,4 +99,13 @@ SimulationState SimulationStateApiService::SimulationStateFromJson(const nlohman
     state.mainPipeBrakePressureInPsi = json.at("mainPipeBrakePressureInPsi");
 
     return state;
+}
+
+void SimulationStateApiService::SendMessagesToAComponent(ISimulationStateSender* sender, std::chrono::milliseconds interval) {
+    auto start = std::chrono::steady_clock::now();
+    while(!shouldStop) {
+        std::this_thread::sleep_until(start + interval);
+        start = std::chrono::steady_clock::now();
+        sender->SendSimulationState(simulationStateDataService->GetSimulationState());
+    }
 }

@@ -15,11 +15,14 @@
 
 
 #include <atomic>
+#include <thread>
 #include "ISimulationStateApiService.hpp"
-#include "Btm/BtmService.hpp"
-#include "SimulationStateDataService.hpp"
+#include "Btm/IBtmService.hpp"
+#include "ISimulationStateDataService.hpp"
 #include "ServiceContainer.hpp"
 #include "ConfigurationService.hpp"
+#include "ISimulationStateSender.hpp"
+#include "JRULoggerService.hpp"
 
 class SimulationStateApiService: public ISimulationStateApiService, public IInitializable, public ILpcManageable {
 public:
@@ -34,14 +37,21 @@ public:
 private:
     void CallApiInALoop();
 
+    void SendMessagesToAComponent(ISimulationStateSender* sender, std::chrono::milliseconds interval);
+
     SimulationState SimulationStateFromJson(const nlohmann::json& json);
 
     ISimulationStateDataService* simulationStateDataService;
     IBtmService* btmService;
     JRULoggerService* jruLoggerService;
     ConfigurationService* configurationService;
+    ISimulationStateSender* orcToGuiSender;
+    ISimulationStateSender* odoToEvcSender;
     std::atomic_bool shouldStop;
     std::string url;
     std::chrono::milliseconds httpRequestTimeout;
     std::chrono::milliseconds apiCallingInterval;
+    std::thread simulationStateGettingThread;
+    std::thread orcToGuiSenderThread;
+    std::thread odoToEvcSenderThread;
 };
