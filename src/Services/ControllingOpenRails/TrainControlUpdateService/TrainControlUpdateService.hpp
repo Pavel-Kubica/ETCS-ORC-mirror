@@ -23,15 +23,22 @@
 #include "MqttPublisherService.hpp"
 #include "ILocalCabControlsDataService.hpp"
 #include "IHumanControlDataService.hpp"
+#include "OpenRailsTrainBrakeConfiguration.hpp"
 
 class TrainControlUpdateService : public ITrainControlUpdateService,
+                                  public ILpcManageable,
                                   public IInitializable {
 protected:
     void Initialize(ServiceContainer& container) override;
 
 public:
     void Update() override;
-
+    
+    // LPC manageable so we reload train brake config every start/restart
+    bool LpcSaidStart() override;
+    bool LpcSaidStop() override;
+    bool LpcSaidRestart() override;
+    
 private:
     ICabControlApiService* cabControlApiService;
     IHumanControlDataService* humanControlDataService;
@@ -39,6 +46,9 @@ private:
     IMqttPublisherService* mqttPublisherService;
     IIncrementalCabControlService* incrementApiService;
     ILocalCabControlsDataService* openRailsState;
+    
+    ConfigurationService* configurationService;
+    OpenRailsTrainBrakeConfiguration trainBrakeConfig;
     
     void SendFromTiuMessageToEvc();
     

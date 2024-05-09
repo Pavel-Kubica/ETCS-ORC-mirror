@@ -24,11 +24,19 @@ public:
     void from_json(const nlohmann::json& j);
     [[nodiscard]] nlohmann::json to_json() const;
     
-    [[nodiscard]] double Convert(TrainBrake trainBrake) const;
+    /**
+     * Converts train brake according to this loaded config to a value,
+     * that can be POSTed to the Open Rails API so that the train brake in Open Rails' train
+     * corresponds to `trainBrake`.
+     * @param trainBrake - The train brake to be converted.
+     * @return value of type double that can be POSTed to the Open Rails API.
+    */
+    [[nodiscard]] double ConvertToRequestValue(TrainBrake trainBrake) const;
+
 private:
-    int QuickRelease = 0;
-    int Release = 30;       // stored as a percentage
-    int Neutral = 60;       // stored as a percentage
-    int ContService = 80;   // stored as a percentage
-    int Emergency = 420;    // stored as a percentage
+    double QuickRelease = 0;
+    double Release = 0.3;
+    double Neutral = 0.6;
+    double ContService = 0.8;
+    double Emergency = 4.2;
 };

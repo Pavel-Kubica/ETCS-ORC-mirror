@@ -8,7 +8,7 @@ constexpr char NEUTRAL_STR[] = "NEUTRAL";
 constexpr char CONT_SERVICE_STR[] = "CONT_SERVICE";
 constexpr char EMERGENCY_STR[] = "EMERGENCY";
 
-double OpenRailsTrainBrakeConfiguration::Convert(TrainBrake trainBrake) const {
+double OpenRailsTrainBrakeConfiguration::ConvertToRequestValue(TrainBrake trainBrake) const {
     switch (trainBrake) {
         case TrainBrake::QUICK_RELEASE:
             return this->QuickRelease;
