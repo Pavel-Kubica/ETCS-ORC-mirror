@@ -14,6 +14,7 @@
 
 #include "TrainControlUpdateService.hpp"
 #include "ServiceContainer.hpp"
+#include "TrainBrake.hpp"
 
 void TrainControlUpdateService::Initialize(ServiceContainer& container) {
     cabControlApiService = container.FetchService<ICabControlApiService>().get();
@@ -63,26 +64,34 @@ void TrainControlUpdateService::SendOpenRailsCabControlsRequest() {
         case DrivingLeverPosition::Accelerate:
             this->incrementApiService->StartIncreasingThrottle();
             this->SetEngineBrakeInternal(0, apiRequest);
+            apiRequest.SetTrainBrake(ToApiRequestDouble(TrainBrake::QUICK_RELEASE));
             break;
         case DrivingLeverPosition::Continue:
             this->incrementApiService->StopChangingThrottle();
             this->incrementApiService->StartDecreasingEngineBrake();
+            apiRequest.SetTrainBrake(ToApiRequestDouble(TrainBrake::RELEASE));
             break;
         case DrivingLeverPosition::Neutral:
             this->incrementApiService->StartDecreasingThrottle();
             this->incrementApiService->StopChangingEngineBrake();
+            apiRequest.SetTrainBrake(ToApiRequestDouble(TrainBrake::NEUTRAL));
             break;
         case DrivingLeverPosition::ElectrodynamicBrake:
             this->SetThrottleInternal(0, apiRequest);
             this->incrementApiService->StartIncreasingEngineBrake();
+            
+            // TODO: compare this with SimEmulator if this behaviour is correct
+            apiRequest.SetTrainBrake(ToApiRequestDouble(TrainBrake::NEUTRAL));
             break;
         case DrivingLeverPosition::PneumaticBrake:
             this->SetThrottleInternal(0, apiRequest);
             this->incrementApiService->StartIncreasingEngineBrake();
+            apiRequest.SetTrainBrake(ToApiRequestDouble(TrainBrake::CONT_SERVICE));
             break;
         case DrivingLeverPosition::QuickBrake:
             this->SetThrottleInternal(0, apiRequest);
             this->SetEngineBrakeInternal(1, apiRequest);
+            apiRequest.SetTrainBrake(ToApiRequestDouble(TrainBrake::EMERGENCY));
             break;
     }
     
