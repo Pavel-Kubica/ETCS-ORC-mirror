@@ -19,7 +19,7 @@ enum class TrainBrake : int {
     QUICK_RELEASE = 0,
     RELEASE = 30,       // stored as a percentage
     NEUTRAL = 60,       // stored as a percentage
-    CONT_SERVICE = 80,  // stored as a percentage // TODO: rename to full name
+    CONT_SERVICE = 80,  // stored as a percentage
     EMERGENCY = 420     // stored as a percentage
 };
 
