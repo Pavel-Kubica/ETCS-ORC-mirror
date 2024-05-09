@@ -5,10 +5,9 @@
  *  ORC         | 2.3.0
  *
  *  ### Description
- *  Interface for track data service
+ *  Interface for BaliseDataService
  *
  *  ### Contributors
- *  veselo21
  *  pavlian5
  */
 
@@ -19,14 +18,9 @@
 
 class IBaliseDataService : public IService {
 public:
-    virtual void SetBaliseGroups(std::map<uint32_t, std::shared_ptr<BaliseGroup>> baliseGps) = 0;
+    virtual void SetBalises(std::vector<std::unique_ptr<Balise>> balises) = 0;
 
-    /**
-     * @warning return value is a reference so handle with care
-     */
-    virtual std::map<uint32_t, std::shared_ptr<BaliseGroup>>& GetBaliseGroups() = 0;
-
-    virtual std::vector<std::shared_ptr<BaliseGroup>> GetBaliseGroupsSortedByDistance() const = 0;
+    virtual const std::vector<std::unique_ptr<Balise>>& GetBalisesSortedByDistance() const = 0;
 
     virtual void ClearData() = 0;
 

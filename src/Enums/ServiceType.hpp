@@ -30,6 +30,7 @@ enum class ServiceType {
     GuiSimulationStateSender,
     Database,
     BaliseData,
+    Btm,
     
     // Controlling OpenRails
     CabControlApi,
