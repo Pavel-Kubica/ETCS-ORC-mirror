@@ -24,9 +24,6 @@ void TrainControlUpdateService::Initialize(ServiceContainer& container) {
     incrementApiService = container.FetchService<IIncrementalCabControlService>().get();
     openRailsState = container.FetchService<ILocalCabControlsDataService>().get();
     configurationService = container.FetchService<ConfigurationService>().get();
-    
-    this->trainBrakeConfig = configurationService->FetchConfiguration<OpenRailsTrainBrakeConfiguration>();
-    
 }
 
 bool TrainControlUpdateService::LpcSaidStart() {
@@ -116,33 +113,33 @@ bool TrainControlUpdateService::HandleMachineInstructions(CabControlRequest& req
 void TrainControlUpdateService::HandleHumanInstructions(CabControlRequest& request) {
     switch (humanControlDataService->GetDrivingLever()) {
         case DrivingLeverPosition::Accelerate:
-            this->incrementApiService->StartIncreasingThrottle();                                     // THROTTLE
-            this->SetEngineBrakeInternal(0, request);                                        // ENGINE BRAKE
+            this->incrementApiService->StartIncreasingThrottle();                                                        // THROTTLE
+            this->SetEngineBrakeInternal(0, request);                                                            // ENGINE BRAKE
             request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::QUICK_RELEASE)); // TRAIN BRAKE
             break;
         case DrivingLeverPosition::Continue:
-            this->incrementApiService->StopChangingThrottle();                                  // THROTTLE
-            this->incrementApiService->StartDecreasingEngineBrake();                            // ENGINE BRAKE
+            this->incrementApiService->StopChangingThrottle();                                                      // THROTTLE
+            this->incrementApiService->StartDecreasingEngineBrake();                                               // ENGINE BRAKE
             request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::RELEASE)); // TRAIN BRAKE
             break;
         case DrivingLeverPosition::Neutral:
-            this->incrementApiService->StartDecreasingThrottle();                               // THROTTLE
-            this->incrementApiService->StopChangingEngineBrake();                               // ENGINE BRAKE
+            this->incrementApiService->StartDecreasingThrottle();                                                   // THROTTLE
+            this->incrementApiService->StopChangingEngineBrake();                                                   // ENGINE BRAKE
             request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::NEUTRAL)); // TRAIN BRAKE
             break;
         case DrivingLeverPosition::ElectrodynamicBrake:
-            this->SetThrottleInternal(0, request);                                     // THROTTLE
-            this->incrementApiService->StartIncreasingEngineBrake();                            // ENGINE BRAKE
+            this->SetThrottleInternal(0, request);                                                         // THROTTLE
+            this->incrementApiService->StartIncreasingEngineBrake();                                               // ENGINE BRAKE
             request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::NEUTRAL)); // TRAIN BRAKE
             break;
         case DrivingLeverPosition::PneumaticBrake:
-            this->SetThrottleInternal(0, request);                                          // THROTTLE
-            this->incrementApiService->StartIncreasingEngineBrake();                                 // ENGINE BRAKE
+            this->SetThrottleInternal(0, request);                                                              // THROTTLE
+            this->incrementApiService->StartIncreasingEngineBrake();                                                    // ENGINE BRAKE
             request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::CONT_SERVICE)); // TRAIN BRAKE
             break;
         case DrivingLeverPosition::QuickBrake:
-            this->SetThrottleInternal(0, request);                                       // THROTTLE
-            this->SetEngineBrakeInternal(1, request);                                    // ENGINE BRAKE
+            this->SetThrottleInternal(0, request);                                                           // THROTTLE
+            this->SetEngineBrakeInternal(1, request);                                                        // ENGINE BRAKE
             request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::EMERGENCY)); // TRAIN BRAKE
             break;
     }
