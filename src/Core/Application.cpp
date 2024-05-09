@@ -23,11 +23,13 @@
 #include "SimulationStateData/SimulationStateDataService.hpp"
 #include "BaliseDataService.hpp"
 #include "DatabaseService.hpp"
-#include "Btm/BtmService.hpp"
+#include "BtmService.hpp"
 #include "SimulationStateApi/SimulationStateApiService.hpp"
 #include "GuiSimulationStateSenderService.hpp"
 #include "OdoToEvcSenderService.hpp"
 #include "ControllingOpenRails/CabControlApiService/CabControlApiService.hpp"
+#include "BalisesFromJsonService.hpp"
+
 
 
 #include <stdio.h> /* defines FILENAME_MAX */
@@ -51,7 +53,8 @@ void Application::Initialize(const std::string& mqttHostname, int mqttPort) {
     service_container->RegisterService<MqttListenerService>();
     service_container->RegisterService<SimulationStateDataService>();
     service_container->RegisterService<BaliseDataService>();
-    service_container->RegisterService<DatabaseService>();
+    service_container->RegisterService<BalisesFromJsonService>();
+    service_container->RegisterService<BtmService>();
     service_container->RegisterService<BtmService>();
     service_container->RegisterService<SimulationStateApiService>();
     service_container->RegisterService<GuiSimulationStateSenderService>();

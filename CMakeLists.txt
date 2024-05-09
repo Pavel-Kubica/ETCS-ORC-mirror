@@ -97,6 +97,7 @@ include_directories(lib
         src/Services/BaliseData
         src/Services/SimulationStateApi
         src/Services/Btm
+        src/Services/BalisesFromJson
         src/MessageHandlers
         src/MessageHandlers/LPC
         src/MessageHandlers/EVC
