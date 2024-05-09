@@ -9,11 +9,13 @@
  *
  *  ###Contributors
  *  kubicpa3
+ *  rehorja8
  */
 
 #pragma once
 
 #include "ITrainControlUpdateService.hpp"
+#include "IIncrementalCabControlService.hpp"
 #include "IInitializable.hpp"
 #include "../CabControlApiService/CabControlApiService.hpp"
 #include "../../MachineControlData/MachineControlDataService.hpp"
@@ -24,19 +26,20 @@
 class TrainControlUpdateService : public ITrainControlUpdateService,
                                   public IInitializable {
 protected:
-    void Initialize(ServiceContainer &container) override;
+    void Initialize(ServiceContainer& container) override;
 
 public:
     void Update() override;
 
 private:
-    ICabControlApiService *cabControlApiService;
-    ITrainControlDataService *trainControlDataService;
-    IMachineControlDataService *machineControlDataService;
-    IMqttPublisherService *mqttPublisherService;
-
+    ICabControlApiService* cabControlApiService;
+    ITrainControlDataService* trainControlDataService;
+    IMachineControlDataService* machineControlDataService;
+    IMqttPublisherService* mqttPublisherService;
+    IIncrementalCabControlService* incrementalCabControlsService;
+    
     void SendFromTiuMessageToEvc();
-
+    
     void SendOpenRailsCabControlsRequest();
-
+    
 };

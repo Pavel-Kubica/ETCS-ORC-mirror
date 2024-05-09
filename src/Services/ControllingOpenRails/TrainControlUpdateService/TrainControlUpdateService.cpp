@@ -9,16 +9,18 @@
  *
  *  ###Contributors
  *  kubicpa3
+ *  rehorja8
  */
 
 #include "TrainControlUpdateService.hpp"
 #include "ServiceContainer.hpp"
 
-void TrainControlUpdateService::Initialize(ServiceContainer &container) {
-    cabControlApiService = container.FetchService<CabControlApiService>().get();
-    trainControlDataService = container.FetchService<TrainControlDataService>().get();
-    machineControlDataService = container.FetchService<MachineControlDataService>().get();
-    mqttPublisherService = container.FetchService<MqttPublisherService>().get();
+void TrainControlUpdateService::Initialize(ServiceContainer& container) {
+    cabControlApiService = container.FetchService<ICabControlApiService>().get();
+    trainControlDataService = container.FetchService<ITrainControlDataService>().get();
+    machineControlDataService = container.FetchService<IMachineControlDataService>().get();
+    mqttPublisherService = container.FetchService<IMqttPublisherService>().get();
+    incrementalCabControlsService = container.FetchService<IIncrementalCabControlService>().get();
 }
 
 void TrainControlUpdateService::Update() {
