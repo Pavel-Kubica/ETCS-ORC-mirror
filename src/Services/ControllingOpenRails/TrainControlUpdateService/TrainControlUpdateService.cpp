@@ -24,6 +24,11 @@ void TrainControlUpdateService::Initialize(ServiceContainer& container) {
     incrementApiService = container.FetchService<IIncrementalCabControlService>().get();
     openRailsState = container.FetchService<ILocalCabControlsDataService>().get();
     configurationService = container.FetchService<ConfigurationService>().get();
+    
+    // This causes to create a config file if one does not exist.
+    // This is handy so that we can just run the program once without LpcSaidStart
+    // and the configuration gets created.
+    configurationService->FetchConfiguration<OpenRailsTrainBrakeConfiguration>();
 }
 
 bool TrainControlUpdateService::LpcSaidStart() {
