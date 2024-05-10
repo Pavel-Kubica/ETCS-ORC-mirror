@@ -10,6 +10,7 @@
  *  ### Contributors
  *  veselo21
  *  zimaluk1
+ *  rehorja8
  */
 
 #pragma once
@@ -26,7 +27,9 @@ class MessageHandlersService : public IMessageHandlersService, public IInitializ
 public:
     void Initialize(ServiceContainer& container) override;
     std::map<MessageID, std::shared_ptr<MessageHandler>> GetAllHandlers() const override;
-
+    [[nodiscard]] std::optional<std::shared_ptr<MessageHandler>> TryToGetCANMessageHandler(Topic topic) const override;
 private:
     std::map<MessageID, std::shared_ptr<MessageHandler>> messageHandlers;
+    
+    std::map<Topic, std::shared_ptr<MessageHandler>> canMessageHandlers;
 };
