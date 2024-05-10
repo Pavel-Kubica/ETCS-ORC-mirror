@@ -15,6 +15,7 @@
 
 
 #include "BaliseDataService.hpp"
+#include "JRULoggerService.hpp"
 #include "MqttPublisherService.hpp"
 #include "IBtmService.hpp"
 
@@ -30,4 +31,5 @@ private:
 
     IBaliseDataService* baliseDataService;
     IMqttPublisherService* mqttPublisherService;
+    JRULoggerService* jruLoggerService;
 };

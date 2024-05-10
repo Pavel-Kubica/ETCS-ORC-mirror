@@ -22,7 +22,9 @@ class ListenerConfiguration {
 public:
     ListenerConfiguration() {
 
-        // TODO: add topics
+        topics.push_back(Topic::EVCtoODO);
+        // topics.push_back(Topic::LPCtoORC); this is here automatically see mqttListener initialize
+        topics.push_back(Topic::EVCtoTIU);
 
 //        topics.push_back(Topic::RBCtoEVC);
 //        topics.push_back(Topic::DMItoEVC);
@@ -31,6 +33,7 @@ public:
 //        topics.push_back(Topic::TIUtoEVC);
 //        // topics.push_back(Topic::LPCtoEVC); this is here automatically see mqttListener initialize
 //        topics.push_back(Topic::TEST);
+
     }
     static constexpr char FileName[] = "listener-configuration.json";
 
