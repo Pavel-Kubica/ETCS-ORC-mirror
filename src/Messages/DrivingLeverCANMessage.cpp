@@ -16,7 +16,7 @@
 
 static const std::map<unsigned long long, DrivingLeverPosition> drivingLeverSerializations = {
     {0xf7, DrivingLeverPosition::PneumaticBrake},
-    {0xbd, DrivingLeverPosition::Neutral},
+    {0xbd, DrivingLeverPosition::ElectrodynamicBrake},
     {0x77, DrivingLeverPosition::Neutral},
     {0xdb, DrivingLeverPosition::Continue},
     {0xeb, DrivingLeverPosition::Accelerate},
@@ -25,7 +25,7 @@ static const std::map<unsigned long long, DrivingLeverPosition> drivingLeverSeri
 
 static const std::map<DrivingLeverPosition, unsigned long long> drivingLeverToBits = {
     {DrivingLeverPosition::PneumaticBrake, 0xf7},
-    {DrivingLeverPosition::Neutral, 0xbd},
+    {DrivingLeverPosition::ElectrodynamicBrake, 0xbd},
     {DrivingLeverPosition::Neutral, 0x77},
     {DrivingLeverPosition::Continue, 0xdb},
     {DrivingLeverPosition::Accelerate, 0xeb},
