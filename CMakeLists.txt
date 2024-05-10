@@ -114,6 +114,7 @@ include_directories(lib
         src/MessageHandlers/LPC
         src/MessageHandlers/EVC
         src/MessageHandlers/TIU
+        src/MessageHandlers/CAN
         src/Enums
         src/Configurations
         src/Utils

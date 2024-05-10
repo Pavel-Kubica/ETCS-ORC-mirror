@@ -21,10 +21,12 @@
 class ListenerConfiguration {
 public:
     ListenerConfiguration() {
-
-        topics.push_back(Topic::EVCtoODO);
         // topics.push_back(Topic::LPCtoORC); this is here automatically see mqttListener initialize
+
+        // TODO: check - this should be everything (?)
+        topics.push_back(Topic::EVCtoODO);
         topics.push_back(Topic::EVCtoTIU);
+        topics.push_back(Topic::CANtoORC);
 
 //        topics.push_back(Topic::RBCtoEVC);
 //        topics.push_back(Topic::DMItoEVC);
