@@ -43,8 +43,7 @@ public:
      * Creates an empty message of the type accepted by the handler
      */
     virtual std::unique_ptr<Message> GetEmptyMessage() const = 0;
-    
-    virtual ~MessageHandler() = default;
+
 protected:
     virtual void HandleMessageBody(const Message& data) = 0;
 

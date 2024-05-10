@@ -17,7 +17,7 @@
 #include "CANTopicWorker.hpp"
 #include "Bitstring.hpp"
 
-CANTopicWorker::CANTopicWorker(std::shared_ptr<MessageHandler> handler,
+CANTopicWorker::CANTopicWorker(std::unique_ptr<MessageHandler>&& handler,
                                JRULoggerService* jru,
                                Topic topic) :
     TopicWorker(jru, topic),
