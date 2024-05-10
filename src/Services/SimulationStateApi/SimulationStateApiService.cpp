@@ -27,24 +27,25 @@ void SimulationStateApiService::Initialize(ServiceContainer& container) {
     configurationService = container.FetchService<ConfigurationService>().get();
     orcToGuiSender = container.FetchService<IGuiSimulationStateSenderService>().get();
     odoToEvcSender = container.FetchService<IOdoToEvcSenderService>().get();
-
+    
     configurationService->FetchConfiguration<OpenRailsApiConfiguration>();
     configurationService->FetchConfiguration<SimulationStateSendingConfiguration>();
 }
 
 bool SimulationStateApiService::LpcSaidStart() {
     shouldStop = false;
-
+    
     const auto& apiConfiguration = configurationService->FetchConfiguration<OpenRailsApiConfiguration>();
     url = apiConfiguration.orcUrl;
     apiCallingInterval = apiConfiguration.apiGetOrcCallingInterval;
     httpRequestTimeout = apiConfiguration.orcTimeout;
-
+    
     const auto& sendingConfiguration = configurationService->FetchConfiguration<SimulationStateSendingConfiguration>();
     waitForOdoConfigMessage = sendingConfiguration.waitForOdoConfigMessage;
-
+    
     simulationStateGettingThread = std::thread(&SimulationStateApiService::CallApiInALoop, this);
-    orcToGuiSenderThread = std::thread(&SimulationStateApiService::SendMessagesToAComponent, this, orcToGuiSender, sendingConfiguration.orcToGuiSendingInterval);
+    orcToGuiSenderThread = std::thread(&SimulationStateApiService::SendMessagesToAComponent, this, orcToGuiSender,
+                                       sendingConfiguration.orcToGuiSendingInterval);
     if (!waitForOdoConfigMessage) {
         StartSendingOdoMessages(sendingConfiguration.odoToEvcSendingInterval);
     }
@@ -69,7 +70,7 @@ void SimulationStateApiService::CallApiInALoop() {
     while (!shouldStop) {
         auto start = std::chrono::steady_clock::now();
         cpr::Response response = cpr::Get(cpr::Url{url}, cpr::Timeout(httpRequestTimeout));
-
+        
         if (response.status_code / 100 != 2) {
             // Detected error
             std::ostringstream error;
@@ -80,12 +81,16 @@ void SimulationStateApiService::CallApiInALoop() {
         } else {
             try {
                 nlohmann::json j = nlohmann::json::parse(response.text);
-                jruLoggerService->Log(true, MessageType::Debug, "SimulationStateApiService: Response from Open Rails: " + j.dump());
+                jruLoggerService->Log(true, MessageType::Debug,
+                                      "SimulationStateApiService: Response from Open Rails: " + j.dump());
                 SimulationState currentState = SimulationStateFromJson(j);
                 currentState.distanceTravelledInMetres += startingPoint.GetMeters();    // add the starting offset received from EVC
                 SimulationState previousState = simulationStateDataService->GetSimulationState();
                 simulationStateDataService->SetSimulationState(currentState);
-                btmService->CheckIfBaliseWasPassed(previousState.distanceTravelledInMetres, currentState.distanceTravelledInMetres);
+                btmService->CheckIfBaliseWasPassed(
+                        Distance(previousState.distanceTravelledInMetres / 10.0, QScale::TEN_CM),
+                        Distance(currentState.distanceTravelledInMetres / 10.0, QScale::TEN_CM)
+                );
             } catch (const std::exception& e) {
                 std::ostringstream error;
                 error << "SimulationStateApiService: Error while parsing json response from OpenRails";
@@ -109,13 +114,14 @@ SimulationState SimulationStateApiService::SimulationStateFromJson(const nlohman
     state.motiveForceInNewtons = json.at("MotiveForceInNewtons");
     state.brakeCylinderPressureInPsi = json.at("BrakeCylinderPreasureInPsi");
     state.mainPipeBrakePressureInPsi = json.at("MainPipeBrakePreasureInPsi");
-
+    
     return state;
 }
 
-void SimulationStateApiService::SendMessagesToAComponent(ISimulationStateSender* sender, std::chrono::milliseconds interval) {
+void
+SimulationStateApiService::SendMessagesToAComponent(ISimulationStateSender* sender, std::chrono::milliseconds interval) {
     auto start = std::chrono::steady_clock::now();
-    while(!shouldStop) {
+    while (!shouldStop) {
         std::this_thread::sleep_until(start + interval);
         start = std::chrono::steady_clock::now();
         sender->SendSimulationState(simulationStateDataService->GetSimulationState());
@@ -128,6 +134,7 @@ void SimulationStateApiService::SetStartingPoint(const Distance& _startingPoint)
 
 void SimulationStateApiService::StartSendingOdoMessages(const std::chrono::milliseconds& interval) {
     if (odoToEvcSenderThread.get_id() == std::thread::id()) {   // thread is not running yet
-        odoToEvcSenderThread = std::thread(&SimulationStateApiService::SendMessagesToAComponent, this, odoToEvcSender, interval);
+        odoToEvcSenderThread = std::thread(&SimulationStateApiService::SendMessagesToAComponent, this, odoToEvcSender,
+                                           interval);
     }
 }
