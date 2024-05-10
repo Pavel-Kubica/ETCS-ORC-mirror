@@ -23,12 +23,12 @@ public:
 	 * @param jru For logging purposes
 	 * @param topic Topic handled by the worker, to indicate what topics are done working
 	 */
-	CANTopicWorker(std::unique_ptr<MessageHandler>&& handler,
+	CANTopicWorker(std::shared_ptr<MessageHandler> handler,
 		           JRULoggerService* jru,
 		           Topic topic);
 
 private:
 	void ProcessMessage(const std::string& message) override;
 
-	std::unique_ptr<MessageHandler> messageHandler;
+	std::shared_ptr<MessageHandler> messageHandler;
 };
