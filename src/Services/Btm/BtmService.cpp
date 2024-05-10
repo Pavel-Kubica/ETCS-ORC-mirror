@@ -19,13 +19,14 @@
 void BtmService::Initialize(ServiceContainer& container) {
     baliseDataService = container.FetchService<BaliseDataService>().get();
     mqttPublisherService = container.FetchService<MqttPublisherService>().get();
+    jruLoggerService = container.FetchService<JRULoggerService>().get();
 }
 
 void BtmService::CheckIfBaliseWasPassed(Distance previousDistance, Distance currentDistance) {
     if (previousDistance == currentDistance) return;
-
+    
     const std::vector<std::unique_ptr<Balise>>& balises = baliseDataService->GetBalisesSortedByDistance();
-
+    
     if (previousDistance < currentDistance) {   // train is moving forwards
         //find the first balise which has higher position than previousDistance
         auto baliseIter = std::upper_bound(balises.begin(), balises.end(), previousDistance,
@@ -64,5 +65,9 @@ void BtmService::SendMessageThatBaliseWasPassed(const Balise& balise) {
             balise.GetTelegram().NID_BG,
             packets
     );
+    
+    jruLoggerService->Log(true, MessageType::Note, "BtmService: passed balise with id[%baliseId%] at [%distance%]m",
+                          balise.GetBaliseId(), balise.GetPos().GetMeters());
+    
     mqttPublisherService->Publish(message);
 }
