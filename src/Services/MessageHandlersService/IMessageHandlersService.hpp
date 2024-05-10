@@ -14,8 +14,6 @@
 
 #pragma once
 
-#include <optional>
-
  #include "MessageID.hpp"
  #include "MessageHandler.hpp"
  #include "IService.hpp"
@@ -27,15 +25,6 @@ public:
     explicit IMessageHandlersService() : IService() {}
 
     virtual std::map<MessageID, std::shared_ptr<MessageHandler>> GetAllHandlers() const = 0;
-    
-    /**
-     * Checks if @p topic is a CAN topic. If it is, it returns a unique pointer of a MessageHandler,
-     * that should be put inside a CAN TopicWorker.
-     * @param topic Topic that might be a CAN topic.
-     * @return A non-nullptr of a MessageHandler, that handles CAN message of @p topic if @p topic is a CAN topic.
-     *         Empty optional otherwise
-     */
-    [[nodiscard]] virtual std::optional<std::shared_ptr<MessageHandler>> TryToGetCANMessageHandler(Topic topic) const = 0;
 
     static constexpr ServiceType Type = ServiceType::MessageHandlers;
 };
