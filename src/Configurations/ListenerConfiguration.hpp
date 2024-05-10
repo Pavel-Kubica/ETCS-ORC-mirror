@@ -24,6 +24,15 @@ public:
 
         topics.push_back(Topic::EVCtoODO);
         // topics.push_back(Topic::LPCtoORC); this is here automatically see mqttListener initialize
+        topics.push_back(Topic::EVCtoTIU);
+
+//        topics.push_back(Topic::RBCtoEVC);
+//        topics.push_back(Topic::DMItoEVC);
+//        topics.push_back(Topic::BTMtoEVC);
+//        topics.push_back(Topic::ODOtoEVC);
+//        topics.push_back(Topic::TIUtoEVC);
+//        // topics.push_back(Topic::LPCtoEVC); this is here automatically see mqttListener initialize
+//        topics.push_back(Topic::TEST);
 
     }
     static constexpr char FileName[] = "listener-configuration.json";

@@ -41,6 +41,7 @@ file(GLOB_RECURSE SOURCE
         cem/Other/BaliseGroup.cpp
         cem/Other/Balise.cpp
         cem/Other/Telegram.cpp
+        cem/Utils/Bitstring.cpp
 )
 # Exclude files in the 'cem/test' directory
 file(GLOB_RECURSE CEM_TEST_FILES
@@ -70,6 +71,8 @@ include_directories(lib
         cem/Messages/ToJRU
         cem/Messages/Lpc/Orc
         cem/Messages/Evc/Odo
+        cem/Messages/Tiu/Evc
+        cem/Messages/Evc/Tiu
         cem/Exceptions
         cem/Exceptions/InternalStateMessageExceptions
         cem/Other
@@ -77,6 +80,7 @@ include_directories(lib
         cem/Other/CommunicationData/Dmi
         cem/Packets
         cem/Packets/Factory
+        cem/Utils
         src
         src/Core
         src/Services/ControllingOpenRails/CabControlApiService/CabControlRequest
@@ -84,12 +88,19 @@ include_directories(lib
         src/Core/TopicWorker
         src/Messages
         src/Services
+        src/Services/ControllingOpenRails/
+        src/Services/ControllingOpenRails/LocalCabControlsDataService
+        src/Services/ControllingOpenRails/IncrementalCabControlService
+        src/Services/ControllingOpenRails/CabControlApiService
+        src/Services/ControllingOpenRails/TrainControlUpdateService
         src/Services/Configuration
+        src/Services/ControllingOpenRails/MachineControlData
         src/Services/MessageHandlersService
         src/Services/MqttListener
         src/Services/MqttPublisher
         src/Services/JRULogger
         src/Services/Time
+        src/Services/ControllingOpenRails/HumanControlData
         src/Services/SimulationStateData
         src/Services/SimulationStateSender
         src/Services/Database
@@ -101,6 +112,7 @@ include_directories(lib
         src/MessageHandlers
         src/MessageHandlers/LPC
         src/MessageHandlers/EVC
+        src/MessageHandlers/TIU
         src/Enums
         src/Configurations
         src/Utils
