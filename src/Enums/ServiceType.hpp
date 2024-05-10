@@ -33,6 +33,7 @@ enum class ServiceType {
     Btm,
     SimulationStateApi,
     BalisesFromJson,
+    ConsoleInput,
 
     // Controlling OpenRails
     CabControlApi,

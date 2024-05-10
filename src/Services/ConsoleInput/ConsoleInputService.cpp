@@ -1,0 +1,129 @@
+/** @file ConsoleInputService.hpp
+ *
+ *  Component   | Subset version
+ *  :---------: | :-----------:
+ *  ORC         | 2.3.0
+ *
+ *  ### Description
+ *
+ *
+ *  ### Contributors
+ *  rehorja8
+ */
+ 
+#include <iostream>
+#include <sstream>
+#include "ConsoleInputService.hpp"
+
+void ConsoleInputService::Initialize(ServiceContainer& container) {
+    this->trainService = container.FetchService<ITrainControlUpdateService>().get();
+    this->machineControlService = container.FetchService<IMachineControlDataService>().get();
+    this->humanControlService = container.FetchService<IHumanControlDataService>().get();
+    
+}
+
+void ConsoleInputService::Start(ServiceContainer& container) {
+    this->workThread = std::thread(&ConsoleInputService::MainLoop, this);
+}
+
+void ConsoleInputService::Wait() {
+    this->workThread.join();
+}
+
+void ConsoleInputService::AppExit() {
+
+}
+
+void ConsoleInputService::MainLoop() {
+    // Za tento kód se stydím
+    char input = 0;
+    double argument;
+    std::string line;
+    
+    auto invalidInput = [&]() { std::cerr << "[console-service]: invalid input" << line << std::endl; };
+    
+    while (true) {
+        std::cout << "[console-service]: (enter input)>>> " << std::flush;
+        
+        line.clear();
+        std::getline(std::cin, line);
+        if (line.empty()) {
+            invalidInput();
+            continue;
+        }
+        std::istringstream stream(line);
+        input = (char) stream.get();
+        if (input == 'q') {
+            return;
+        }
+        if (!(stream >> argument)) {
+            invalidInput();
+            continue;
+        }
+        
+        switch (input) {
+            case 'l':
+                switch ((int) argument) {
+                    case 1:
+                        this->humanControlService->SetDrivingLever(DrivingLeverPosition::Accelerate);
+                        break;
+                    case 2:
+                        this->humanControlService->SetDrivingLever(DrivingLeverPosition::Continue);
+                        break;
+                    case 3:
+                        this->humanControlService->SetDrivingLever(DrivingLeverPosition::Neutral);
+                        break;
+                    case 4:
+                        this->humanControlService->SetDrivingLever(DrivingLeverPosition::ElectrodynamicBrake);
+                        break;
+                    case 5:
+                        this->humanControlService->SetDrivingLever(DrivingLeverPosition::PneumaticBrake);
+                        break;
+                    case 6:
+                        this->humanControlService->SetDrivingLever(DrivingLeverPosition::QuickBrake);
+                        break;
+                    default:
+                        invalidInput();
+                        continue;
+                }
+                break;
+            
+            case 'd': {
+                DirectionLeverPosition p;
+                switch ((int) argument) {
+                    case -1:
+                        p = DirectionLeverPosition::Backwards;
+                        break;
+                    case 0:
+                        p = DirectionLeverPosition::Neutral;
+                        break;
+                    case 1:
+                        p = DirectionLeverPosition::Forwards;
+                        break;
+                    default:
+                        invalidInput();
+                        continue;
+                }
+                this->humanControlService->SetTrainDirection(p);
+                break;
+            }
+            
+            case 'b': {
+                this->humanControlService->SetBattery((bool) argument);
+                break;
+            }
+            
+            case 'c': {
+                this->humanControlService->SetCab((bool) argument);
+                break;
+            }
+            
+            default:
+                invalidInput();
+                continue;
+        }
+        
+        this->trainService->Update();
+    }
+}
+
