@@ -88,8 +88,8 @@ void SimulationStateApiService::CallApiInALoop() {
                 SimulationState previousState = simulationStateDataService->GetSimulationState();
                 simulationStateDataService->SetSimulationState(currentState);
                 btmService->CheckIfBaliseWasPassed(
-                        Distance(previousState.distanceTravelledInMetres / 10.0, QScale::TEN_CM),
-                        Distance(currentState.distanceTravelledInMetres / 10.0, QScale::TEN_CM)
+                        Distance(previousState.distanceTravelledInMetres * 10.0, QScale::TEN_CM),
+                        Distance(currentState.distanceTravelledInMetres * 10.0, QScale::TEN_CM)
                 );
             } catch (const std::exception& e) {
                 std::ostringstream error;
