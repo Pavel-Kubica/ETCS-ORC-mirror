@@ -13,6 +13,7 @@
  *  maresj39
  *  zimaluk1
  *  hamaljan
+ *  pavlian5
  */
 
 #pragma once
@@ -31,7 +32,7 @@
  */
 class MqttPublisherService : public MqttService, public IMqttPublisherService, public IInitializable {
 public:
-    ~MqttPublisherService();
+    ~MqttPublisherService() override;
     /**
      * Publishes message via mosquitto
      * @param msg message to be published
@@ -40,6 +41,8 @@ public:
     void Initialize(ServiceContainer& container) override;
 
 private:
+    void ConnectToBroker();
+
     struct mosquitto* komar;
     JRULoggerService* jruLoggerService;
 };
