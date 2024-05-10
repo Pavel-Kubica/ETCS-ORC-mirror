@@ -26,9 +26,7 @@ public:
         // TODO: check - this should be everything (?)
         topics.push_back(Topic::EVCtoODO);
         topics.push_back(Topic::EVCtoTIU);
-        topics.push_back(Topic::CAN_1_0);
-        topics.push_back(Topic::CAN_1_4);
-        topics.push_back(Topic::CAN_1_5);
+        topics.push_back(Topic::CANtoORC);
 
 //        topics.push_back(Topic::RBCtoEVC);
 //        topics.push_back(Topic::DMItoEVC);

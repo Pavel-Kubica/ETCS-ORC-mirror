@@ -13,6 +13,7 @@
 
 #include <sstream>
 #include <bitset>
+#include <algorithm>
 
 #include "CANTopicWorker.hpp"
 #include "Bitstring.hpp"
@@ -25,9 +26,12 @@ CANTopicWorker::CANTopicWorker(std::shared_ptr<MessageHandler> handler,
 {}
 
 void CANTopicWorker::ProcessMessage(const std::string& message) {
+    std::string messageLittleEndian = message;
+    std::reverse(messageLittleEndian.begin(), messageLittleEndian.end());
+
     Bitstring bits;
     try {
-        bits = Bitstring::FromHex(message);
+        bits = Bitstring::FromHex(messageLittleEndian);
     }
     catch (const std::invalid_argument&) {
         jruLoggerService->Log(true, MessageType::Error, "CAN message contains a non-hexadecimal character");

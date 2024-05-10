@@ -21,10 +21,6 @@
 #include "ListenerConfiguration.hpp"
 #include "JsonTopicWorker.hpp"
 #include "CANTopicWorker.hpp"
-#include "BatteryControlCANMessageHandler.hpp"
-#include "DirectionControlCANMessageHandler.hpp"
-#include "DrivingLeverCANMessageHandler.hpp"
-
 
 MqttListenerService::~MqttListenerService() {
     mosquitto_disconnect(komar);

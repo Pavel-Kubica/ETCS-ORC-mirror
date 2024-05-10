@@ -19,9 +19,7 @@
 #include "SimulationStatusMessageHandler.hpp"
 #include "ODOConfigMessageHandler.hpp"
 #include "ODOInitializationMessageHandler.hpp"
-#include "DrivingLeverCANMessageHandler.hpp"
-#include "DirectionControlCANMessageHandler.hpp"
-#include "BatteryControlCANMessageHandler.hpp"
+#include "CANControlMessageHandler.hpp"
 
 void MessageHandlersService::Initialize(ServiceContainer& container) {
     messageHandlers[MessageID::SimulationStatusLPCtoORC] = std::make_shared<SimulationStatusMessageHandler>(container);
@@ -29,9 +27,7 @@ void MessageHandlersService::Initialize(ServiceContainer& container) {
     messageHandlers[MessageID::ODOInitialization] = std::make_shared<ODOInitializationMessageHandler>(container);
     messageHandlers[MessageID::ToTIU] = std::make_shared<TiuMessageHandler>(container);
     
-    canMessageHandlers[Topic::CAN_1_0] = std::make_shared<DrivingLeverCANMessageHandler>(container);
-    canMessageHandlers[Topic::CAN_1_4] = std::make_shared<DirectionControlCANMessageHandler>(container);
-    canMessageHandlers[Topic::CAN_1_5] = std::make_shared<BatteryControlCANMessageHandler>(container);
+    canMessageHandlers[Topic::CANtoORC] = std::make_shared<CANControlMessageHandler>(container);
 }
 
 std::map<MessageID, std::shared_ptr<MessageHandler>> MessageHandlersService::GetAllHandlers() const {
