@@ -62,7 +62,7 @@ std::vector<std::unique_ptr<Balise>> BalisesFromJsonService::GetBalisesFromJson(
         baliseJson = nlohmann::json::parse(baliseFile);
     } catch (const nlohmann::json::exception& e) {
         jruLoggerService->Log(true, MessageType::Error,
-                              "BalisesFromJsonService: Error while parsing balise file: " + std::string(e.what()));
+                              R"(BalisesFromJsonService: Error "%error%" while parsing the balise file: "%file%")", e.what(), pathToFile);
         return {};
     }
     std::vector<std::unique_ptr<Balise>> balises;
