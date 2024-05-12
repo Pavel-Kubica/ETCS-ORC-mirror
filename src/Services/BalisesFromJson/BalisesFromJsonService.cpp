@@ -75,7 +75,7 @@ std::vector<std::unique_ptr<Balise>> BalisesFromJsonService::GetBalisesFromJson(
                               "BalisesFromJsonService: Json in file " + pathToFile.string() + " does not contain balises in the correct format: " + e.what());
         return {};
     }
-    jruLoggerService->Log(true, MessageType::Debug,"BalisesFromJsonService: Balises ware correctly parsed from file " + pathToFile.string());
+    jruLoggerService->Log(true, MessageType::Note,"BalisesFromJsonService: Balises ware correctly parsed from file " + pathToFile.string());
     return balises;
 }
 
