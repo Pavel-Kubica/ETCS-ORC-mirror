@@ -36,7 +36,7 @@ void OdoToEvcSenderService::SendSimulationState(const SimulationState& simulatio
     ODOMeasurementsMessage odoMeasurements(
         Q_CONTROL,
         static_cast<uint32_t>(simulationState.distanceTravelledInMetres),
-        abs(simulationState.speedInMetresPerSecond),
+        abs(simulationState.speedInMetresPerSecond) * 3.6,
         static_cast<uint16_t>(simulationState.accelerationInMetersPerSecondSquared),
         NID_C,
         NID_BG,
