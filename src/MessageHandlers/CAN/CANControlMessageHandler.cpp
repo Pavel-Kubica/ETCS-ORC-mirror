@@ -28,7 +28,7 @@ void CANControlMessageHandler::HandleMessageBody(const Message& message) {
 
     if (drivingLeverPosition == humanControlDataService->GetDrivingLever() &&
         directionLeverPosition == humanControlDataService->GetTrainDirection()) {
-        jruLoggerService->Log(MessageType::Debug,
+        jruLoggerService->Log(MessageType::Note,
                               "[CAN] ----> [ORC] || CAN control WITH NO CHANGE. "
                               "[Main lever: %drivingLeverPosition%] "
                               "[Direction lever:%directionLever%]",
@@ -36,7 +36,7 @@ void CANControlMessageHandler::HandleMessageBody(const Message& message) {
         return;
     }
 
-    jruLoggerService->Log(true, MessageType::Note,
+    jruLoggerService->Log(true, MessageType::Info,
                           "[CAN] ----> [ORC] || CAN control"
                           "[Main lever: %drivingLeverPosition%] "
                           "[Direction lever:%directionLever%]",
