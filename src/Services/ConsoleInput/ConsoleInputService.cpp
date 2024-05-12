@@ -114,7 +114,11 @@ void ConsoleInputService::MainLoop() {
             }
             
             case 'c': {
-                this->humanControlService->SetCab((bool) argument);
+                bool cab = (bool)argument;
+                this->humanControlService->SetCab(cab);
+                if (cab) {
+                    this->humanControlService->SetBattery(cab);
+                }
                 break;
             }
             

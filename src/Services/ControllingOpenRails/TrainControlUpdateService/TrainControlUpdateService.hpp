@@ -24,6 +24,7 @@
 #include "ILocalCabControlsDataService.hpp"
 #include "IHumanControlDataService.hpp"
 #include "OpenRailsTrainBrakeConfiguration.hpp"
+#include "JruLoggerService.hpp"
 
 class TrainControlUpdateService : public ITrainControlUpdateService,
                                   public ILpcManageable,
@@ -46,6 +47,7 @@ private:
     IMqttPublisherService* mqttPublisherService;
     IIncrementalCabControlService* incrementApiService;
     ILocalCabControlsDataService* openRailsState;
+    JRULoggerService* jruLoggerService;
     
     ConfigurationService* configurationService;
     OpenRailsTrainBrakeConfiguration trainBrakeConfig;
