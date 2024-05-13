@@ -24,7 +24,7 @@ void IncrementalCabControlService::Initialize(ServiceContainer& container) {
     this->config = configurationService->FetchConfiguration<IncrementalCabControlConfiguration>();
     
     localCabControlsDataService->SetThrottleStep(config.throttleStep);
-    localCabControlsDataService->SetEngineBrakeStep(config.brakeStep);
+    localCabControlsDataService->SetDynamicBrakeStep(config.brakeStep);
 }
 
 void IncrementalCabControlService::StartIncreasingThrottle() {
@@ -136,15 +136,15 @@ void IncrementalCabControlService::ChangeBrake(CabControlRequest& request) {
     // No mutex since we call this method when this->mtx is locked
     switch (brakeIncrement) {
         case Increment::Positive: {
-            bool finished = !localCabControlsDataService->IncreaseEngineBrake();
-            request.SetDynamicBrake(localCabControlsDataService->GetEngineBrake());
+            bool finished = !localCabControlsDataService->IncreaseDynamicBrake();
+            request.SetDynamicBrake(localCabControlsDataService->GetDynamicBrake());
             if (finished)
                 brakeIncrement = Increment::None;
             break;
         }
         case Increment::Negative: {
-            bool finished = !localCabControlsDataService->DecreaseEngineBrake();
-            request.SetDynamicBrake(localCabControlsDataService->GetEngineBrake());
+            bool finished = !localCabControlsDataService->DecreaseDynamicBrake();
+            request.SetDynamicBrake(localCabControlsDataService->GetDynamicBrake());
             if (finished)
                 brakeIncrement = Increment::None;
             break;
@@ -164,5 +164,5 @@ void IncrementalCabControlService::SetThrottleTo(double value) {
 void IncrementalCabControlService::SetDynamicBrakeTo(double value) {
     std::lock_guard lck(this->mtx);
     this->throttleIncrement = Increment::None;
-    this->localCabControlsDataService->SetEngineBrake(0);
+    this->localCabControlsDataService->SetDynamicBrake(0);
 }
