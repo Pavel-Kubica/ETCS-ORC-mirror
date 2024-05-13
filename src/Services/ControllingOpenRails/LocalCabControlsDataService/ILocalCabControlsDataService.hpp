@@ -19,6 +19,7 @@
 
 #include "IService.hpp"
 #include "OpenRailsTrainBrakeState.hpp"
+#include "TrainBrake.hpp"
 
 class ILocalCabControlsDataService : public IService
 {
@@ -45,8 +46,8 @@ public:
     // Returns true if engine brake is still above 0
     [[nodiscard]] virtual bool DecreaseDynamicBrake() = 0;
 
-    virtual void SetTrainBrake(OpenRailsTrainBrakeState newState) = 0;
-    [[nodiscard]] virtual OpenRailsTrainBrakeState GetTrainBrake() const = 0;
+    virtual void SetTrainBrake(TrainBrake newState) = 0;
+    [[nodiscard]] virtual TrainBrake GetTrainBrake() const = 0;
 
     static constexpr ServiceType Type = ServiceType::LocalCabControlsData;
 };

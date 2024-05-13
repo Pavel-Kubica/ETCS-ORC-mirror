@@ -84,11 +84,11 @@ bool LocalCabControlsDataService::DecreaseDynamicBrake() {
     return dynamicBrake > 0.0;
 }
 
-void LocalCabControlsDataService::SetTrainBrake(OpenRailsTrainBrakeState newState) {
+void LocalCabControlsDataService::SetTrainBrake(TrainBrake newState) {
     trainBrakeState = newState;
 }
 
-OpenRailsTrainBrakeState LocalCabControlsDataService::GetTrainBrake() const {
+TrainBrake LocalCabControlsDataService::GetTrainBrake() const {
     return trainBrakeState;
 }
 

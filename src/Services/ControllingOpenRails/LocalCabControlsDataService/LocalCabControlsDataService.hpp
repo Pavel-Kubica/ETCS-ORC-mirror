@@ -20,8 +20,9 @@
 #pragma once
 
 #include <atomic>
-#include "ILocalCabControlsDataService.hpp"
 #include "AsyncProperty.hpp"
+#include "ILocalCabControlsDataService.hpp"
+#include "TrainBrake.hpp"
 
 class LocalCabControlsDataService : public ILocalCabControlsDataService
 {
@@ -41,14 +42,14 @@ public:
     [[nodiscard]] double GetDynamicBrake() const override;
     [[nodiscard]] bool IncreaseDynamicBrake() override;
     [[nodiscard]] bool DecreaseDynamicBrake() override;
-
-    void SetTrainBrake(OpenRailsTrainBrakeState newState) override;
-    [[nodiscard]] OpenRailsTrainBrakeState GetTrainBrake() const override;
+    
+    void SetTrainBrake(TrainBrake newState) override;
+    [[nodiscard]] TrainBrake GetTrainBrake() const override;
 
 private:
     std::atomic<double> throttleStep;
     std::atomic<double> dynamicBrakeStep;
     std::atomic<double> throttle;
     std::atomic<double> dynamicBrake;
-    std::atomic<OpenRailsTrainBrakeState> trainBrakeState;
+    std::atomic<TrainBrake> trainBrakeState;
 };
