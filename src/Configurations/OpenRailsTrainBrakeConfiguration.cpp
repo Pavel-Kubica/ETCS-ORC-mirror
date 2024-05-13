@@ -17,7 +17,7 @@ double OpenRailsTrainBrakeConfiguration::ConvertToRequestValue(TrainBrake trainB
         case TrainBrake::NEUTRAL:
             return this->Neutral;
         case TrainBrake::APPLY:
-            return this->ContService;
+            return this->Apply;
         case TrainBrake::EMERGENCY:
             return this->Emergency;
         default:
@@ -29,7 +29,7 @@ void OpenRailsTrainBrakeConfiguration::from_json(const nlohmann::json& j) {
     QuickRelease = j.at(QUICK_RELEASE_STR);
     Release = j.at(RELEASE_STR);
     Neutral = j.at(NEUTRAL_STR);
-    ContService = j.at(CONT_SERVICE_STR);
+    Apply = j.at(CONT_SERVICE_STR);
     Emergency = j.at(EMERGENCY_STR);
 }
 
@@ -40,7 +40,7 @@ nlohmann::json OpenRailsTrainBrakeConfiguration::to_json() const {
     j[QUICK_RELEASE_STR] = QuickRelease;
     j[RELEASE_STR] = Release;
     j[NEUTRAL_STR] = Neutral;
-    j[CONT_SERVICE_STR] = ContService;
+    j[CONT_SERVICE_STR] = Apply;
     j[EMERGENCY_STR] = Emergency;
     
     return j;

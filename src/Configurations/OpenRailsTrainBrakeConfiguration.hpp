@@ -35,8 +35,8 @@ public:
 
 private:
     double QuickRelease = 0;
-    double Release = 0.3;
-    double Neutral = 0.6;
-    double ContService = 0.8;
+    double Release = 0.2;
+    double Neutral = 0.5;
+    double Apply = 0.7;
     double Emergency = 4.2;
 };
