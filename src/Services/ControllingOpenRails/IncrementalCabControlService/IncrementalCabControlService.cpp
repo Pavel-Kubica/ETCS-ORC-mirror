@@ -110,6 +110,12 @@ void IncrementalCabControlService::IncrementingThreadEntryPoint() {
 
 void IncrementalCabControlService::ChangeThrottle(CabControlRequest& request) {
     // No mutex since we call this method when this->mtx is locked
+    if (this->throttleWasSet) {
+        request.SetThrottle(this->localCabControlsDataService->GetThrottle());
+        this->throttleIncrement = Increment::None;
+        return;
+    }
+    
     switch (throttleIncrement) {
         case Increment::Positive: {
             bool finished = !localCabControlsDataService->IncreaseThrottle();
@@ -134,6 +140,12 @@ void IncrementalCabControlService::ChangeThrottle(CabControlRequest& request) {
 
 void IncrementalCabControlService::ChangeBrake(CabControlRequest& request) {
     // No mutex since we call this method when this->mtx is locked
+    if (this->dynamicBrakeWasSet) {
+        request.SetDynamicBrake(this->localCabControlsDataService->GetDynamicBrake());
+        this->brakeIncrement = Increment::None;
+        return;
+    }
+    
     switch (brakeIncrement) {
         case Increment::Positive: {
             bool finished = !localCabControlsDataService->IncreaseDynamicBrake();
@@ -157,12 +169,12 @@ void IncrementalCabControlService::ChangeBrake(CabControlRequest& request) {
 }
 void IncrementalCabControlService::SetThrottleTo(double value) {
     std::lock_guard lck(this->mtx);
-    this->throttleIncrement = Increment::None;
-    this->localCabControlsDataService->SetThrottle(0);
+    this->localCabControlsDataService->SetThrottle(value);
+    this->throttleWasSet = true;
 }
 
 void IncrementalCabControlService::SetDynamicBrakeTo(double value) {
     std::lock_guard lck(this->mtx);
-    this->throttleIncrement = Increment::None;
-    this->localCabControlsDataService->SetDynamicBrake(0);
+    this->localCabControlsDataService->SetDynamicBrake(value);
+    this->dynamicBrakeWasSet = true;
 }
