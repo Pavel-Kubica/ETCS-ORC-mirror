@@ -34,6 +34,8 @@ public:
     [[nodiscard]] virtual DrivingLeverPosition GetDrivingLever() const = 0;
 
     virtual void SetDrivingLever(DrivingLeverPosition position) = 0;
+    
+    [[nodiscard]] virtual bool HasTouchedRelease() const = 0;
 
     static constexpr ServiceType Type = ServiceType::TrainControlData;
 };
