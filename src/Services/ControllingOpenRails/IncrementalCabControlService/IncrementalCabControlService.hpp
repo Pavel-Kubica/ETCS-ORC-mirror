@@ -39,10 +39,11 @@ public:
     void StopChangingThrottle() override;
     void StartDecreasingThrottle() override;
     
-    void StartIncreasingEngineBrake() override;
-    void StopChangingEngineBrake() override;
-    void StartDecreasingEngineBrake() override;
-    
+    void StartIncreasingDynamicBrake() override;
+    void StopChangingDynamicBrake() override;
+    void StartDecreasingDynamicBrake() override;
+    void SetThrottleTo(double value) override;
+    void SetDynamicBrakeTo(double value) override;
     bool LpcSaidStart() override;
     
     bool LpcSaidStop() override;

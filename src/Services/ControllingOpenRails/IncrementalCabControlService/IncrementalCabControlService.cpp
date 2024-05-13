@@ -45,19 +45,19 @@ void IncrementalCabControlService::StartDecreasingThrottle() {
     cv.notify_one();
 }
 
-void IncrementalCabControlService::StartIncreasingEngineBrake() {
+void IncrementalCabControlService::StartIncreasingDynamicBrake() {
     std::lock_guard lck(this->mtx);
     brakeIncrement = Increment::Positive;
     cv.notify_one();
 }
 
-void IncrementalCabControlService::StopChangingEngineBrake() {
+void IncrementalCabControlService::StopChangingDynamicBrake() {
     std::lock_guard lck(this->mtx);
     brakeIncrement = Increment::None;
     cv.notify_one();
 }
 
-void IncrementalCabControlService::StartDecreasingEngineBrake() {
+void IncrementalCabControlService::StartDecreasingDynamicBrake() {
     std::lock_guard lck(this->mtx);
     brakeIncrement = Increment::Negative;
     cv.notify_one();
@@ -137,14 +137,14 @@ void IncrementalCabControlService::ChangeBrake(CabControlRequest& request) {
     switch (brakeIncrement) {
         case Increment::Positive: {
             bool finished = !localCabControlsDataService->IncreaseEngineBrake();
-            request.SetEngineBrake(localCabControlsDataService->GetEngineBrake());
+            request.SetDynamicBrake(localCabControlsDataService->GetEngineBrake());
             if (finished)
                 brakeIncrement = Increment::None;
             break;
         }
         case Increment::Negative: {
             bool finished = !localCabControlsDataService->DecreaseEngineBrake();
-            request.SetEngineBrake(localCabControlsDataService->GetEngineBrake());
+            request.SetDynamicBrake(localCabControlsDataService->GetEngineBrake());
             if (finished)
                 brakeIncrement = Increment::None;
             break;
@@ -154,4 +154,15 @@ void IncrementalCabControlService::ChangeBrake(CabControlRequest& request) {
         default:
             throw std::runtime_error("unreachable branch");
     }
+}
+void IncrementalCabControlService::SetThrottleTo(double value) {
+    std::lock_guard lck(this->mtx);
+    this->throttleIncrement = Increment::None;
+    this->localCabControlsDataService->SetThrottle(0);
+}
+
+void IncrementalCabControlService::SetDynamicBrakeTo(double value) {
+    std::lock_guard lck(this->mtx);
+    this->throttleIncrement = Increment::None;
+    this->localCabControlsDataService->SetEngineBrake(0);
 }
