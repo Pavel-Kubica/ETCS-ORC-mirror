@@ -44,7 +44,7 @@ private:
 
     void SendMessagesToAComponent(ISimulationStateSender* sender, std::chrono::milliseconds interval);
 
-    SimulationState SimulationStateFromJson(const nlohmann::json& json);
+    static SimulationState SimulationStateFromJson(const nlohmann::json& json);
 
     ISimulationStateDataService* simulationStateDataService;
     IBtmService* btmService;
