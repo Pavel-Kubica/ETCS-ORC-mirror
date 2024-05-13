@@ -159,8 +159,8 @@ void TrainControlUpdateService::HandleHumanInstructions(CabControlRequest& reque
         case DrivingLeverPosition::PneumaticBrake:
             this->incrementApiService->SetThrottleTo(0);                                                      // THROTTLE
             this->incrementApiService->StopChangingDynamicBrake();                                                  // DYNAMIC BRAKE
-            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::CONT_SERVICE)); // TRAIN BRAKE
-            openRailsState->SetTrainBrake(TrainBrake::CONT_SERVICE);
+            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::APPLY)); // TRAIN BRAKE
+            openRailsState->SetTrainBrake(TrainBrake::APPLY);
             break;
         case DrivingLeverPosition::QuickBrake:
             this->incrementApiService->SetThrottleTo(0);                                                      // THROTTLE

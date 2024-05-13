@@ -18,7 +18,6 @@
 #pragma once
 
 #include "IService.hpp"
-#include "OpenRailsTrainBrakeState.hpp"
 #include "TrainBrake.hpp"
 
 class ILocalCabControlsDataService : public IService

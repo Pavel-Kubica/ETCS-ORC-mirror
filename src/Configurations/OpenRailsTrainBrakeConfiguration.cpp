@@ -16,7 +16,7 @@ double OpenRailsTrainBrakeConfiguration::ConvertToRequestValue(TrainBrake trainB
             return this->Release;
         case TrainBrake::NEUTRAL:
             return this->Neutral;
-        case TrainBrake::CONT_SERVICE:
+        case TrainBrake::APPLY:
             return this->ContService;
         case TrainBrake::EMERGENCY:
             return this->Emergency;
