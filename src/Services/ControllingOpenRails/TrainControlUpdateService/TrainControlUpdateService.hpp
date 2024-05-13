@@ -58,7 +58,7 @@ private:
     
     void SetThrottleInternal(double value, CabControlRequest& request);
     
-    void SetEngineBrakeInternal(double value, CabControlRequest& request);
+    void SetDynamicBrakeInternal(double value, CabControlRequest& request);
     
     /**
      * Handles the state of `this->machineControlDataService`.
