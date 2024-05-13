@@ -73,9 +73,11 @@ void TrainControlUpdateService::SendOpenRailsCabControlsRequest() {
     bool battery = humanControlDataService->GetBattery();
     bool cab = humanControlDataService->GetCab();
     if (!battery || !cab) {
-        jruLoggerService->Log(true, MessageType::Note,
-                              "TrainControlUpdateService: (small) warning - no action was sent to train because the cab or "
-                              "battery is off: [battery:%battery%] [cab:%cab%]", battery, cab);
+        jruLoggerService->Log(
+            true, MessageType::Note,
+            "TrainControlUpdateService: (small) warning - no action was sent to train because the cab or "
+            "battery is off: [battery:%battery%] [cab:%cab%]",
+            battery, cab);
         return;  // Cannot control the train if we are switched off
     }
 
@@ -90,54 +92,42 @@ void TrainControlUpdateService::SendOpenRailsCabControlsRequest() {
     this->cabControlApiService->Send(apiRequest);
 }
 
-void TrainControlUpdateService::SetThrottleInternal(double value, CabControlRequest& request) {
-    this->incrementApiService->StopChangingThrottle();
-    request.SetThrottle(value);
-    this->openRailsState->SetThrottle(value);
-}
-
-void TrainControlUpdateService::SetDynamicBrakeInternal(double value, CabControlRequest& request) {
-    this->incrementApiService->StopChangingDynamicBrake();
-    request.SetDynamicBrake(value);
-    this->openRailsState->SetDynamicBrake(value);
-}
-
 bool TrainControlUpdateService::HandleMachineInstructions(CabControlRequest& request) {
     if (this->machineControlDataService->GetEmergencyBrake()) {
-        this->SetThrottleInternal(0, request);
-        this->SetDynamicBrakeInternal(1, request);
+        this->incrementApiService->SetThrottleTo(0);
         request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::EMERGENCY));
+        this->openRailsState->SetTrainBrake(TrainBrake::EMERGENCY);
         return true;
     }
 
     if (this->machineControlDataService->GetServiceBrake()) {
-        this->SetThrottleInternal(0, request);
-        this->SetDynamicBrakeInternal(1, request);
+        this->incrementApiService->SetThrottleTo(0);
+        request.SetEngineBrake(1);
         request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::NEUTRAL));
         return true;
     }
-
+    
     return false;
 }
 
 void TrainControlUpdateService::HandleHumanInstructions(CabControlRequest& request) {
     switch (humanControlDataService->GetDrivingLever()) {
         case DrivingLeverPosition::Accelerate:
-            this->incrementApiService->StartIncreasingThrottle();                                                   // THROTTLE
-            this->incrementApiService->SetDynamicBrakeTo(0);                                                  // DYNAMIC BRAKE
-            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::RELEASE)); // TRAIN BRAKE
+            this->incrementApiService->StartIncreasingThrottle();                                // THROTTLE
+            this->incrementApiService->SetDynamicBrakeTo(0);                                     // DYNAMIC BRAKE
+            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::RELEASE));  // TRAIN BRAKE
             openRailsState->SetTrainBrake(TrainBrake::RELEASE);
             break;
         case DrivingLeverPosition::Continue:
-            this->incrementApiService->StopChangingThrottle();                                                      // THROTTLE
-            this->incrementApiService->StartDecreasingDynamicBrake();                                               // DYNAMIC BRAKE
-            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::RELEASE)); // TRAIN BRAKE
+            this->incrementApiService->StopChangingThrottle();                                   // THROTTLE
+            this->incrementApiService->StartDecreasingDynamicBrake();                            // DYNAMIC BRAKE
+            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::RELEASE));  // TRAIN BRAKE
             openRailsState->SetTrainBrake(TrainBrake::RELEASE);
             break;
         case DrivingLeverPosition::Neutral:
-            this->incrementApiService->StartDecreasingThrottle();                                                   // THROTTLE
-            this->incrementApiService->StopChangingDynamicBrake();                                                  // DYNAMIC BRAKE
-            if (humanControlDataService->HasTouchedRelease()) {                                                     // TRAIN BRAKE
+            this->incrementApiService->StartDecreasingThrottle();   // THROTTLE
+            this->incrementApiService->StopChangingDynamicBrake();  // DYNAMIC BRAKE
+            if (humanControlDataService->HasTouchedRelease()) {     // TRAIN BRAKE
                 request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::RELEASE));
                 openRailsState->SetTrainBrake(TrainBrake::RELEASE);
             } else {
@@ -146,9 +136,9 @@ void TrainControlUpdateService::HandleHumanInstructions(CabControlRequest& reque
             }
             break;
         case DrivingLeverPosition::ElectrodynamicBrake:
-            this->incrementApiService->SetThrottleTo(0);                                                      // THROTTLE
-            this->incrementApiService->StartIncreasingDynamicBrake();                                               // DYNAMIC BRAKE
-            if (humanControlDataService->HasTouchedRelease()) {                                                     // TRAIN BRAKE
+            this->incrementApiService->SetThrottleTo(0);               // THROTTLE
+            this->incrementApiService->StartIncreasingDynamicBrake();  // DYNAMIC BRAKE
+            if (humanControlDataService->HasTouchedRelease()) {        // TRAIN BRAKE
                 request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::RELEASE));
                 openRailsState->SetTrainBrake(TrainBrake::RELEASE);
             } else {
@@ -157,14 +147,14 @@ void TrainControlUpdateService::HandleHumanInstructions(CabControlRequest& reque
             }
             break;
         case DrivingLeverPosition::PneumaticBrake:
-            this->incrementApiService->SetThrottleTo(0);                                                      // THROTTLE
-            this->incrementApiService->StopChangingDynamicBrake();                                                  // DYNAMIC BRAKE
-            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::APPLY)); // TRAIN BRAKE
+            this->incrementApiService->SetThrottleTo(0);                                       // THROTTLE
+            this->incrementApiService->StopChangingDynamicBrake();                             // DYNAMIC BRAKE
+            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::APPLY));  // TRAIN BRAKE
             openRailsState->SetTrainBrake(TrainBrake::APPLY);
             break;
         case DrivingLeverPosition::QuickBrake:
-            this->incrementApiService->SetThrottleTo(0);                                                      // THROTTLE
-            this->incrementApiService->SetDynamicBrakeTo(0);                                                  // DYNAMIC BRAKE
+            this->incrementApiService->SetThrottleTo(0);                                           // THROTTLE
+            this->incrementApiService->SetDynamicBrakeTo(0);                                       // DYNAMIC BRAKE
             request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::EMERGENCY));  // TRAIN BRAKE
             openRailsState->SetTrainBrake(TrainBrake::EMERGENCY);
             break;

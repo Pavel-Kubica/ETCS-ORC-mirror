@@ -56,10 +56,6 @@ private:
     
     void SendOpenRailsCabControlsRequest();
     
-    void SetThrottleInternal(double value, CabControlRequest& request);
-    
-    void SetDynamicBrakeInternal(double value, CabControlRequest& request);
-    
     /**
      * Handles the state of `this->machineControlDataService`.
      * @return True if some handling was necessary, false otherwise.
