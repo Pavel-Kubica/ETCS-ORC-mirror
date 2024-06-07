@@ -113,6 +113,7 @@ void IncrementalCabControlService::ChangeThrottle(CabControlRequest& request) {
     if (this->throttleWasSet) {
         request.SetThrottle(this->localCabControlsDataService->GetThrottle());
         this->throttleIncrement = Increment::None;
+        this->throttleWasSet = false;
         return;
     }
     
@@ -143,6 +144,7 @@ void IncrementalCabControlService::ChangeBrake(CabControlRequest& request) {
     if (this->dynamicBrakeWasSet) {
         request.SetDynamicBrake(this->localCabControlsDataService->GetDynamicBrake());
         this->brakeIncrement = Increment::None;
+        this->dynamicBrakeWasSet = false;
         return;
     }
     
