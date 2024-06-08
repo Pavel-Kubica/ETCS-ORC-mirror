@@ -110,12 +110,16 @@ bool TrainControlUpdateService::HandleMachineInstructions(CabControlRequest& req
     return false;
 }
 
+// If we want to move throttle, we MUST ensure first that dynamic brake is set to 0
+
 void TrainControlUpdateService::HandleHumanInstructions(CabControlRequest& request) {
     switch (humanControlDataService->GetDrivingLever()) {
         case DrivingLeverPosition::Accelerate:
-            this->incrementApiService->StartIncreasingThrottle();                                // THROTTLE
-            this->incrementApiService->SetDynamicBrakeTo(0);                                     // DYNAMIC BRAKE
+            this->incrementApiService->SetDynamicBrakeTo(0);                               // DYNAMIC BRAKE
+            request.SetDynamicBrake(0.0);
             request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::RELEASE));  // TRAIN BRAKE
+            this->cabControlApiService->Send(request); // We must do everything in this order to ensure synchronization between OR and our state
+            this->incrementApiService->StartIncreasingThrottle();                                // THROTTLE
             openRailsState->SetTrainBrake(TrainBrake::RELEASE);
             break;
         case DrivingLeverPosition::Continue:
@@ -148,13 +152,17 @@ void TrainControlUpdateService::HandleHumanInstructions(CabControlRequest& reque
             break;
         case DrivingLeverPosition::PneumaticBrake:
             this->incrementApiService->SetThrottleTo(0);                                       // THROTTLE
-            this->incrementApiService->StopChangingDynamicBrake();                             // DYNAMIC BRAKE
+            request.SetThrottle(0);
             request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::APPLY));  // TRAIN BRAKE
+            this->cabControlApiService->Send(request); // We must do everything in this order to ensure synchronization between OR and our state
+            this->incrementApiService->StartIncreasingDynamicBrake();                               // DYNAMIC BRAKE
             openRailsState->SetTrainBrake(TrainBrake::APPLY);
             break;
         case DrivingLeverPosition::QuickBrake:
             this->incrementApiService->SetThrottleTo(0);                                           // THROTTLE
-            this->incrementApiService->SetDynamicBrakeTo(0);                                       // DYNAMIC BRAKE
+            this->incrementApiService->SetDynamicBrakeTo(1);                                       // DYNAMIC BRAKE
+            request.SetThrottle(0);
+            request.SetDynamicBrake(1);
             request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::EMERGENCY));  // TRAIN BRAKE
             openRailsState->SetTrainBrake(TrainBrake::EMERGENCY);
             break;
