@@ -97,7 +97,7 @@ void IncrementalCabControlService::IncrementingThreadEntryPoint() {
         CabControlRequest request;
         
         std::unique_lock lk(this->mtx);
-        cv.wait(lk, [this]() { return !shouldRun || !WorkDone(); });
+        cv.wait(lk, [this]() { return shouldRun && !WorkDone(); });
         
         this->ChangeThrottle(request);
         if (localCabControlsDataService->GetThrottle() == 0) { // If we attempt to change brake when throttle is not zero, local controls data will be desynchronized
@@ -114,7 +114,6 @@ void IncrementalCabControlService::ChangeThrottle(CabControlRequest& request) {
     // No mutex since we call this method when this->mtx is locked
     if (this->throttleWasSet) {
         request.SetThrottle(this->localCabControlsDataService->GetThrottle());
-        this->throttleIncrement = Increment::None;
         this->throttleWasSet = false;
         return;
     }
@@ -145,7 +144,6 @@ void IncrementalCabControlService::ChangeBrake(CabControlRequest& request) {
     // No mutex since we call this method when this->mtx is locked
     if (this->dynamicBrakeWasSet) {
         request.SetDynamicBrake(this->localCabControlsDataService->GetDynamicBrake());
-        this->brakeIncrement = Increment::None;
         this->dynamicBrakeWasSet = false;
         return;
     }
@@ -175,10 +173,12 @@ void IncrementalCabControlService::SetThrottleTo(double value) {
     std::lock_guard lck(this->mtx);
     this->localCabControlsDataService->SetThrottle(value);
     this->throttleWasSet = true;
+    this->throttleIncrement = Increment::None;
 }
 
 void IncrementalCabControlService::SetDynamicBrakeTo(double value) {
     std::lock_guard lck(this->mtx);
     this->localCabControlsDataService->SetDynamicBrake(value);
     this->dynamicBrakeWasSet = true;
+    this->brakeIncrement = Increment::None;
 }
