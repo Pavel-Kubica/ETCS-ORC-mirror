@@ -107,22 +107,15 @@ void ThrottleAndDynBrakeControlService::IncrementingThreadEntryPoint() {
         
         this->ChangeThrottle(request);
         this->ChangeBrake(request);
-        lk.unlock();
-        
         cabControlApiService->Send(request);
+        lk.unlock();
+
         std::this_thread::sleep_for(config.timeBetweenIncrements);
     }
 }
 
 void ThrottleAndDynBrakeControlService::ChangeThrottle(CabControlRequest& request) {
     // No mutex since we call this method when this->mtx is locked
-    if (this->throttleWasSet) {
-        request.SetThrottle(this->localCabControlsDataService->GetThrottle());
-        this->throttleWasSet = false;
-        this->throttleIncrement = Increment::None;
-        return;
-    }
-
     switch (throttleIncrement) {
         case Increment::Positive: {
             bool finished = !localCabControlsDataService->IncreaseThrottle();
@@ -147,13 +140,6 @@ void ThrottleAndDynBrakeControlService::ChangeThrottle(CabControlRequest& reques
 
 void ThrottleAndDynBrakeControlService::ChangeBrake(CabControlRequest& request) {
     // No mutex since we call this method when this->mtx is locked
-    if (this->dynamicBrakeWasSet) {
-        request.SetDynamicBrake(this->localCabControlsDataService->GetDynamicBrake());
-        this->dynamicBrakeWasSet = false;
-        this->brakeIncrement = Increment::None;
-        return;
-    }
-
     switch (brakeIncrement) {
         case Increment::Positive: {
             bool finished = !localCabControlsDataService->IncreaseDynamicBrake();
@@ -176,25 +162,19 @@ void ThrottleAndDynBrakeControlService::ChangeBrake(CabControlRequest& request) 
     }
 }
 void ThrottleAndDynBrakeControlService::SetThrottleTo(double value) {
-    if (throttleIncrement == Increment::None) // If not, then the incrementing thread will do exactly this on its next tick anyway
-    {
-        CabControlRequest request;
-        request.SetThrottle(value);
-        cabControlApiService->Send(request);
-    }
     std::lock_guard lk(this->mtx);
-    this->localCabControlsDataService->SetThrottle(value);
-    this->throttleWasSet = true;
+    localCabControlsDataService->SetThrottle(value);
+    CabControlRequest request;
+    request.SetThrottle(value);
+    cabControlApiService->Send(request);
+    throttleIncrement = Increment::None;
 }
 
 void ThrottleAndDynBrakeControlService::SetDynamicBrakeTo(double value) {
-    if (brakeIncrement == Increment::None) // If not, then the incrementing thread will do exactly this on its next tick anyway
-    {
-        CabControlRequest request;
-        request.SetDynamicBrake(value);
-        cabControlApiService->Send(request);
-    }
     std::lock_guard lk(this->mtx);
-    this->localCabControlsDataService->SetDynamicBrake(value);
-    this->dynamicBrakeWasSet = true;
+    localCabControlsDataService->SetDynamicBrake(value);
+    CabControlRequest request;
+    request.SetDynamicBrake(value);
+    cabControlApiService->Send(request);
+    brakeIncrement = Increment::None;
 }

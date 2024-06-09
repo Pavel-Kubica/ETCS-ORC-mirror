@@ -67,9 +67,6 @@ private:
     std::condition_variable cv;
     std::thread incrementingThread;
 
-    bool throttleWasSet;
-    bool dynamicBrakeWasSet;
-
     void IncrementingThreadEntryPoint();
 
     /**
