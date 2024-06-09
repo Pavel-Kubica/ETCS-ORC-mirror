@@ -1,4 +1,4 @@
-/** @file IncrementalCabControlService.hpp
+/** @file ThrottleAndDynBrakeControlService.hpp
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
@@ -16,7 +16,7 @@
 
 #include "ConfigurationService.hpp"
 #include "ICabControlApiService.hpp"
-#include "IIncrementalCabControlService.hpp"
+#include "IThrottleAndDynBrakeControlService.hpp"
 #include "IInitializable.hpp"
 #include "ILocalCabControlsDataService.hpp"
 #include "ILpcManageable.hpp"
@@ -27,11 +27,11 @@
 #include <thread>
 #include "AsyncProperty.hpp"
 #include "Increment.hpp"
-#include "IncrementalCabControlConfiguration.hpp"
+#include "ThrottleAndDynBrakeControlConfiguration.hpp"
 
-class IncrementalCabControlService : public IInitializable,
-                                     public ILpcManageable,
-                                     public IIncrementalCabControlService {
+class ThrottleAndDynBrakeControlService : public IInitializable,
+                                          public ILpcManageable,
+                                          public IThrottleAndDynBrakeControlService {
 protected:
     void Initialize(ServiceContainer& container) override;
 
@@ -58,7 +58,7 @@ private:
     Increment brakeIncrement;
 
     // Loading from config files
-    IncrementalCabControlConfiguration config;
+    ThrottleAndDynBrakeControlConfiguration config;
     ConfigurationService* configurationService;
 
     // Says if the incrementing thread should be running or not
@@ -66,7 +66,7 @@ private:
     std::mutex mtx;
     std::condition_variable cv;
     std::thread incrementingThread;
-    
+
     bool throttleWasSet;
     bool dynamicBrakeWasSet;
 

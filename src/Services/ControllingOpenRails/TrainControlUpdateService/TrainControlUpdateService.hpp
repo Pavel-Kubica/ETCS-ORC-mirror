@@ -15,7 +15,7 @@
 #pragma once
 
 #include "ITrainControlUpdateService.hpp"
-#include "IIncrementalCabControlService.hpp"
+#include "IThrottleAndDynBrakeControlService.hpp"
 #include "IInitializable.hpp"
 #include "CabControlApiService.hpp"
 #include "MachineControlDataService.hpp"
@@ -45,7 +45,7 @@ private:
     IHumanControlDataService* humanControlDataService;
     IMachineControlDataService* machineControlDataService;
     IMqttPublisherService* mqttPublisherService;
-    IIncrementalCabControlService* incrementApiService;
+    IThrottleAndDynBrakeControlService* throttleAndDynBrakeService;
     ILocalCabControlsDataService* openRailsState;
     JRULoggerService* jruLoggerService;
     
@@ -62,21 +62,12 @@ private:
      * If (and only if) this function returns false, the state of the `this->humanControlDataService`
      * should be handled.
      */
-    bool HandleMachineInstructions(CabControlRequest & request);
+    bool HandleMachineInstructions();
     
     /**
      * Handles the state of `this->humanControlDataService`.
      */
-    void HandleHumanInstructions(CabControlRequest & request);
-
-    /**
-     * Sets throttle to 0 and immediately sends the corresponding request
-     */
-    void SetThrottleToZeroNow(CabControlRequest& request);
-    /**
-     * Sets dynamic brake to 0 and immediately sends the corresponding request
-     */
-    void SetDynBrakeToZeroNow(CabControlRequest& request);
+    void HandleHumanInstructions();
 
     bool ReverserNotNeutral();
 };
