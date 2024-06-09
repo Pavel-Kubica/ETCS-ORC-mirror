@@ -100,9 +100,7 @@ void IncrementalCabControlService::IncrementingThreadEntryPoint() {
         cv.wait(lk, [this]() { return shouldRun && !WorkDone(); });
         
         this->ChangeThrottle(request);
-        if (localCabControlsDataService->GetThrottle() == 0) { // If we attempt to change brake when throttle is not zero, local controls data will be desynchronized
-            this->ChangeBrake(request);
-        }
+        this->ChangeBrake(request);
         lk.unlock();
         
         cabControlApiService->Send(request);

@@ -68,4 +68,15 @@ private:
      * Handles the state of `this->humanControlDataService`.
      */
     void HandleHumanInstructions(CabControlRequest & request);
+
+    /**
+     * Sets throttle to 0 and immediately sends the corresponding request
+     */
+    void SetThrottleToZeroNow(CabControlRequest& request);
+    /**
+     * Sets dynamic brake to 0 and immediately sends the corresponding request
+     */
+    void SetDynBrakeToZeroNow(CabControlRequest& request);
+
+    bool ReverserNotNeutral();
 };
