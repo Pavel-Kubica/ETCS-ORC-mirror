@@ -103,7 +103,7 @@ void ThrottleAndDynBrakeControlService::IncrementingThreadEntryPoint() {
         CabControlRequest request;
         
         std::unique_lock lk(this->mtx);
-        cv.wait(lk, [this]() { return shouldRun && !WorkDone(); });
+        cv.wait(lk, [this]() { return !shouldRun || !WorkDone(); });
         
         this->ChangeThrottle(request);
         this->ChangeBrake(request);
