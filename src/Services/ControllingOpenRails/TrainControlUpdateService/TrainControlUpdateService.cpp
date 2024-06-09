@@ -169,8 +169,11 @@ void TrainControlUpdateService::HandleHumanInstructions(CabControlRequest& reque
             break;
         case DrivingLeverPosition::QuickBrake:
             SetThrottleToZeroNow(request);                                                            // THROTTLE
-            if (ReverserNotNeutral()) {
-                incrementApiService->SetDynamicBrakeTo(1);                                  // DYNAMIC BRAKE
+            if (ReverserNotNeutral()) {                                                                  // DYNAMIC BRAKE
+                incrementApiService->SetDynamicBrakeTo(1);
+                // If this is the first time we are controlling dynamic brake, API will not react to just sending DynBrake 1
+                request.SetDynamicBrake(0.1);
+                request.SetDynamicBrake(0.6);
                 request.SetDynamicBrake(1);
             }
             request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::EMERGENCY));  // TRAIN BRAKE
