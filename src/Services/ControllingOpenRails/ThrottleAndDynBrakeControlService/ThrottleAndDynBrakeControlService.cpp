@@ -30,42 +30,36 @@ void ThrottleAndDynBrakeControlService::Initialize(ServiceContainer& container) 
 void ThrottleAndDynBrakeControlService::StartIncreasingThrottle() {
     std::lock_guard lck(this->mtx);
     throttleIncrement = Increment::Positive;
-    throttleWasSet = false;
     cv.notify_one();
 }
 
 void ThrottleAndDynBrakeControlService::StopChangingThrottle() {
     std::lock_guard lck(this->mtx);
     throttleIncrement = Increment::None;
-    throttleWasSet = false;
     cv.notify_one();
 }
 
 void ThrottleAndDynBrakeControlService::StartDecreasingThrottle() {
     std::lock_guard lck(this->mtx);
     throttleIncrement = Increment::Negative;
-    throttleWasSet = false;
     cv.notify_one();
 }
 
 void ThrottleAndDynBrakeControlService::StartIncreasingDynamicBrake() {
     std::lock_guard lck(this->mtx);
     brakeIncrement = Increment::Positive;
-    dynamicBrakeWasSet = false;
     cv.notify_one();
 }
 
 void ThrottleAndDynBrakeControlService::StopChangingDynamicBrake() {
     std::lock_guard lck(this->mtx);
     brakeIncrement = Increment::None;
-    dynamicBrakeWasSet = false;
     cv.notify_one();
 }
 
 void ThrottleAndDynBrakeControlService::StartDecreasingDynamicBrake() {
     std::lock_guard lck(this->mtx);
     brakeIncrement = Increment::Negative;
-    dynamicBrakeWasSet = false;
     cv.notify_one();
 }
 
