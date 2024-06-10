@@ -43,15 +43,58 @@ static const std::map<DrivingLeverPosition, unsigned long long> drivingLeverToBi
     {DrivingLeverPosition::PneumaticBrake, 0x13},
 };
 
+static const std::map<unsigned long long, EngineBrakeLeverPosition> engineBrakeSerializations = {
+    {0x11, EngineBrakeLeverPosition::FullRelease},
+    {0x01, EngineBrakeLeverPosition::Release},
+    {0x02, EngineBrakeLeverPosition::Neutral},
+    {0x0a, EngineBrakeLeverPosition::Engage},
+    {0x0c, EngineBrakeLeverPosition::FullPower},
+};
+
+static const std::map<EngineBrakeLeverPosition, unsigned long long> engineBrakeToBits = {
+    {EngineBrakeLeverPosition::FullRelease, 0x11},
+    {EngineBrakeLeverPosition::Release, 0x01},
+    {EngineBrakeLeverPosition::Neutral, 0x02},
+    {EngineBrakeLeverPosition::Engage, 0x0a},
+    {EngineBrakeLeverPosition::FullPower, 0x0c},
+};
+
 CANControlMessage::CANControlMessage() {
     NID_MESSAGE = MessageID::CANControls;
 }
 
 CANControlMessage::CANControlMessage(DrivingLeverPosition drivingLever,
-                                     DirectionLeverPosition directionLever) :
+                                     DirectionLeverPosition directionLever,
+                                     EngineBrakeLeverPosition engineBrake,
+                                     bool generalStop,
+                                     bool leftTimeout,
+                                     bool rightTimeout,
+                                     bool lights,
+                                     bool farLights,
+                                     bool openLeftDoor,
+                                     bool openRightDoor,
+                                     bool horn,
+                                     bool sander,
+                                     bool pantographDown,
+                                     bool pantographUp,
+                                     bool breaker,
+                                     bool emergencyStop) :
     drivingLever(drivingLever),
-    directionLever(directionLever)
-{
+    directionLever(directionLever),
+    engineBrake(engineBrake),
+    generalStop(generalStop),
+    leftTimeout(leftTimeout),
+    rightTimeout(rightTimeout),
+    lights(lights),
+    farLights(farLights),
+    openLeftDoor(openLeftDoor),
+    openRightDoor(openRightDoor),
+    horn(horn),
+    sander(sander),
+    pantographDown(pantographDown),
+    pantographUp(pantographUp),
+    breaker(breaker),
+    emergencyStop(emergencyStop) {
     NID_MESSAGE = MessageID::CANControls;
 }
 
@@ -65,15 +108,45 @@ void CANControlMessage::from_json(const nlohmann::json& j) {
 
 Bitstring CANControlMessage::ToBitstring() const {
     Bitstring bits = Bitstring::FromHex("ff00ff00ff00ff00");
+    unsigned long long engineBrakeBits = engineBrakeToBits.at(GetEngineBrakeLever());
+    bits.Write(GetRightDoor(), 8, 1);
+    bits.Write(GetLeftDoor(), 9, 1);
+    bits.Write(GetGeneralStop(), 10, 1);
+    bits.Write(GetLights(), 24, 1);
+    bits.Write(GetRightTimeout(), 25, 1);
+    bits.Write(GetFarLights(), 26, 1);
+    bits.Write(GetEmergencyStop(), 27, 1);
+    bits.Write(GetLeftTimeout(), 28, 1);
+    bits.Write(GetHorn(), 29, 1);
+    bits.Write(GetSander(), 30, 1);
+    bits.Write(engineBrakeBits & 3, 40, 2);
     bits.Write(directionsToBits.at(GetDirectionLever()), 42, 2);
+    bits.Write(GetPantographDown(), 44, 1);
+    bits.Write(GetPantographUp(), 45, 1);
+    bits.Write(GetBreaker(), 46, 1);
     bits.Write(drivingLeverToBits.at(GetDrivingLever()), 56, 5);
+    bits.Write(engineBrakeBits >> 2, 61, 3);
     return bits;
 }
 
 void CANControlMessage::FromBitstring(const Bitstring& bits) {
     try {
+        openRightDoor = bits.At(8, 1);
+        openLeftDoor = bits.At(9, 1);
+        generalStop = bits.At(10, 1);
+        lights = bits.At(24, 1);
+        rightTimeout = bits.At(25, 1);
+        farLights = bits.At(26, 1);
+        emergencyStop = bits.At(27, 1);
+        leftTimeout = bits.At(28, 1);
+        horn = bits.At(29, 1);
+        sander = bits.At(30, 1);
         directionLever = directionLeverSerializations.at(bits.At(42, 2));
+        pantographDown = bits.At(44, 1);
+        pantographUp = bits.At(45, 1);
+        breaker = bits.At(46, 1);
         drivingLever = drivingLeverSerializations.at(bits.At(56, 5));
+        engineBrake = engineBrakeSerializations.at((bits.At(61, 3) << 2) | bits.At(40, 2));
     }
     catch (const std::out_of_range&) {
         throw std::invalid_argument(__FUNCTION__);
@@ -86,4 +159,60 @@ DrivingLeverPosition CANControlMessage::GetDrivingLever() const noexcept {
 
 DirectionLeverPosition CANControlMessage::GetDirectionLever() const noexcept {
     return directionLever;
+}
+
+EngineBrakeLeverPosition CANControlMessage::GetEngineBrakeLever() const noexcept {
+    return engineBrake;
+}
+
+bool CANControlMessage::GetGeneralStop() const noexcept {
+    return generalStop;
+}
+
+bool CANControlMessage::GetLeftTimeout() const noexcept {
+    return leftTimeout;
+}
+
+bool CANControlMessage::GetRightTimeout() const noexcept {
+    return rightTimeout;
+}
+
+bool CANControlMessage::GetLights() const noexcept {
+    return lights;
+}
+
+bool CANControlMessage::GetFarLights() const noexcept {
+    return farLights;
+}
+
+bool CANControlMessage::GetLeftDoor() const noexcept {
+    return openLeftDoor;
+}
+
+bool CANControlMessage::GetRightDoor() const noexcept {
+    return openRightDoor;
+}
+
+bool CANControlMessage::GetHorn() const noexcept {
+    return horn;
+}
+
+bool CANControlMessage::GetSander() const noexcept {
+    return sander;
+}
+
+bool CANControlMessage::GetPantographDown() const noexcept {
+    return pantographDown;
+}
+
+bool CANControlMessage::GetPantographUp() const noexcept {
+    return pantographUp;
+}
+
+bool CANControlMessage::GetBreaker() const noexcept {
+    return breaker;
+}
+
+bool CANControlMessage::GetEmergencyStop() const noexcept {
+    return emergencyStop;
 }
