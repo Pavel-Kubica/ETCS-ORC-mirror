@@ -25,9 +25,18 @@ void CANControlMessageHandler::HandleMessageBody(const Message& message) {
     const auto& msg = static_cast<const CANControlMessage&>(message);
     DrivingLeverPosition drivingLeverPosition = msg.GetDrivingLever();
     DirectionLeverPosition directionLeverPosition = msg.GetDirectionLever();
+    EngineBrakeLeverPosition engineBrakeLeverPosition = msg.GetEngineBrakeLever();
+    // TODO is this pantograph behavior correct?
+    bool pantograph = !msg.GetPantographDown();
+    bool horn = msg.GetHorn();
+    bool sander = msg.GetSander();
 
     if (drivingLeverPosition == humanControlDataService->GetDrivingLever() &&
-        directionLeverPosition == humanControlDataService->GetTrainDirection()) {
+        directionLeverPosition == humanControlDataService->GetTrainDirection() &&
+        engineBrakeLeverPosition == humanControlDataService->GetEngineBrake() &&
+        pantograph == humanControlDataService->GetPantograph() &&
+        horn == humanControlDataService->GetHorn() &&
+        sander == humanControlDataService->GetSander()) {
         jruLoggerService->Log(MessageType::Note,
                               "[CAN] ----> [ORC] || CAN control WITH NO CHANGE. "
                               "[Main lever: %drivingLeverPosition%] "
@@ -44,6 +53,10 @@ void CANControlMessageHandler::HandleMessageBody(const Message& message) {
 
     humanControlDataService->SetDrivingLever(drivingLeverPosition);
     humanControlDataService->SetTrainDirection(directionLeverPosition);
+    humanControlDataService->SetEngineBrake(engineBrakeLeverPosition);
+    humanControlDataService->SetPantograph(pantograph);
+    humanControlDataService->SetHorn(horn);
+    humanControlDataService->SetSander(sander);
     trainControlUpdateService->Update();
 }
 
