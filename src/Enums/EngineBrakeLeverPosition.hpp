@@ -11,6 +11,8 @@
  *  kubicpa3
  */
 
+#pragma once
+
 enum class EngineBrakeLeverPosition {
     FullRelease,
     Release,

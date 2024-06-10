@@ -121,6 +121,16 @@ void ConsoleInputService::MainLoop() {
                 }
                 break;
             }
+            case 'p': {
+                bool pantograph = (bool)argument;
+                this->humanControlService->SetPantograph(pantograph);
+                break;
+            }
+            case 'h': {
+                bool horn = (bool)argument;
+                this->humanControlService->SetHorn(horn);
+                break;
+            }
             
             default:
                 invalidInput();

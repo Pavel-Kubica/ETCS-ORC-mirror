@@ -138,8 +138,7 @@ void TrainControlUpdateService::HandleDrivingLever() {
     switch (humanControlDataService->GetDrivingLever()) {
         case DrivingLeverPosition::Accelerate: {
             if (ReverserNotNeutral()) {
-                throttleAndDynBrakeService->SetDynamicBrakeTo(
-                        0);                                           // DYNAMIC BRAKE
+                throttleAndDynBrakeService->SetDynamicBrakeTo(0);                                           // DYNAMIC BRAKE
             }
             throttleAndDynBrakeService->StartIncreasingThrottle();                                // THROTTLE
 

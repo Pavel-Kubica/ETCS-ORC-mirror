@@ -15,7 +15,6 @@
 #include <atomic>
 #include "AsyncProperty.hpp"
 #include "IHumanControlDataService.hpp"
-#include "EngineBrakeLeverPosition.hpp"
 
 class HumanControlDataService : public IHumanControlDataService {
 public:
