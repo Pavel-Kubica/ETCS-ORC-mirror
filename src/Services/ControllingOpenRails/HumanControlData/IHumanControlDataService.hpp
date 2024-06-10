@@ -16,6 +16,7 @@
 #include "IService.hpp"
 #include "DirectionLeverPosition.hpp"
 #include "DrivingLeverPosition.hpp"
+#include "EngineBrakeLeverPosition.hpp"
 
 class IHumanControlDataService : public IService {
 public:
@@ -36,6 +37,26 @@ public:
     virtual void SetDrivingLever(DrivingLeverPosition position) = 0;
     
     [[nodiscard]] virtual bool HasTouchedRelease() const = 0;
+
+    [[nodiscard]] virtual EngineBrakeLeverPosition GetEngineBrake() const = 0;
+
+    virtual void SetEngineBrake(EngineBrakeLeverPosition percentage) = 0;
+
+    [[nodiscard]] virtual bool GetQuickRelease() const = 0;
+
+    virtual void SetQuickRelease(bool on) = 0;
+
+    [[nodiscard]] virtual bool GetHorn() const = 0;
+
+    virtual void SetHorn(bool on) = 0;
+
+    [[nodiscard]] virtual bool GetSander() const = 0;
+
+    virtual void SetSander(bool sander) = 0;
+
+    [[nodiscard]] virtual bool GetPantograph() const = 0;
+
+    virtual void SetPantograph(bool up) = 0;
 
     static constexpr ServiceType Type = ServiceType::TrainControlData;
 };

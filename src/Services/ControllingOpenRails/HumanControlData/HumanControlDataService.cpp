@@ -66,3 +66,43 @@ bool HumanControlDataService::HasTouchedRelease() const {
     std::lock_guard l(leverPositionMutex);
     return this->touchedRelease;
 }
+
+EngineBrakeLeverPosition HumanControlDataService::GetEngineBrake() const {
+    return engineBrake;
+}
+
+void HumanControlDataService::SetEngineBrake(EngineBrakeLeverPosition position) {
+    engineBrake = position;
+}
+
+bool HumanControlDataService::GetQuickRelease() const {
+    return quickRelease;
+}
+
+void HumanControlDataService::SetQuickRelease(bool on) {
+    quickRelease = on;
+}
+
+bool HumanControlDataService::GetHorn() const {
+    return horn;
+}
+
+void HumanControlDataService::SetHorn(bool on) {
+    horn = on;
+}
+
+bool HumanControlDataService::GetSander() const {
+    return sander;
+}
+
+void HumanControlDataService::SetSander(bool on) {
+    sander = on;
+}
+
+bool HumanControlDataService::GetPantograph() const {
+    return pantograph;
+}
+
+void HumanControlDataService::SetPantograph(bool up) {
+    pantograph = up;
+}

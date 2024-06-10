@@ -15,6 +15,7 @@
 #include <atomic>
 #include "AsyncProperty.hpp"
 #include "IHumanControlDataService.hpp"
+#include "EngineBrakeLeverPosition.hpp"
 
 class HumanControlDataService : public IHumanControlDataService {
 public:
@@ -37,10 +38,35 @@ public:
     void SetDrivingLever(DrivingLeverPosition position) override;
     
     [[nodiscard]] bool HasTouchedRelease() const override;
-    
+
+    [[nodiscard]] EngineBrakeLeverPosition GetEngineBrake() const override;
+
+    void SetEngineBrake(EngineBrakeLeverPosition position) override;
+
+    [[nodiscard]] bool GetQuickRelease() const override;
+
+    void SetQuickRelease(bool on) override;
+
+    [[nodiscard]] bool GetHorn() const override;
+
+    void SetHorn(bool on) override;
+
+    [[nodiscard]] bool GetSander() const override;
+
+    void SetSander(bool on) override;
+
+    [[nodiscard]] bool GetPantograph() const override;
+
+    void SetPantograph(bool up) override;
+
 private:
     std::atomic_bool battery;
     std::atomic_bool cab;
+    std::atomic<EngineBrakeLeverPosition> engineBrake;
+    std::atomic_bool quickRelease;
+    std::atomic_bool horn;
+    std::atomic_bool sander;
+    std::atomic_bool pantograph;
 
 private:
     std::atomic<DirectionLeverPosition> trainDirection;
