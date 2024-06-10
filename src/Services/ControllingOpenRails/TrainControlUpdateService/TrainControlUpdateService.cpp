@@ -120,6 +120,16 @@ bool TrainControlUpdateService::HandleMachineInstructions() {
 // Additionally, we cannot move dynamic brake if the Reverser is in the Neutral position
 
 void TrainControlUpdateService::HandleHumanInstructions() {
+
+    HandleDrivingLever();
+
+}
+
+bool TrainControlUpdateService::ReverserNotNeutral() {
+    return humanControlDataService->GetTrainDirection() != DirectionLeverPosition::Neutral;
+}
+
+void TrainControlUpdateService::HandleDrivingLever() {
     CabControlRequest request;
     switch (humanControlDataService->GetDrivingLever()) {
         case DrivingLeverPosition::Accelerate:
@@ -183,8 +193,4 @@ void TrainControlUpdateService::HandleHumanInstructions() {
             break;
     }
     cabControlApiService->Send(request);
-}
-
-bool TrainControlUpdateService::ReverserNotNeutral() {
-    return humanControlDataService->GetTrainDirection() != DirectionLeverPosition::Neutral;
 }
