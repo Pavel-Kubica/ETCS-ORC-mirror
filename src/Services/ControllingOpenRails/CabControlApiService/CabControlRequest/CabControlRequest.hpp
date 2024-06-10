@@ -30,6 +30,9 @@ public:
     CabControlRequest& SetEngineBrake(double percentage);
     CabControlRequest& SetDynamicBrake(double percentage);
     CabControlRequest& SetDirection(DirectionLeverPosition position);
+    CabControlRequest& SetPantograph(bool up);
+    CabControlRequest& SetHorn(bool on);
+    CabControlRequest& SetSander(bool on);
 
     CabControlRequest& Clear();
     

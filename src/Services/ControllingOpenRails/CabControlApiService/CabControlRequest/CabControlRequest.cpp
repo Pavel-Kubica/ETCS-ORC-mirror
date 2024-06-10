@@ -58,6 +58,21 @@ CabControlRequest& CabControlRequest::SetDirection(DirectionLeverPosition positi
     return *this;
 }
 
+CabControlRequest &CabControlRequest::SetSander(bool on) {
+    this->items.emplace_back(CabControlType::Sander, on);
+    return *this;
+}
+
+CabControlRequest &CabControlRequest::SetHorn(bool on) {
+    this->items.emplace_back(CabControlType::Horn, on);
+    return *this;
+}
+
+CabControlRequest &CabControlRequest::SetPantograph(bool up) {
+    this->items.emplace_back(CabControlType::Pantograph, up);
+    return *this;
+}
+
 CabControlRequest& CabControlRequest::Clear() {
     this->items.clear();
     return *this;
