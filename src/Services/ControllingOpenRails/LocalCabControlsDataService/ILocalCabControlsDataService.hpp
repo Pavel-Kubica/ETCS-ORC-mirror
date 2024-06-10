@@ -18,7 +18,7 @@
 #pragma once
 
 #include "IService.hpp"
-#include "OpenRailsTrainBrakeState.hpp"
+#include "TrainBrake.hpp"
 
 class ILocalCabControlsDataService : public IService
 {
@@ -28,8 +28,8 @@ public:
     [[nodiscard]] virtual double GetThrottleStep() const = 0;
 
     // Sets by how much the engine brake should be increased/decreased with each incremental change
-    virtual void SetEngineBrakeStep(double step) = 0;
-    [[nodiscard]] virtual double GetEngineBrakeStep() const = 0;
+    virtual void SetDynamicBrakeStep(double step) = 0;
+    [[nodiscard]] virtual double GetDynamicBrakeStep() const = 0;
 
     virtual void SetThrottle(double newValue) = 0;
     [[nodiscard]] virtual double GetThrottle() const = 0;
@@ -38,15 +38,15 @@ public:
     // Returns true if throttle is still above 0
     [[nodiscard]] virtual bool DecreaseThrottle() = 0;
 
-    virtual void SetEngineBrake(double newValue) = 0;
-    [[nodiscard]] virtual double GetEngineBrake() const = 0;
+    virtual void SetDynamicBrake(double newValue) = 0;
+    [[nodiscard]] virtual double GetDynamicBrake() const = 0;
     // Returns true if engine brake is not yet at its maximum value
-    [[nodiscard]] virtual bool IncreaseEngineBrake() = 0;
+    [[nodiscard]] virtual bool IncreaseDynamicBrake() = 0;
     // Returns true if engine brake is still above 0
-    [[nodiscard]] virtual bool DecreaseEngineBrake() = 0;
+    [[nodiscard]] virtual bool DecreaseDynamicBrake() = 0;
 
-    virtual void SetTrainBrake(OpenRailsTrainBrakeState newState) = 0;
-    [[nodiscard]] virtual OpenRailsTrainBrakeState GetTrainBrake() const = 0;
+    virtual void SetTrainBrake(TrainBrake newState) = 0;
+    [[nodiscard]] virtual TrainBrake GetTrainBrake() const = 0;
 
     static constexpr ServiceType Type = ServiceType::LocalCabControlsData;
 };

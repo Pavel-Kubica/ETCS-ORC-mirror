@@ -11,13 +11,12 @@
  *  nguyem12
  */
 
-
 #include "OdoToEvcSenderService.hpp"
-#include "Odo/Evc/ODOMeasurementsMessage.hpp"
 #include "ODODirection.hpp"
+#include "Odo/Evc/ODOMeasurementsMessage.hpp"
 
-
-void OdoToEvcSenderService::Initialize(ServiceContainer &container) {
+void OdoToEvcSenderService::Initialize(ServiceContainer& container) {
+    jruLoggerService = container.FetchService<JRULoggerService>().get();
     mqttPublisher = container.FetchService<IMqttPublisherService>().get();
 }
 
@@ -34,18 +33,15 @@ void OdoToEvcSenderService::SendSimulationState(const SimulationState& simulatio
     }
 
     ODOMeasurementsMessage odoMeasurements(
-        Q_CONTROL,
-        static_cast<uint32_t>(simulationState.distanceTravelledInMetres),
-        abs(simulationState.speedInMetresPerSecond),
-        static_cast<uint16_t>(simulationState.accelerationInMetersPerSecondSquared),
-        NID_C,
-        NID_BG,
-        DL_DOUBTOVER,
-        DL_DOUBTUNDER,
-        V_DOUBTPOS,
-        V_DOUBTNEG,
-        q_control
-    );
+        Q_CONTROL, static_cast<uint32_t>(simulationState.distanceTravelledInMetres * 100),
+        abs(simulationState.speedInMetresPerSecond) * 3.6,
+        static_cast<uint16_t>(simulationState.accelerationInMetersPerSecondSquared), NID_C, NID_BG, DL_DOUBTOVER,
+        DL_DOUBTUNDER, V_DOUBTPOS, V_DOUBTNEG, q_control);
 
+    jruLoggerService->Log(true, MessageType::Debug,
+                          "OdoToEvcSenderService: sending ODO message "
+                          "[travelled-distance: %distance%] "
+                          "[speed: %speed%]",
+                          simulationState.distanceTravelledInMetres, simulationState.speedInMetresPerSecond);
     mqttPublisher->Publish(std::make_shared<ODOMeasurementsMessage>(odoMeasurements));
 }

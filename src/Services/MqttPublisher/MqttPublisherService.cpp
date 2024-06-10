@@ -48,6 +48,7 @@ void MqttPublisherService::Initialize(ServiceContainer& container) {
 void MqttPublisherService::ConnectToBroker() {
     if (!komar) {
         komar = mosquitto_new("OrcPublisher", true, this);
+        mosquitto_threaded_set(komar, true);
         auto res = mosquitto_connect_async(komar, mqttHostname.c_str(), mqttPort, 60);
         if (res != MOSQ_ERR_SUCCESS) {
             throw std::runtime_error(std::string("MqttPublisher could not connect to MQTT broker.") +

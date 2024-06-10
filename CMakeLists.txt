@@ -88,9 +88,10 @@ include_directories(lib
         src/Core/TopicWorker
         src/Messages
         src/Services
+        src/Services/ConsoleInput/
         src/Services/ControllingOpenRails/
         src/Services/ControllingOpenRails/LocalCabControlsDataService
-        src/Services/ControllingOpenRails/IncrementalCabControlService
+        src/Services/ControllingOpenRails/ThrottleAndDynBrakeControlService
         src/Services/ControllingOpenRails/CabControlApiService
         src/Services/ControllingOpenRails/TrainControlUpdateService
         src/Services/Configuration
@@ -113,6 +114,7 @@ include_directories(lib
         src/MessageHandlers/LPC
         src/MessageHandlers/EVC
         src/MessageHandlers/TIU
+        src/MessageHandlers/CAN
         src/Enums
         src/Configurations
         src/Utils

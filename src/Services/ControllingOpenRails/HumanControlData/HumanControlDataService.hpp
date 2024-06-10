@@ -9,11 +9,12 @@
  *
  *  ###Contributors
  *  kubicpa3
+ *  rehorja8
  */
 
-#include "IHumanControlDataService.hpp"
 #include <atomic>
 #include "AsyncProperty.hpp"
+#include "IHumanControlDataService.hpp"
 
 class HumanControlDataService : public IHumanControlDataService {
 public:
@@ -34,10 +35,20 @@ public:
     [[nodiscard]] DrivingLeverPosition GetDrivingLever() const override;
 
     void SetDrivingLever(DrivingLeverPosition position) override;
-
+    
+    [[nodiscard]] bool HasTouchedRelease() const override;
+    
 private:
     std::atomic_bool battery;
     std::atomic_bool cab;
-    AsyncProperty<DirectionLeverPosition> trainDirection;
-    AsyncProperty<DrivingLeverPosition> drivingLeverPosition;
+
+private:
+    std::atomic<DirectionLeverPosition> trainDirection;
+    DrivingLeverPosition drivingLeverPosition;
+    bool touchedRelease;
+
+    // mutable is for const getters
+    // - this example with mutable mutex is on cpp reference:
+    // https://en.cppreference.com/w/cpp/language/cv
+    mutable std::mutex leverPositionMutex{};
 };

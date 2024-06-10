@@ -42,7 +42,8 @@ void CabControlApiService::Initialize(ServiceContainer& container) {
     this->jruLoggerService = container.FetchService<JRULoggerService>().get();
     this->configurationService = container.FetchService<ConfigurationService>().get();
     
-    // TODO: remove call to this method once the ORC is able to resolve messages from LPC.
+    // This is here so the configuration file is created during initialisation
+    // even when no LpcSaidStart message is received.
     this->LoadConfig();
 }
 

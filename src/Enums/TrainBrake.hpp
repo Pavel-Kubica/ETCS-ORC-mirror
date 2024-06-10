@@ -21,6 +21,6 @@ enum class TrainBrake {
     QUICK_RELEASE,
     RELEASE,       // stored as a percentage
     NEUTRAL,       // stored as a percentage
-    CONT_SERVICE,  // stored as a percentage
+    APPLY,         // stored as a percentage
     EMERGENCY      // stored as a percentage
 };

@@ -33,6 +33,7 @@ enum class ServiceType {
     Btm,
     SimulationStateApi,
     BalisesFromJson,
+    ConsoleInput,
 
     // Controlling OpenRails
     CabControlApi,
@@ -40,5 +41,5 @@ enum class ServiceType {
     MachineControlData,
     TrainControlUpdate,
     LocalCabControlsData,
-    IncrementalCabControl
+    ThrottleAndDynBrakeControl
 };

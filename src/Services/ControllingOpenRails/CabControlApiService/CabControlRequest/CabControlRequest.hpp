@@ -30,6 +30,8 @@ public:
     CabControlRequest& SetEngineBrake(double percentage);
     CabControlRequest& SetDynamicBrake(double percentage);
     CabControlRequest& SetDirection(DirectionLeverPosition position);
+
+    CabControlRequest& Clear();
     
 private:
     struct RequestItem {

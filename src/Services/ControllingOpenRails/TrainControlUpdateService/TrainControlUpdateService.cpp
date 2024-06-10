@@ -21,10 +21,11 @@ void TrainControlUpdateService::Initialize(ServiceContainer& container) {
     humanControlDataService = container.FetchService<IHumanControlDataService>().get();
     machineControlDataService = container.FetchService<IMachineControlDataService>().get();
     mqttPublisherService = container.FetchService<IMqttPublisherService>().get();
-    incrementApiService = container.FetchService<IIncrementalCabControlService>().get();
+    throttleAndDynBrakeService = container.FetchService<IThrottleAndDynBrakeControlService>().get();
     openRailsState = container.FetchService<ILocalCabControlsDataService>().get();
     configurationService = container.FetchService<ConfigurationService>().get();
-    
+    jruLoggerService = container.FetchService<JRULoggerService>().get();
+
     // This causes to create a config file if one does not exist.
     // This is handy so that we can just run the program once without LpcSaidStart
     // and the configuration gets created.
@@ -64,89 +65,126 @@ void TrainControlUpdateService::SendFromTiuMessageToEvc() {
         default:
             throw std::runtime_error("unreachable branch");
     }
-    FromTIUMessage message{humanControlDataService->GetBattery(), humanControlDataService->GetCab(),
-                           dir};
+    FromTIUMessage message{humanControlDataService->GetBattery(), humanControlDataService->GetCab(), dir};
     mqttPublisherService->Publish(std::make_shared<FromTIUMessage>(message));
 }
 
 void TrainControlUpdateService::SendOpenRailsCabControlsRequest() {
-    if (!humanControlDataService->GetBattery() || !humanControlDataService->GetCab()) {
-        return; // Cannot control the train if we are switched off
+    bool battery = humanControlDataService->GetBattery();
+    bool cab = humanControlDataService->GetCab();
+    if (!battery || !cab) {
+        jruLoggerService->Log(
+            true, MessageType::Note,
+            "TrainControlUpdateService: (small) warning - no action was sent to train because the cab or "
+            "battery is off: [battery:%battery%] [cab:%cab%]",
+            battery, cab);
+        return;  // Cannot control the train if we are switched off
     }
-    
+
     CabControlRequest apiRequest;
-    apiRequest.SetDirection(humanControlDataService->GetTrainDirection());
-    
-    bool hadToHandleMachineInstructions = this->HandleMachineInstructions(apiRequest);
-    if (!hadToHandleMachineInstructions) {
-        this->HandleHumanInstructions(apiRequest);
+    if (openRailsState->GetDynamicBrake() == 0) { // Cannot move Reverser while DynBrake is active
+        apiRequest.SetDirection(humanControlDataService->GetTrainDirection());
     }
-    
-    this->cabControlApiService->Send(apiRequest);
+    // TODO handle pantographs, lights etc.
+    cabControlApiService->Send(apiRequest);
+
+    bool hadToHandleMachineInstructions = this->HandleMachineInstructions();
+    if (!hadToHandleMachineInstructions) {
+        this->HandleHumanInstructions();
+    }
 }
 
-void TrainControlUpdateService::SetThrottleInternal(double value, CabControlRequest& request) {
-    this->incrementApiService->StopChangingThrottle();
-    request.SetThrottle(value);
-    this->openRailsState->SetThrottle(value);
-}
-
-void TrainControlUpdateService::SetEngineBrakeInternal(double value, CabControlRequest& request) {
-    this->incrementApiService->StopChangingEngineBrake();
-    request.SetEngineBrake(value);
-    this->openRailsState->SetEngineBrake(value);
-}
-
-bool TrainControlUpdateService::HandleMachineInstructions(CabControlRequest& request) {
+bool TrainControlUpdateService::HandleMachineInstructions() {
+    CabControlRequest request;
     if (this->machineControlDataService->GetEmergencyBrake()) {
-        this->SetThrottleInternal(0, request);
-        this->SetEngineBrakeInternal(1, request);
+        this->throttleAndDynBrakeService->SetThrottleTo(0);
         request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::EMERGENCY));
+        this->openRailsState->SetTrainBrake(TrainBrake::EMERGENCY);
+        cabControlApiService->Send(request);
         return true;
     }
-    
+
     if (this->machineControlDataService->GetServiceBrake()) {
-        this->SetThrottleInternal(0, request);
-        this->SetEngineBrakeInternal(1, request);
+        this->throttleAndDynBrakeService->SetThrottleTo(0);
+        request.SetEngineBrake(1);
         request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::NEUTRAL));
+        cabControlApiService->Send(request);
         return true;
     }
     
     return false;
 }
 
-void TrainControlUpdateService::HandleHumanInstructions(CabControlRequest& request) {
+// INVARIANTS:
+// We must always ensure that !(DynBrake > 0 && Throttle > 0)
+// Additionally, we cannot move dynamic brake if the Reverser is in the Neutral position
+
+void TrainControlUpdateService::HandleHumanInstructions() {
+    CabControlRequest request;
     switch (humanControlDataService->GetDrivingLever()) {
         case DrivingLeverPosition::Accelerate:
-            this->incrementApiService->StartIncreasingThrottle();                                                        // THROTTLE
-            this->SetEngineBrakeInternal(0, request);                                                            // ENGINE BRAKE
-            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::QUICK_RELEASE)); // TRAIN BRAKE
+            if (ReverserNotNeutral()) {
+                throttleAndDynBrakeService->SetDynamicBrakeTo(0);                                           // DYNAMIC BRAKE
+            }
+            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::RELEASE));  // TRAIN BRAKE
+            throttleAndDynBrakeService->StartIncreasingThrottle();                                // THROTTLE
+            openRailsState->SetTrainBrake(TrainBrake::RELEASE);
             break;
         case DrivingLeverPosition::Continue:
-            this->incrementApiService->StopChangingThrottle();                                                      // THROTTLE
-            this->incrementApiService->StartDecreasingEngineBrake();                                               // ENGINE BRAKE
-            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::RELEASE)); // TRAIN BRAKE
+            // As long as the invariants are preserved everywhere else, we do not need any checks here
+            throttleAndDynBrakeService->StopChangingThrottle();                                   // THROTTLE
+            throttleAndDynBrakeService->StartDecreasingDynamicBrake();                            // DYNAMIC BRAKE
+            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::RELEASE));  // TRAIN BRAKE
+            openRailsState->SetTrainBrake(TrainBrake::RELEASE);
             break;
         case DrivingLeverPosition::Neutral:
-            this->incrementApiService->StartDecreasingThrottle();                                                   // THROTTLE
-            this->incrementApiService->StopChangingEngineBrake();                                                   // ENGINE BRAKE
-            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::NEUTRAL)); // TRAIN BRAKE
+            // As long as the invariants are preserved everywhere else, we do not need any checks here
+            throttleAndDynBrakeService->StartDecreasingThrottle();   // THROTTLE
+            throttleAndDynBrakeService->StopChangingDynamicBrake();  // DYNAMIC BRAKE
+            if (humanControlDataService->HasTouchedRelease()) {     // TRAIN BRAKE
+                request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::RELEASE));
+                openRailsState->SetTrainBrake(TrainBrake::RELEASE);
+            } else {
+                request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::NEUTRAL));
+                openRailsState->SetTrainBrake(TrainBrake::NEUTRAL);
+            }
             break;
         case DrivingLeverPosition::ElectrodynamicBrake:
-            this->SetThrottleInternal(0, request);                                                         // THROTTLE
-            this->incrementApiService->StartIncreasingEngineBrake();                                               // ENGINE BRAKE
-            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::NEUTRAL)); // TRAIN BRAKE
+            throttleAndDynBrakeService->SetThrottleTo(0);                         // THROTTLE
+            if (ReverserNotNeutral()) {
+                throttleAndDynBrakeService->StartIncreasingDynamicBrake();        // DYNAMIC BRAKE
+            }
+            if (humanControlDataService->HasTouchedRelease()) {        // TRAIN BRAKE
+                request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::RELEASE));
+                openRailsState->SetTrainBrake(TrainBrake::RELEASE);
+            } else {
+                request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::NEUTRAL));
+                openRailsState->SetTrainBrake(TrainBrake::NEUTRAL);
+            }
             break;
         case DrivingLeverPosition::PneumaticBrake:
-            this->SetThrottleInternal(0, request);                                                              // THROTTLE
-            this->incrementApiService->StartIncreasingEngineBrake();                                                    // ENGINE BRAKE
-            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::CONT_SERVICE)); // TRAIN BRAKE
+            throttleAndDynBrakeService->SetThrottleTo(0);                                                           // THROTTLE
+            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::APPLY));  // TRAIN BRAKE
+            if (ReverserNotNeutral()) {
+                throttleAndDynBrakeService->StartIncreasingDynamicBrake();                               // DYNAMIC BRAKE
+            }
+            openRailsState->SetTrainBrake(TrainBrake::APPLY);
             break;
         case DrivingLeverPosition::QuickBrake:
-            this->SetThrottleInternal(0, request);                                                           // THROTTLE
-            this->SetEngineBrakeInternal(1, request);                                                        // ENGINE BRAKE
-            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::EMERGENCY)); // TRAIN BRAKE
+            throttleAndDynBrakeService->SetThrottleTo(0);                                                             // THROTTLE
+            if (ReverserNotNeutral()) {                                                                  // DYNAMIC BRAKE
+                // If this is the first time we are controlling dynamic brake, API will not react to just sending DynBrake 1
+                throttleAndDynBrakeService->SetDynamicBrakeTo(0.1);
+                throttleAndDynBrakeService->SetDynamicBrakeTo(0.6);
+                throttleAndDynBrakeService->SetDynamicBrakeTo(1);
+            }
+            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::EMERGENCY));  // TRAIN BRAKE
+            openRailsState->SetTrainBrake(TrainBrake::EMERGENCY);
             break;
     }
+    cabControlApiService->Send(request);
 }
 
+bool TrainControlUpdateService::ReverserNotNeutral() {
+    return humanControlDataService->GetTrainDirection() != DirectionLeverPosition::Neutral;
+}

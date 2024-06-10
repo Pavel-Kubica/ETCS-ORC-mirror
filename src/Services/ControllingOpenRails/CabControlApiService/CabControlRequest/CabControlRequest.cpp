@@ -57,3 +57,8 @@ CabControlRequest& CabControlRequest::SetDirection(DirectionLeverPosition positi
     );
     return *this;
 }
+
+CabControlRequest& CabControlRequest::Clear() {
+    this->items.clear();
+    return *this;
+}

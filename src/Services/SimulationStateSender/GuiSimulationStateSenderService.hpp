@@ -14,10 +14,10 @@
 #pragma once
 
 #include "IGuiSimulationStateSenderService.hpp"
-#include "ServiceContainer.hpp"
 #include "IInitializable.hpp"
 #include "IMqttPublisherService.hpp"
-
+#include "JRULoggerService.hpp"
+#include "ServiceContainer.hpp"
 
 class GuiSimulationStateSenderService : public IGuiSimulationStateSenderService,
                                         public IInitializable {
@@ -27,5 +27,6 @@ public:
     void SendSimulationState(const SimulationState& simulationState) override;
 
 private:
+    JRULoggerService* jruLoggerService;
     IMqttPublisherService* mqttPublisher{};
 };

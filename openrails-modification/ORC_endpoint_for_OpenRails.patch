@@ -1,8 +1,8 @@
 diff --git a/Source/RunActivity/Viewer3D/WebServices/WebServer.cs b/Source/RunActivity/Viewer3D/WebServices/WebServer.cs
-index 42c8128..802fe91 100644
+index 42c8128..91782f7 100644
 --- a/Source/RunActivity/Viewer3D/WebServices/WebServer.cs
 +++ b/Source/RunActivity/Viewer3D/WebServices/WebServer.cs
-@@ -134,6 +134,58 @@ public ORTSApiController(Viewer viewer)
+@@ -134,6 +134,60 @@ public ORTSApiController(Viewer viewer)
              Viewer = viewer;
          }
  
@@ -13,11 +13,12 @@ index 42c8128..802fe91 100644
 +        {
 +            public float DistanceTravelledInMeters;
 +            public float SpeedInMetersPerSecond;
-+            public float AccelerationInMeteresPerSecondSquared;
++            public float AccelerationInMetersPerSecondSquared;
 +            public float ThrottleLeverPercentage;
 +            public float Direction;
-+            public float BrakeCylinderPreasureInPsi;
-+            public float MainPipeBrakePreasureInPsi;
++            public float BrakeCylinderPressureInPsi;
++            public float MainPipeBrakePressureInPsi;
++            public float MainReservoirPressureInPsi;
 +            public float MotiveForceInNewtons;
 +        }
 +
@@ -30,11 +31,12 @@ index 42c8128..802fe91 100644
 +            {
 +                DistanceTravelledInMeters             = train.DistanceTravelledM,
 +                SpeedInMetersPerSecond                = train.SpeedMpS,
-+                AccelerationInMeteresPerSecondSquared = train.AccelerationMpSpS.Value,
++                AccelerationInMetersPerSecondSquared = train.AccelerationMpSpS.Value,
 +                ThrottleLeverPercentage               = train.MUThrottlePercent,
 +                Direction                             = DirectionToFloat(train.MUDirection),
-+                BrakeCylinderPreasureInPsi            = train.HUDLocomotiveBrakeCylinderPSI,
-+                MainPipeBrakePreasureInPsi            = train.LeadPipePressurePSI,
++                BrakeCylinderPressureInPsi            = train.HUDLocomotiveBrakeCylinderPSI,
++                MainPipeBrakePressureInPsi            = train.LeadPipePressurePSI,
++                MainReservoirPressureInPsi            = train.BrakeLine2PressurePSI,
 +                MotiveForceInNewtons                  = train.Cars[0].MotiveForceN,
 +            };
 +        }

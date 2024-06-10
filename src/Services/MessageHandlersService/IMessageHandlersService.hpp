@@ -25,6 +25,7 @@ public:
     explicit IMessageHandlersService() : IService() {}
 
     virtual std::map<MessageID, std::shared_ptr<MessageHandler>> GetAllHandlers() const = 0;
+    [[nodiscard]] virtual std::optional<std::shared_ptr<MessageHandler>> TryToGetCANMessageHandler(Topic topic) const = 0;
 
     static constexpr ServiceType Type = ServiceType::MessageHandlers;
 };

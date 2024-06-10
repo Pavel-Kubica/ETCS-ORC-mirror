@@ -13,12 +13,11 @@
 
 #pragma once
 
-
-#include "IOdoToEvcSenderService.hpp"
 #include "IInitializable.hpp"
-#include "ServiceContainer.hpp"
 #include "IMqttPublisherService.hpp"
-
+#include "IOdoToEvcSenderService.hpp"
+#include "JRULoggerService.hpp"
+#include "ServiceContainer.hpp"
 
 class OdoToEvcSenderService : public IOdoToEvcSenderService,
                               public IInitializable {
@@ -28,6 +27,7 @@ public:
     void SendSimulationState(const SimulationState& simulationState) override;
 
 private:
+    JRULoggerService* jruLoggerService;
     IMqttPublisherService* mqttPublisher{};
 
     static constexpr uint16_t Q_CONTROL = 0b100000000;

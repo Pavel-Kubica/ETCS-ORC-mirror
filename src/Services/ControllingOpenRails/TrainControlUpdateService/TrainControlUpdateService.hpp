@@ -15,7 +15,7 @@
 #pragma once
 
 #include "ITrainControlUpdateService.hpp"
-#include "IIncrementalCabControlService.hpp"
+#include "IThrottleAndDynBrakeControlService.hpp"
 #include "IInitializable.hpp"
 #include "CabControlApiService.hpp"
 #include "MachineControlDataService.hpp"
@@ -24,6 +24,7 @@
 #include "ILocalCabControlsDataService.hpp"
 #include "IHumanControlDataService.hpp"
 #include "OpenRailsTrainBrakeConfiguration.hpp"
+#include "JruLoggerService.hpp"
 
 class TrainControlUpdateService : public ITrainControlUpdateService,
                                   public ILpcManageable,
@@ -44,8 +45,9 @@ private:
     IHumanControlDataService* humanControlDataService;
     IMachineControlDataService* machineControlDataService;
     IMqttPublisherService* mqttPublisherService;
-    IIncrementalCabControlService* incrementApiService;
+    IThrottleAndDynBrakeControlService* throttleAndDynBrakeService;
     ILocalCabControlsDataService* openRailsState;
+    JRULoggerService* jruLoggerService;
     
     ConfigurationService* configurationService;
     OpenRailsTrainBrakeConfiguration trainBrakeConfig;
@@ -54,21 +56,18 @@ private:
     
     void SendOpenRailsCabControlsRequest();
     
-    void SetThrottleInternal(double value, CabControlRequest& request);
-    
-    void SetEngineBrakeInternal(double value, CabControlRequest& request);
-    
     /**
      * Handles the state of `this->machineControlDataService`.
      * @return True if some handling was necessary, false otherwise.
      * If (and only if) this function returns false, the state of the `this->humanControlDataService`
      * should be handled.
      */
-    bool HandleMachineInstructions(CabControlRequest & request);
+    bool HandleMachineInstructions();
     
     /**
      * Handles the state of `this->humanControlDataService`.
      */
-    void HandleHumanInstructions(CabControlRequest & request);
-    
+    void HandleHumanInstructions();
+
+    bool ReverserNotNeutral();
 };
