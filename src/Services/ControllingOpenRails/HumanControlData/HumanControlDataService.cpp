@@ -19,7 +19,13 @@ HumanControlDataService::HumanControlDataService()
       cab(false),
       trainDirection(DirectionLeverPosition::Neutral),
       drivingLeverPosition(DrivingLeverPosition::Neutral),
-      touchedRelease(false) {}
+      touchedRelease(false),
+      engineBrake(EngineBrakeLeverPosition::FullRelease),
+      quickRelease(false),
+      pantograph(true),
+      horn(false),
+      sander(false),
+      emergencyBrake(false) {}
 
 bool HumanControlDataService::GetBattery() const {
     return battery;
