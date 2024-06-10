@@ -68,6 +68,11 @@ private:
      * Handles the state of `this->humanControlDataService`.
      */
     void HandleHumanInstructions();
+    void HandleDirectionLever(CabControlRequest &request);
+    void HandleAuxiliaryFunctions(CabControlRequest &request);
+    /**
+     * This function might need to send requests in a specific order, so it doesn't take the request as an argument
+     */
     void HandleDrivingLever();
 
     bool ReverserNotNeutral();

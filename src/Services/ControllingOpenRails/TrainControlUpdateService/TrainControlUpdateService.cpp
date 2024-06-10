@@ -81,13 +81,6 @@ void TrainControlUpdateService::SendOpenRailsCabControlsRequest() {
         return;  // Cannot control the train if we are switched off
     }
 
-    CabControlRequest apiRequest;
-    if (openRailsState->GetDynamicBrake() == 0) { // Cannot move Reverser while DynBrake is active
-        apiRequest.SetDirection(humanControlDataService->GetTrainDirection());
-    }
-    // TODO handle pantographs, lights etc.
-    cabControlApiService->Send(apiRequest);
-
     bool hadToHandleMachineInstructions = this->HandleMachineInstructions();
     if (!hadToHandleMachineInstructions) {
         this->HandleHumanInstructions();
@@ -120,33 +113,55 @@ bool TrainControlUpdateService::HandleMachineInstructions() {
 // Additionally, we cannot move dynamic brake if the Reverser is in the Neutral position
 
 void TrainControlUpdateService::HandleHumanInstructions() {
+    CabControlRequest request;
+    HandleDirectionLever(request);
+    HandleAuxiliaryFunctions(request);
+    cabControlApiService->Send(request);
 
     HandleDrivingLever();
-
 }
 
-bool TrainControlUpdateService::ReverserNotNeutral() {
-    return humanControlDataService->GetTrainDirection() != DirectionLeverPosition::Neutral;
+void TrainControlUpdateService::HandleDirectionLever(CabControlRequest& request) {
+    if (openRailsState->GetDynamicBrake() == 0) { // Cannot move Reverser while DynBrake is active
+        request.SetDirection(humanControlDataService->GetTrainDirection());
+    }
+}
+
+void TrainControlUpdateService::HandleAuxiliaryFunctions(CabControlRequest& request) {
+    request.SetPantograph(humanControlDataService->GetPantograph());
+    request.SetSander(humanControlDataService->GetSander());
+    request.SetHorn(humanControlDataService->GetHorn());
 }
 
 void TrainControlUpdateService::HandleDrivingLever() {
     CabControlRequest request;
     switch (humanControlDataService->GetDrivingLever()) {
-        case DrivingLeverPosition::Accelerate:
+        case DrivingLeverPosition::Accelerate: {
             if (ReverserNotNeutral()) {
-                throttleAndDynBrakeService->SetDynamicBrakeTo(0);                                           // DYNAMIC BRAKE
+                throttleAndDynBrakeService->SetDynamicBrakeTo(
+                        0);                                           // DYNAMIC BRAKE
             }
-            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::RELEASE));  // TRAIN BRAKE
             throttleAndDynBrakeService->StartIncreasingThrottle();                                // THROTTLE
-            openRailsState->SetTrainBrake(TrainBrake::RELEASE);
+
+            TrainBrake newTrainBrakeState = TrainBrake::RELEASE;                                    // TRAIN BRAKE
+            if (humanControlDataService->GetQuickRelease())
+                newTrainBrakeState = TrainBrake::QUICK_RELEASE;
+            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(newTrainBrakeState));
+            openRailsState->SetTrainBrake(newTrainBrakeState);
             break;
-        case DrivingLeverPosition::Continue:
+        }
+        case DrivingLeverPosition::Continue: {
             // As long as the invariants are preserved everywhere else, we do not need any checks here
             throttleAndDynBrakeService->StopChangingThrottle();                                   // THROTTLE
             throttleAndDynBrakeService->StartDecreasingDynamicBrake();                            // DYNAMIC BRAKE
-            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(TrainBrake::RELEASE));  // TRAIN BRAKE
-            openRailsState->SetTrainBrake(TrainBrake::RELEASE);
+
+            TrainBrake newTrainBrakeState = TrainBrake::RELEASE;                                    // TRAIN BRAKE
+            if (humanControlDataService->GetQuickRelease())
+                newTrainBrakeState = TrainBrake::QUICK_RELEASE;
+            request.SetTrainBrake(trainBrakeConfig.ConvertToRequestValue(newTrainBrakeState));
+            openRailsState->SetTrainBrake(newTrainBrakeState);
             break;
+        }
         case DrivingLeverPosition::Neutral:
             // As long as the invariants are preserved everywhere else, we do not need any checks here
             throttleAndDynBrakeService->StartDecreasingThrottle();   // THROTTLE
@@ -193,4 +208,8 @@ void TrainControlUpdateService::HandleDrivingLever() {
             break;
     }
     cabControlApiService->Send(request);
+}
+
+bool TrainControlUpdateService::ReverserNotNeutral() {
+    return humanControlDataService->GetTrainDirection() != DirectionLeverPosition::Neutral;
 }
