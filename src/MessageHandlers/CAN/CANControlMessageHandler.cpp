@@ -30,13 +30,15 @@ void CANControlMessageHandler::HandleMessageBody(const Message& message) {
     bool pantograph = !msg.GetPantographDown();
     bool horn = msg.GetHorn();
     bool sander = msg.GetSander();
+    bool emergencyBrake = msg.GetEmergencyStop();
 
     if (drivingLeverPosition == humanControlDataService->GetDrivingLever() &&
         directionLeverPosition == humanControlDataService->GetTrainDirection() &&
         engineBrakeLeverPosition == humanControlDataService->GetEngineBrake() &&
         pantograph == humanControlDataService->GetPantograph() &&
         horn == humanControlDataService->GetHorn() &&
-        sander == humanControlDataService->GetSander()) {
+        sander == humanControlDataService->GetSander() &&
+        emergencyBrake == humanControlDataService->GetEmergencyBrake()) {
         jruLoggerService->Log(MessageType::Note,
                               "[CAN] ----> [ORC] || CAN control WITH NO CHANGE. "
                               "[Main lever: %drivingLeverPosition%] "
@@ -57,6 +59,7 @@ void CANControlMessageHandler::HandleMessageBody(const Message& message) {
     humanControlDataService->SetPantograph(pantograph);
     humanControlDataService->SetHorn(horn);
     humanControlDataService->SetSander(sander);
+    humanControlDataService->SetEmergencyBrake(emergencyBrake);
     trainControlUpdateService->Update();
 }
 

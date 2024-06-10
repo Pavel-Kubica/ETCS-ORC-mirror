@@ -68,6 +68,7 @@ private:
      * Handles the state of `this->humanControlDataService`.
      */
     void HandleHumanInstructions();
+    void HandleEngineBrake(CabControlRequest& request);
     void HandleDirectionLever(CabControlRequest &request);
     void HandleAuxiliaryFunctions(CabControlRequest &request);
     /**

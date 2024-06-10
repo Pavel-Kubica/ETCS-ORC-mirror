@@ -73,6 +73,11 @@ CabControlRequest &CabControlRequest::SetPantograph(bool up) {
     return *this;
 }
 
+CabControlRequest &CabControlRequest::SetEmergencyBrake(bool on) {
+    this->items.emplace_back(CabControlType::EmergencyBrake, on);
+    return *this;
+}
+
 CabControlRequest& CabControlRequest::Clear() {
     this->items.clear();
     return *this;

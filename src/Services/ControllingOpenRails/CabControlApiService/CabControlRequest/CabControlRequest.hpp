@@ -33,6 +33,7 @@ public:
     CabControlRequest& SetPantograph(bool up);
     CabControlRequest& SetHorn(bool on);
     CabControlRequest& SetSander(bool on);
+    CabControlRequest& SetEmergencyBrake(bool on);
 
     CabControlRequest& Clear();
     

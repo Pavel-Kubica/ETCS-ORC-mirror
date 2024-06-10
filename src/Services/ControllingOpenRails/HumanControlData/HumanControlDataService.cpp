@@ -106,3 +106,11 @@ bool HumanControlDataService::GetPantograph() const {
 void HumanControlDataService::SetPantograph(bool up) {
     pantograph = up;
 }
+
+bool HumanControlDataService::GetEmergencyBrake() const {
+    return emergencyBrake;
+}
+
+void HumanControlDataService::SetEmergencyBrake(bool on) {
+    emergencyBrake = on;
+}

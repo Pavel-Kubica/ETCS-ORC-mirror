@@ -58,6 +58,10 @@ public:
 
     void SetPantograph(bool up) override;
 
+    bool GetEmergencyBrake() const override;
+
+    void SetEmergencyBrake(bool on) override;
+
 private:
     std::atomic_bool battery;
     std::atomic_bool cab;
@@ -66,6 +70,7 @@ private:
     std::atomic_bool horn;
     std::atomic_bool sander;
     std::atomic_bool pantograph;
+    std::atomic_bool emergencyBrake;
 
 private:
     std::atomic<DirectionLeverPosition> trainDirection;

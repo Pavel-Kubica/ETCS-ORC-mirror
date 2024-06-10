@@ -116,6 +116,7 @@ void TrainControlUpdateService::HandleHumanInstructions() {
     CabControlRequest request;
     HandleDirectionLever(request);
     HandleAuxiliaryFunctions(request);
+    HandleEngineBrake(request);
     cabControlApiService->Send(request);
 
     HandleDrivingLever();
@@ -131,6 +132,11 @@ void TrainControlUpdateService::HandleAuxiliaryFunctions(CabControlRequest& requ
     request.SetPantograph(humanControlDataService->GetPantograph());
     request.SetSander(humanControlDataService->GetSander());
     request.SetHorn(humanControlDataService->GetHorn());
+    request.SetEmergencyBrake(humanControlDataService->GetEmergencyBrake());
+}
+
+void TrainControlUpdateService::HandleEngineBrake(CabControlRequest &request) {
+    // TODO
 }
 
 void TrainControlUpdateService::HandleDrivingLever() {

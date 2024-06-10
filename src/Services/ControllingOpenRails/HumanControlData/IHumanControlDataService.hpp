@@ -58,5 +58,9 @@ public:
 
     virtual void SetPantograph(bool up) = 0;
 
+    [[nodiscard]] virtual bool GetEmergencyBrake() const = 0;
+
+    virtual void SetEmergencyBrake(bool on) = 0;
+
     static constexpr ServiceType Type = ServiceType::TrainControlData;
 };
