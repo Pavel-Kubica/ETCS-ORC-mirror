@@ -59,6 +59,18 @@ static const std::map<EngineBrakeLeverPosition, unsigned long long> engineBrakeT
     {EngineBrakeLeverPosition::FullPower, 0x0c},
 };
 
+static const std::map<unsigned long long, PantographPosition> pantographSerializations = {
+    {1, PantographPosition::Down},
+    {2, PantographPosition::Up},
+    {4, PantographPosition::UpConnected},
+};
+
+static const std::map<PantographPosition, unsigned long long> pantographToBits = {
+    {PantographPosition::Down, 1},
+    {PantographPosition::Up, 2},
+    {PantographPosition::UpConnected, 4},
+};
+
 CANControlMessage::CANControlMessage() {
     NID_MESSAGE = MessageID::CANControls;
 }
@@ -66,6 +78,7 @@ CANControlMessage::CANControlMessage() {
 CANControlMessage::CANControlMessage(DrivingLeverPosition drivingLever,
                                      DirectionLeverPosition directionLever,
                                      EngineBrakeLeverPosition engineBrake,
+                                     PantographPosition pantograph,
                                      bool generalStop,
                                      bool leftTimeout,
                                      bool rightTimeout,
@@ -75,13 +88,11 @@ CANControlMessage::CANControlMessage(DrivingLeverPosition drivingLever,
                                      bool openRightDoor,
                                      bool horn,
                                      bool sander,
-                                     bool pantographDown,
-                                     bool pantographUp,
-                                     bool breaker,
                                      bool emergencyStop) :
     drivingLever(drivingLever),
     directionLever(directionLever),
     engineBrake(engineBrake),
+    pantograph(pantograph),
     generalStop(generalStop),
     leftTimeout(leftTimeout),
     rightTimeout(rightTimeout),
@@ -91,9 +102,6 @@ CANControlMessage::CANControlMessage(DrivingLeverPosition drivingLever,
     openRightDoor(openRightDoor),
     horn(horn),
     sander(sander),
-    pantographDown(pantographDown),
-    pantographUp(pantographUp),
-    breaker(breaker),
     emergencyStop(emergencyStop) {
     NID_MESSAGE = MessageID::CANControls;
 }
@@ -121,9 +129,7 @@ Bitstring CANControlMessage::ToBitstring() const {
     bits.Write(GetSander(), 30, 1);
     bits.Write(engineBrakeBits & 3, 40, 2);
     bits.Write(directionsToBits.at(GetDirectionLever()), 42, 2);
-    bits.Write(GetPantographDown(), 44, 1);
-    bits.Write(GetPantographUp(), 45, 1);
-    bits.Write(GetBreaker(), 46, 1);
+    bits.Write(pantographToBits.at(GetPantograph()), 44, 3);
     bits.Write(drivingLeverToBits.at(GetDrivingLever()), 56, 5);
     bits.Write(engineBrakeBits >> 2, 61, 3);
     return bits;
@@ -142,9 +148,7 @@ void CANControlMessage::FromBitstring(const Bitstring& bits) {
         horn = bits.At(29, 1);
         sander = bits.At(30, 1);
         directionLever = directionLeverSerializations.at(bits.At(42, 2));
-        pantographDown = bits.At(44, 1);
-        pantographUp = bits.At(45, 1);
-        breaker = bits.At(46, 1);
+        pantograph = pantographSerializations.at(bits.At(44, 3));
         drivingLever = drivingLeverSerializations.at(bits.At(56, 5));
         engineBrake = engineBrakeSerializations.at((bits.At(61, 3) << 2) | bits.At(40, 2));
     }
@@ -163,6 +167,10 @@ DirectionLeverPosition CANControlMessage::GetDirectionLever() const noexcept {
 
 EngineBrakeLeverPosition CANControlMessage::GetEngineBrakeLever() const noexcept {
     return engineBrake;
+}
+
+PantographPosition CANControlMessage::GetPantograph() const noexcept {
+    return pantograph;
 }
 
 bool CANControlMessage::GetGeneralStop() const noexcept {
@@ -199,18 +207,6 @@ bool CANControlMessage::GetHorn() const noexcept {
 
 bool CANControlMessage::GetSander() const noexcept {
     return sander;
-}
-
-bool CANControlMessage::GetPantographDown() const noexcept {
-    return pantographDown;
-}
-
-bool CANControlMessage::GetPantographUp() const noexcept {
-    return pantographUp;
-}
-
-bool CANControlMessage::GetBreaker() const noexcept {
-    return breaker;
 }
 
 bool CANControlMessage::GetEmergencyStop() const noexcept {

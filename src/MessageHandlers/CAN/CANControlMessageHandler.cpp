@@ -27,7 +27,7 @@ void CANControlMessageHandler::HandleMessageBody(const Message& message) {
     DirectionLeverPosition directionLeverPosition = msg.GetDirectionLever();
     EngineBrakeLeverPosition engineBrakeLeverPosition = msg.GetEngineBrakeLever();
     // TODO is this pantograph behavior correct?
-    bool pantograph = !msg.GetPantographDown();
+    bool pantograph = msg.GetPantograph() != PantographPosition::Down;
     bool horn = msg.GetHorn();
     bool sander = msg.GetSander();
     bool emergencyBrake = msg.GetEmergencyStop();

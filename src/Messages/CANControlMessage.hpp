@@ -17,6 +17,7 @@
 #include "DrivingLeverPosition.hpp"
 #include "DirectionLeverPosition.hpp"
 #include "EngineBrakeLeverPosition.hpp"
+#include "PantographPosition.hpp"
 
 class CANControlMessage : public Message {
 public:
@@ -24,6 +25,7 @@ public:
     CANControlMessage(DrivingLeverPosition drivingLever,
                       DirectionLeverPosition directionLever,
                       EngineBrakeLeverPosition engineBrake,
+                      PantographPosition pantograph,
                       bool generalStop,
                       bool leftTimeout,
                       bool rightTimeout,
@@ -33,9 +35,6 @@ public:
                       bool openRightDoor,
                       bool horn,
                       bool sander,
-                      bool pantographDown,
-                      bool pantographUp,
-                      bool breaker,
                       bool emergencyStop);
     void from_json(const nlohmann::json& j) override;
     nlohmann::json to_json() const override;
@@ -44,6 +43,7 @@ public:
     DrivingLeverPosition GetDrivingLever() const noexcept;
     DirectionLeverPosition GetDirectionLever() const noexcept;
     EngineBrakeLeverPosition GetEngineBrakeLever() const noexcept;
+    PantographPosition GetPantograph() const noexcept;
     bool GetGeneralStop() const noexcept;
     bool GetLeftTimeout() const noexcept;
     bool GetRightTimeout() const noexcept;
@@ -53,15 +53,13 @@ public:
     bool GetRightDoor() const noexcept;
     bool GetHorn() const noexcept;
     bool GetSander() const noexcept;
-    bool GetPantographDown() const noexcept;
-    bool GetPantographUp() const noexcept;
-    bool GetBreaker() const noexcept;
     bool GetEmergencyStop() const noexcept;
 
 private:
     DrivingLeverPosition drivingLever;
     DirectionLeverPosition directionLever;
     EngineBrakeLeverPosition engineBrake;
+    PantographPosition pantograph;
     bool generalStop;
     bool leftTimeout;
     bool rightTimeout;
@@ -71,8 +69,5 @@ private:
     bool openRightDoor;
     bool horn;
     bool sander;
-    bool pantographDown;
-    bool pantographUp;
-    bool breaker;
     bool emergencyStop;
 };
