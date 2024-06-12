@@ -40,7 +40,7 @@ inline std::string_view CabControlTypeToRequestString(CabControlType type) {
         case CabControlType::Pantograph:
             return "PANTOGRAPH";
         case CabControlType::Horn:
-            return "HORN";
+            return "BELL";
         case CabControlType::Sander:
             return "SANDERS";
         case CabControlType::EmergencyBrake:

@@ -10,6 +10,7 @@
  *  ### Contributors
  *  cajantom
  *  rehorja8
+ *  kubicpa3
  */
 
 #include "CANControlMessageHandler.hpp"
@@ -30,7 +31,7 @@ void CANControlMessageHandler::HandleMessageBody(const Message& message) {
     bool pantograph = msg.GetPantograph() != PantographPosition::Down;
     bool horn = msg.GetHorn();
     bool sander = msg.GetSander();
-    bool emergencyBrake = msg.GetEmergencyStop();
+    bool emergencyBrake = msg.GetGeneralStop();
 
     if (drivingLeverPosition == humanControlDataService->GetDrivingLever() &&
         directionLeverPosition == humanControlDataService->GetTrainDirection() &&
