@@ -17,7 +17,9 @@
 
 void BaliseCoordinatesPrinterService::Initialize(ServiceContainer& container) {
     configurationService = container.FetchService<ConfigurationService>().get();
-    filename = configurationService->FetchConfiguration<BaliseCoordinatesPrinterConfiguration>().baliseCoordinatesFilename;
+    auto config = configurationService->FetchConfiguration<BaliseCoordinatesPrinterConfiguration>();
+    filename = config.baliseCoordinatesFilename;
+    shouldPrintBalises = config.shouldPrintBalises;
     simulationStateDataService = container.FetchService<ISimulationStateDataService>().get();
     file = std::ofstream(filename);
     if (!file) {
@@ -26,8 +28,10 @@ void BaliseCoordinatesPrinterService::Initialize(ServiceContainer& container) {
 }
 
 void BaliseCoordinatesPrinterService::PrintBalisesOnCurrentPosition(Distance currentDistance, uint32_t baliseCnt) {
+    if (!file || !shouldPrintBalises) {
+        return;
+    }
     SimulationState simulationState = simulationStateDataService->GetSimulationState();
-
     file << "balise-count:{" << baliseCnt << "} | world-location:" << simulationState.worldLocationString
            << " | world-position:" << simulationState.worldPositionString << std::endl;
 }

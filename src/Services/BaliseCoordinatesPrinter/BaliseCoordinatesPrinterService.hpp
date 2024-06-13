@@ -31,4 +31,5 @@ private:
     JRULoggerService* logger;
     std::string filename;
     std::ofstream file;
+    bool shouldPrintBalises;
 };
