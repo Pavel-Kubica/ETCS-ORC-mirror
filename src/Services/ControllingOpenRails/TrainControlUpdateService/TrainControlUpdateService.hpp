@@ -15,7 +15,7 @@
 #pragma once
 
 #include "ITrainControlUpdateService.hpp"
-#include "IThrottleAndDynBrakeControlService.hpp"
+#include "IIncrementalCabControlService.hpp"
 #include "IInitializable.hpp"
 #include "CabControlApiService.hpp"
 #include "MachineControlDataService.hpp"
@@ -45,7 +45,7 @@ private:
     IHumanControlDataService* humanControlDataService;
     IMachineControlDataService* machineControlDataService;
     IMqttPublisherService* mqttPublisherService;
-    IThrottleAndDynBrakeControlService* throttleAndDynBrakeService;
+    IIncrementalCabControlService* incrementalCabControlService;
     ILocalCabControlsDataService* openRailsState;
     JRULoggerService* jruLoggerService;
     

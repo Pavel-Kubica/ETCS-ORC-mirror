@@ -5,7 +5,7 @@
  *  ORC         | 2.3.0
  *
  *  ###Description
- *  This service is used as a storage of member variables of ThrottleAndDynBrakeControlService.
+ *  This service is used as a storage of member variables of IncrementalCabControlService.
  *
  *  This data service stores the local state of cab controls.
  *  It does not represent the current numbers in Open Rails, only what we think they should be.

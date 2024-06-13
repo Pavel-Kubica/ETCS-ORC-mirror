@@ -1,11 +1,11 @@
-/** @file ThrottleAndDynBrakeControlConfiguration.hpp
+/** @file IncrementalCabControlConfiguration.hpp
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
  *  ORC         | 2.3.0
  *
  *  ### Description
- *  Configuration for ThrottleAndDynBrakeControlsService.
+ *  Configuration for IncrementalCabControlsService.
  *
  *  ### Contributors
  *  rehorja8
@@ -16,7 +16,7 @@
 #include <chrono>
 #include "json.hpp"
 
-class ThrottleAndDynBrakeControlConfiguration {
+class IncrementalCabControlConfiguration {
 public:
     static constexpr char FileName[] = "incremental-cab-controls-configuration.json";
     

@@ -1,4 +1,4 @@
-/** @file ThrottleAndDynBrakeControlService.hpp
+/** @file IncrementalCabControlService.hpp
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
@@ -16,7 +16,7 @@
 
 #include "ConfigurationService.hpp"
 #include "ICabControlApiService.hpp"
-#include "IThrottleAndDynBrakeControlService.hpp"
+#include "IIncrementalCabControlService.hpp"
 #include "IInitializable.hpp"
 #include "ILocalCabControlsDataService.hpp"
 #include "ILpcManageable.hpp"
@@ -27,11 +27,11 @@
 #include <thread>
 #include "AsyncProperty.hpp"
 #include "Increment.hpp"
-#include "ThrottleAndDynBrakeControlConfiguration.hpp"
+#include "IncrementalCabControlConfiguration.hpp"
 
-class ThrottleAndDynBrakeControlService : public IInitializable,
-                                          public ILpcManageable,
-                                          public IThrottleAndDynBrakeControlService {
+class IncrementalCabControlService : public IInitializable,
+                                     public ILpcManageable,
+                                     public IIncrementalCabControlService {
 protected:
     void Initialize(ServiceContainer& container) override;
 
@@ -64,7 +64,7 @@ private:
     Increment engineBrakeIncrement;
 
     // Loading from config files
-    ThrottleAndDynBrakeControlConfiguration config;
+    IncrementalCabControlConfiguration config;
     ConfigurationService* configurationService;
 
     // Says if the incrementing thread should be running or not

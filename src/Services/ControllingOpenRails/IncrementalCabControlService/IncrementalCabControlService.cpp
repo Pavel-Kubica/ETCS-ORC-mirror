@@ -1,4 +1,4 @@
-/** @file ThrottleAndDynBrakeControlService.cpp
+/** @file IncrementalCabControlService.cpp
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
@@ -12,87 +12,87 @@
  *  rehorja8
  */
 
-#include "ThrottleAndDynBrakeControlService.hpp"
+#include "IncrementalCabControlService.hpp"
 #include "CabControlRequest.hpp"
 #include <stdexcept>
 
-void ThrottleAndDynBrakeControlService::Initialize(ServiceContainer& container) {
+void IncrementalCabControlService::Initialize(ServiceContainer& container) {
     cabControlApiService = container.FetchService<ICabControlApiService>().get();
     localCabControlsDataService = container.FetchService<ILocalCabControlsDataService>().get();
     configurationService = container.FetchService<ConfigurationService>().get();
     
-    this->config = configurationService->FetchConfiguration<ThrottleAndDynBrakeControlConfiguration>();
+    this->config = configurationService->FetchConfiguration<IncrementalCabControlConfiguration>();
     
     localCabControlsDataService->SetThrottleStep(config.throttleStep);
     localCabControlsDataService->SetDynamicBrakeStep(config.dynamicBrakeStep);
     localCabControlsDataService->SetEngineBrakeStep(config.engineBrakeStep);
 }
 
-void ThrottleAndDynBrakeControlService::StartIncreasingThrottle() {
+void IncrementalCabControlService::StartIncreasingThrottle() {
     std::lock_guard lck(this->mtx);
     throttleIncrement = Increment::Positive;
     cv.notify_one();
 }
 
-void ThrottleAndDynBrakeControlService::StopChangingThrottle() {
+void IncrementalCabControlService::StopChangingThrottle() {
     std::lock_guard lck(this->mtx);
     throttleIncrement = Increment::None;
     cv.notify_one();
 }
 
-void ThrottleAndDynBrakeControlService::StartDecreasingThrottle() {
+void IncrementalCabControlService::StartDecreasingThrottle() {
     std::lock_guard lck(this->mtx);
     throttleIncrement = Increment::Negative;
     cv.notify_one();
 }
 
-void ThrottleAndDynBrakeControlService::StartIncreasingDynamicBrake() {
+void IncrementalCabControlService::StartIncreasingDynamicBrake() {
     std::lock_guard lck(this->mtx);
     dynamicBrakeIncrement = Increment::Positive;
     cv.notify_one();
 }
 
-void ThrottleAndDynBrakeControlService::StopChangingDynamicBrake() {
+void IncrementalCabControlService::StopChangingDynamicBrake() {
     std::lock_guard lck(this->mtx);
     dynamicBrakeIncrement = Increment::None;
     cv.notify_one();
 }
 
-void ThrottleAndDynBrakeControlService::StartDecreasingDynamicBrake() {
+void IncrementalCabControlService::StartDecreasingDynamicBrake() {
     std::lock_guard lck(this->mtx);
     dynamicBrakeIncrement = Increment::Negative;
     cv.notify_one();
 }
 
-void ThrottleAndDynBrakeControlService::StartIncreasingEngineBrake() {
+void IncrementalCabControlService::StartIncreasingEngineBrake() {
     std::lock_guard lck(this->mtx);
     engineBrakeIncrement = Increment::Positive;
     cv.notify_one();
 }
 
-void ThrottleAndDynBrakeControlService::StopChangingEngineBrake() {
+void IncrementalCabControlService::StopChangingEngineBrake() {
     std::lock_guard lck(this->mtx);
     engineBrakeIncrement = Increment::None;
     cv.notify_one();
 }
 
-void ThrottleAndDynBrakeControlService::StartDecreasingEngineBrake() {
+void IncrementalCabControlService::StartDecreasingEngineBrake() {
     std::lock_guard lck(this->mtx);
     engineBrakeIncrement = Increment::Negative;
     cv.notify_one();
 }
 
 
-bool ThrottleAndDynBrakeControlService::LpcSaidStart() {
+bool IncrementalCabControlService::LpcSaidStart() {
     if (shouldRun) {
         return false;
     }
     shouldRun = true;
-    incrementingThread = std::thread(&ThrottleAndDynBrakeControlService::IncrementingThreadEntryPoint, this);
+    incrementingThread = std::thread(&IncrementalCabControlService::IncrementingThreadEntryPoint, this);
     return true;
 }
 
-bool ThrottleAndDynBrakeControlService::LpcSaidStop() {
+bool IncrementalCabControlService::LpcSaidStop() {
     std::unique_lock lck(this->mtx);
     shouldRun = false;
     cv.notify_one();
@@ -103,18 +103,18 @@ bool ThrottleAndDynBrakeControlService::LpcSaidStop() {
     return true;
 }
 
-bool ThrottleAndDynBrakeControlService::LpcSaidRestart() {
+bool IncrementalCabControlService::LpcSaidRestart() {
     return LpcSaidStop() && LpcSaidStart();
 }
 
-bool ThrottleAndDynBrakeControlService::WorkDone() const {
+bool IncrementalCabControlService::WorkDone() const {
     // No mutex since we call this method when this->mtx is locked
     return (throttleIncrement == Increment::None &&
             dynamicBrakeIncrement == Increment::None &&
             engineBrakeIncrement == Increment::None);
 }
 
-void ThrottleAndDynBrakeControlService::IncrementingThreadEntryPoint() {
+void IncrementalCabControlService::IncrementingThreadEntryPoint() {
     while (shouldRun) {
         CabControlRequest request;
         
@@ -131,7 +131,7 @@ void ThrottleAndDynBrakeControlService::IncrementingThreadEntryPoint() {
     }
 }
 
-void ThrottleAndDynBrakeControlService::ChangeThrottle(CabControlRequest& request) {
+void IncrementalCabControlService::ChangeThrottle(CabControlRequest& request) {
     // No mutex since we call this method when this->mtx is locked
     switch (throttleIncrement) {
         case Increment::Positive: {
@@ -155,7 +155,7 @@ void ThrottleAndDynBrakeControlService::ChangeThrottle(CabControlRequest& reques
     }
 }
 
-void ThrottleAndDynBrakeControlService::ChangeDynamicBrake(CabControlRequest& request) {
+void IncrementalCabControlService::ChangeDynamicBrake(CabControlRequest& request) {
     // No mutex since we call this method when this->mtx is locked
     switch (dynamicBrakeIncrement) {
         case Increment::Positive: {
@@ -179,7 +179,7 @@ void ThrottleAndDynBrakeControlService::ChangeDynamicBrake(CabControlRequest& re
     }
 }
 
-void ThrottleAndDynBrakeControlService::ChangeEngineBrake(CabControlRequest &request) {
+void IncrementalCabControlService::ChangeEngineBrake(CabControlRequest &request) {
     // No mutex since we call this method when this->mtx is locked
     switch (engineBrakeIncrement) {
         case Increment::Positive: {
@@ -203,7 +203,7 @@ void ThrottleAndDynBrakeControlService::ChangeEngineBrake(CabControlRequest &req
     }
 }
 
-void ThrottleAndDynBrakeControlService::SetThrottleTo(double value) {
+void IncrementalCabControlService::SetThrottleTo(double value) {
     std::lock_guard lk(this->mtx);
     localCabControlsDataService->SetThrottle(value);
     CabControlRequest request;
@@ -212,7 +212,7 @@ void ThrottleAndDynBrakeControlService::SetThrottleTo(double value) {
     throttleIncrement = Increment::None;
 }
 
-void ThrottleAndDynBrakeControlService::SetDynamicBrakeTo(double value) {
+void IncrementalCabControlService::SetDynamicBrakeTo(double value) {
     std::lock_guard lk(this->mtx);
     localCabControlsDataService->SetDynamicBrake(value);
     CabControlRequest request;
@@ -221,7 +221,7 @@ void ThrottleAndDynBrakeControlService::SetDynamicBrakeTo(double value) {
     dynamicBrakeIncrement = Increment::None;
 }
 
-void ThrottleAndDynBrakeControlService::SetEngineBrakeTo(double value) {
+void IncrementalCabControlService::SetEngineBrakeTo(double value) {
     std::lock_guard lk(this->mtx);
     localCabControlsDataService->SetEngineBrake(value);
     CabControlRequest request;
