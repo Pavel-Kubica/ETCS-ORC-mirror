@@ -24,5 +24,5 @@ public:
 
     [[nodiscard]] nlohmann::json to_json() const;
 
-    std::string baliseCoordinatesFilename;
+    std::string baliseCoordinatesFilename = "balise-coordinates.txt";
 };

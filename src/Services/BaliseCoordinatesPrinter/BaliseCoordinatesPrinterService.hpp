@@ -21,11 +21,9 @@
 
 class BaliseCoordinatesPrinterService: public IBaliseCoordinatesPrinterService, public IInitializable {
 public:
-protected:
     void Initialize(ServiceContainer& container) override;
 
-private:
-    void PrintCurrentPosition(Distance currentDistance) override;
+    void PrintBalisesOnCurrentPosition(Distance currentDistance, uint32_t baliseCnt) override;
 
 private:
     ConfigurationService* configurationService;

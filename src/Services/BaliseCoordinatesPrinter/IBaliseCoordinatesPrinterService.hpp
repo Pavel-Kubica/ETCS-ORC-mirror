@@ -18,7 +18,7 @@
 
 
 class IBaliseCoordinatesPrinterService : public IService {
-
-    virtual void PrintCurrentPosition(Distance currentDistance) = 0;
+public:
+    virtual void PrintBalisesOnCurrentPosition(Distance currentDistance, uint32_t baliseCnt) = 0;
 
 };

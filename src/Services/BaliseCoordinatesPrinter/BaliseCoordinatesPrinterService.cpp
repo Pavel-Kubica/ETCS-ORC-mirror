@@ -25,7 +25,9 @@ void BaliseCoordinatesPrinterService::Initialize(ServiceContainer& container) {
     }
 }
 
-void BaliseCoordinatesPrinterService::PrintCurrentPosition(Distance currentDistance) {
+void BaliseCoordinatesPrinterService::PrintBalisesOnCurrentPosition(Distance currentDistance, uint32_t baliseCnt) {
     SimulationState simulationState = simulationStateDataService->GetSimulationState();
 
+    file << "balise-count:{" << baliseCnt << "} | world-location:" << simulationState.worldLocationString
+           << " | world-position:" << simulationState.worldPositionString << std::endl;
 }
