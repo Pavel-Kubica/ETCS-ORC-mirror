@@ -110,6 +110,7 @@ include_directories(lib
         src/Services/SimulationStateApi
         src/Services/Btm
         src/Services/BalisesFromJson
+        src/Services/BaliseCoordinatesPrinter
         src/MessageHandlers
         src/MessageHandlers/LPC
         src/MessageHandlers/EVC
