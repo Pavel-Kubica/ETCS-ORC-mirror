@@ -24,7 +24,7 @@
 #include "ILocalCabControlsDataService.hpp"
 #include "IHumanControlDataService.hpp"
 #include "OpenRailsTrainBrakeConfiguration.hpp"
-#include "JruLoggerService.hpp"
+#include "JRULoggerService.hpp"
 
 class TrainControlUpdateService : public ITrainControlUpdateService,
                                   public ILpcManageable,
