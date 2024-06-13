@@ -14,8 +14,11 @@
 #pragma once
 
 #include "IService.hpp"
+#include "Distance.hpp"
 
 
 class IBaliseCoordinatesPrinterService : public IService {
+
+    virtual void PrintCurrentPosition(Distance currentDistance) = 0;
 
 };
