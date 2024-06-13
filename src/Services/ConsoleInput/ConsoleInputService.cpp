@@ -131,6 +131,11 @@ void ConsoleInputService::MainLoop() {
                 this->humanControlService->SetHorn(horn);
                 break;
             }
+            case 'e': {
+                auto engineBrake = (EngineBrakeLeverPosition)argument;
+                this->humanControlService->SetEngineBrake(engineBrake);
+                break;
+            }
             
             default:
                 invalidInput();

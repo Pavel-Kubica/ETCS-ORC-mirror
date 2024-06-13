@@ -32,12 +32,22 @@ double LocalCabControlsDataService::GetThrottleStep() const {
 
 void LocalCabControlsDataService::SetDynamicBrakeStep(double step) {
     if (step < 0 || step > 1)
-        throw std::invalid_argument("Attempting to set invalid engine brake step size");
+        throw std::invalid_argument("Attempting to set invalid dynamic brake step size");
     dynamicBrakeStep = step;
 }
 
 double LocalCabControlsDataService::GetDynamicBrakeStep() const {
     return dynamicBrakeStep;
+}
+
+void LocalCabControlsDataService::SetEngineBrakeStep(double step) {
+    if (step < 0 || step > 1)
+        throw std::invalid_argument("Attempting to set invalid engine brake step size");
+    engineBrakeStep = step;
+}
+
+double LocalCabControlsDataService::GetEngineBrakeStep() const {
+    return engineBrakeStep;
 }
 
 void LocalCabControlsDataService::SetThrottle(double newThrottle) {
@@ -84,6 +94,28 @@ bool LocalCabControlsDataService::DecreaseDynamicBrake() {
     return dynamicBrake > 0.0;
 }
 
+void LocalCabControlsDataService::SetEngineBrake(double newValue) {
+    engineBrake = newValue;
+}
+
+double LocalCabControlsDataService::GetEngineBrake() const {
+    return engineBrake;
+}
+
+bool LocalCabControlsDataService::IncreaseEngineBrake() {
+    engineBrake += engineBrakeStep;
+    if (engineBrake > 1.0)
+        engineBrake = 1.0;
+    return engineBrake < 1.0;
+}
+
+bool LocalCabControlsDataService::DecreaseEngineBrake() {
+    engineBrake -= engineBrakeStep;
+    if (engineBrake < 0.0)
+        engineBrake = 0.0;
+    return engineBrake > 0.0;
+}
+
 void LocalCabControlsDataService::SetTrainBrake(TrainBrake newState) {
     trainBrakeState = newState;
 }
@@ -91,4 +123,6 @@ void LocalCabControlsDataService::SetTrainBrake(TrainBrake newState) {
 TrainBrake LocalCabControlsDataService::GetTrainBrake() const {
     return trainBrakeState;
 }
+
+
 

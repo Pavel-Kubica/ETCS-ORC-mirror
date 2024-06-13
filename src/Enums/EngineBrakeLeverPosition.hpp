@@ -14,9 +14,9 @@
 #pragma once
 
 enum class EngineBrakeLeverPosition {
-    FullRelease,
-    Release,
-    Neutral,
-    Engage,
-    FullPower
+    FullRelease = 0,
+    Release = 1,
+    Neutral = 2,
+    Engage = 3,
+    FullPower = 4
 };

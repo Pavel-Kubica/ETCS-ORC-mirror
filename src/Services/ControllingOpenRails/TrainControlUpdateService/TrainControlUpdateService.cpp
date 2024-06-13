@@ -137,7 +137,23 @@ void TrainControlUpdateService::HandleAuxiliaryFunctions(CabControlRequest& requ
 }
 
 void TrainControlUpdateService::HandleEngineBrake(CabControlRequest &request) {
-    // TODO
+    switch (humanControlDataService->GetEngineBrake()) {
+        case EngineBrakeLeverPosition::FullRelease:
+            throttleAndDynBrakeService->SetEngineBrakeTo(0);
+            break;
+        case EngineBrakeLeverPosition::Release:
+            throttleAndDynBrakeService->StartDecreasingEngineBrake();
+            break;
+        case EngineBrakeLeverPosition::Neutral:
+            throttleAndDynBrakeService->StopChangingEngineBrake();
+            break;
+        case EngineBrakeLeverPosition::Engage:
+            throttleAndDynBrakeService->StartIncreasingEngineBrake();
+            break;
+        case EngineBrakeLeverPosition::FullPower:
+            throttleAndDynBrakeService->SetEngineBrakeTo(1);
+            break;
+    }
 }
 
 void TrainControlUpdateService::HandleDrivingLever() {

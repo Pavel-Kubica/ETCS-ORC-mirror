@@ -28,5 +28,10 @@ public:
     virtual void StartDecreasingDynamicBrake() = 0;
     virtual void SetDynamicBrakeTo(double value) = 0;
 
+    virtual void StartIncreasingEngineBrake() = 0;
+    virtual void StopChangingEngineBrake() = 0;
+    virtual void StartDecreasingEngineBrake() = 0;
+    virtual void SetEngineBrakeTo(double value) = 0;
+
     static constexpr ServiceType Type = ServiceType::ThrottleAndDynBrakeControl;
 };

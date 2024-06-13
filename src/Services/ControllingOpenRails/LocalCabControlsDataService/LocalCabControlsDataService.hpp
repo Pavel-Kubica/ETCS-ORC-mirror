@@ -33,6 +33,9 @@ public:
     void SetDynamicBrakeStep(double step) override;
     [[nodiscard]] double GetDynamicBrakeStep() const override;
 
+    void SetEngineBrakeStep(double step) override;
+    [[nodiscard]] double GetEngineBrakeStep() const override;
+
     void SetThrottle(double newThrottle) override;
     [[nodiscard]] double GetThrottle() const override;
     [[nodiscard]] bool IncreaseThrottle() override;
@@ -46,10 +49,17 @@ public:
     void SetTrainBrake(TrainBrake newState) override;
     [[nodiscard]] TrainBrake GetTrainBrake() const override;
 
+    void SetEngineBrake(double newValue) override;
+    [[nodiscard]] double GetEngineBrake() const override;
+    [[nodiscard]] bool IncreaseEngineBrake() override;
+    [[nodiscard]] bool DecreaseEngineBrake() override;
+
 private:
     std::atomic<double> throttleStep;
     std::atomic<double> dynamicBrakeStep;
+    std::atomic<double> engineBrakeStep;
     std::atomic<double> throttle;
     std::atomic<double> dynamicBrake;
+    std::atomic<double> engineBrake;
     std::atomic<TrainBrake> trainBrakeState;
 };

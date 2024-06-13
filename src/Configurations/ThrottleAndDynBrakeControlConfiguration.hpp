@@ -24,6 +24,7 @@ public:
     [[nodiscard]] nlohmann::json to_json() const;
     
      double throttleStep = 0.01;
-     double brakeStep = 0.01;
+     double dynamicBrakeStep = 0.01;
+     double engineBrakeStep = 0.01;
      std::chrono::milliseconds timeBetweenIncrements{300};
 };
