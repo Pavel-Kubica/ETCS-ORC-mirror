@@ -22,4 +22,5 @@ struct SimulationState {
     double motiveForceInNewtons;
     double brakeCylinderPressureInPsi;
     double mainPipeBrakePressureInPsi;
+    double mainReservoirPressureInPsi;
 };

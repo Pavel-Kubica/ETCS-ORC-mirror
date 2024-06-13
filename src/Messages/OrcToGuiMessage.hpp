@@ -20,8 +20,9 @@ public:
 
     OrcToGuiMessage(double speedMpS,
                     double motiveForceN,
-                    double brakeCylinderPSI,
-                    double leadPipePSI);
+                    double brakeCylinderBar,
+                    double leadPipeBar,
+                    double mainReservoirPressureBar);
 
     ~OrcToGuiMessage() override = default;
 
@@ -31,6 +32,7 @@ public:
 protected:
     double speedMpS;
     double motiveForceN;
-    double brakeCylinderPSI;
-    double leadPipePSI;
+    double brakeCylinderBar;
+    double leadPipeBar;
+    double mainReservoirPressureBar;
 };
