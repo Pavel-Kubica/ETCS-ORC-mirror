@@ -34,7 +34,7 @@ void GuiSimulationStateSenderService::SendSimulationState(const SimulationState&
                           "[speed: %speed% m/s]"
                           "[motive-force:%force% N] "
                           "[brake-cylinder-pressure: %b_pressure% bar]"
-                          "[main-pipe-pressure: %main_pressure% bar]",
+                          "[main-pipe-pressure: %main_pressure% bar]"
                           "[main-reservoir-pressure: %main_reservoir% bar]",
                           simState.speedInMetresPerSecond,
                           simState.motiveForceInNewtons,
