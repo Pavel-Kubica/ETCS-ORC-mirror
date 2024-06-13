@@ -32,6 +32,7 @@ enum class ServiceType {
     BaliseData,
     Btm,
     SimulationStateApi,
+    BaliseCoordinatesPrinter,
     BalisesFromJson,
     ConsoleInput,
 

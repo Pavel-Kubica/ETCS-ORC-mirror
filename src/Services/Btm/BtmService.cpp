@@ -17,9 +17,10 @@
 #include "EndOfInformation.hpp"
 
 void BtmService::Initialize(ServiceContainer& container) {
-    baliseDataService = container.FetchService<BaliseDataService>().get();
-    mqttPublisherService = container.FetchService<MqttPublisherService>().get();
-    jruLoggerService = container.FetchService<JRULoggerService>().get();
+    this->baliseDataService = container.FetchService<BaliseDataService>().get();
+    this->mqttPublisherService = container.FetchService<MqttPublisherService>().get();
+    this->jruLoggerService = container.FetchService<JRULoggerService>().get();
+    this->printerService = container.FetchService<IBaliseCoordinatesPrinterService>().get();
 }
 
 void BtmService::CheckIfBaliseWasPassed(Distance previousDistance, Distance currentDistance) {

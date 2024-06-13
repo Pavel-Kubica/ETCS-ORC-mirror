@@ -20,5 +20,6 @@
 class IBaliseCoordinatesPrinterService : public IService {
 public:
     virtual void PrintBalisesOnCurrentPosition(Distance currentDistance, uint32_t baliseCnt) = 0;
-
+    
+    static constexpr ServiceType Type = ServiceType::BaliseCoordinatesPrinter;
 };
