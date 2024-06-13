@@ -16,10 +16,10 @@
 enum class ForwardLight {
     Off = 0,
     Day = 2,
-    Far = 5
+    Far = 4
 };
 
-// TODO inconsistent behavior in OR
+// Orts.[RunActivity].Viewer3D.RollingStock.MSTSLocomotiveViewer:277
 inline double toDouble(ForwardLight light) {
     return static_cast<double>(light);
 }

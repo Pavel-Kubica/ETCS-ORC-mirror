@@ -66,6 +66,8 @@ public:
 
     void SetLight(ForwardLight light) override;
 
+    bool LightSkipped() const override;
+
 private:
     std::atomic_bool battery;
     std::atomic_bool cab;
@@ -76,6 +78,7 @@ private:
     std::atomic_bool pantograph;
     std::atomic_bool emergencyBrake;
     std::atomic<ForwardLight> forwardLight;
+    std::atomic_bool lightSkipped;
 
 private:
     std::atomic<DirectionLeverPosition> trainDirection;
@@ -86,4 +89,5 @@ private:
     // - this example with mutable mutex is on cpp reference:
     // https://en.cppreference.com/w/cpp/language/cv
     mutable std::mutex leverPositionMutex{};
+    mutable std::mutex lightMutex{};
 };

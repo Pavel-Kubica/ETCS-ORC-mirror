@@ -47,7 +47,7 @@ inline std::string_view CabControlTypeToRequestString(CabControlType type) {
         case CabControlType::EmergencyBrake:
             return "EMERGENCY_BRAKE";
         case CabControlType::ForwardLight:
-            return "FORWARD_HLIGHT";
+            return "FRONT_HLIGHT";
         default:
             throw std::runtime_error("unreachable branch");
     }

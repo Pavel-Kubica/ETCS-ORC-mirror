@@ -123,9 +123,23 @@ void HumanControlDataService::SetEmergencyBrake(bool on) {
 }
 
 ForwardLight HumanControlDataService::GetLight() const {
+    std::lock_guard lk(lightMutex);
     return forwardLight;
 }
 
 void HumanControlDataService::SetLight(ForwardLight light) {
+    std::lock_guard lk(lightMutex);
+    if ((forwardLight == ForwardLight::Off && light == ForwardLight::Far) ||
+         forwardLight == ForwardLight::Far && light == ForwardLight::Off) {
+        lightSkipped = true;
+    }
+    else {
+        lightSkipped = false;
+    }
     forwardLight = light;
+}
+
+bool HumanControlDataService::LightSkipped() const {
+    std::lock_guard lk(lightMutex);
+    return lightSkipped;
 }

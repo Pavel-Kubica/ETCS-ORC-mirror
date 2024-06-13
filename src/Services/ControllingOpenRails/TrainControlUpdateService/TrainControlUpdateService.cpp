@@ -15,6 +15,7 @@
 #include "TrainControlUpdateService.hpp"
 #include "ServiceContainer.hpp"
 #include "TrainBrake.hpp"
+#include <thread>
 
 void TrainControlUpdateService::Initialize(ServiceContainer& container) {
     cabControlApiService = container.FetchService<ICabControlApiService>().get();
@@ -129,6 +130,14 @@ void TrainControlUpdateService::HandleDirectionLever(CabControlRequest& request)
 }
 
 void TrainControlUpdateService::HandleAuxiliaryFunctions(CabControlRequest& request) {
+    if (humanControlDataService->LightSkipped()) {
+        // Necessary middle step, OR cannot go from far light to off or the other way around
+        // Also, for some reason if we put the middle step in the same request it doesn't work either
+        CabControlRequest lightReq;
+        lightReq.SetLight(ForwardLight::Day);
+        cabControlApiService->Send(lightReq);
+        std::this_thread::sleep_for(std::chrono::duration(std::chrono::milliseconds(50)));
+    }
     request.SetPantograph(humanControlDataService->GetPantograph());
     request.SetSander(humanControlDataService->GetSander());
     request.SetHorn(humanControlDataService->GetHorn());

@@ -136,6 +136,15 @@ void ConsoleInputService::MainLoop() {
                 this->humanControlService->SetEngineBrake(engineBrake);
                 break;
             }
+            case 'i': { // i0, i2, i4 are valid
+                if (argument != 0 && argument != 2 && argument != 4) {
+                    invalidInput();
+                    continue;
+                }
+                auto light = (ForwardLight)argument;
+                this->humanControlService->SetLight(light);
+                break;
+            }
             
             default:
                 invalidInput();
