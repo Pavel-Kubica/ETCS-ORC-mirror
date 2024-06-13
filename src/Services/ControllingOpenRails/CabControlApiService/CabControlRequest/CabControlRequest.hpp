@@ -17,6 +17,7 @@
 #include "DirectionLeverPosition.hpp"
 #include "CabControlType.hpp"
 #include "json.hpp"
+#include "ForwardLight.hpp"
 
 class CabControlRequest {
 public:
@@ -34,6 +35,7 @@ public:
     CabControlRequest& SetHorn(bool on);
     CabControlRequest& SetSander(bool on);
     CabControlRequest& SetEmergencyBrake(bool on);
+    CabControlRequest& SetLight(ForwardLight light);
 
     CabControlRequest& Clear();
     

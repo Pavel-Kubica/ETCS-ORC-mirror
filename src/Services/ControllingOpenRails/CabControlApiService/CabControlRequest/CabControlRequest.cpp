@@ -78,6 +78,11 @@ CabControlRequest &CabControlRequest::SetEmergencyBrake(bool on) {
     return *this;
 }
 
+CabControlRequest &CabControlRequest::SetLight(ForwardLight light) {
+    this->items.emplace_back(CabControlType::ForwardLight, toDouble(light));
+    return *this;
+}
+
 CabControlRequest& CabControlRequest::Clear() {
     this->items.clear();
     return *this;

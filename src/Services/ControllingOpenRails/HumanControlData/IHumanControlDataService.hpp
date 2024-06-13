@@ -17,6 +17,7 @@
 #include "DirectionLeverPosition.hpp"
 #include "DrivingLeverPosition.hpp"
 #include "EngineBrakeLeverPosition.hpp"
+#include "ForwardLight.hpp"
 
 class IHumanControlDataService : public IService {
 public:
@@ -61,6 +62,10 @@ public:
     [[nodiscard]] virtual bool GetEmergencyBrake() const = 0;
 
     virtual void SetEmergencyBrake(bool on) = 0;
+
+    [[nodiscard]] virtual ForwardLight GetLight() const = 0;
+
+    virtual void SetLight(ForwardLight light) = 0;
 
     static constexpr ServiceType Type = ServiceType::TrainControlData;
 };

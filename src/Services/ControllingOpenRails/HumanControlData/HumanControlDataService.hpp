@@ -58,9 +58,13 @@ public:
 
     void SetPantograph(bool up) override;
 
-    bool GetEmergencyBrake() const override;
+    [[nodiscard]] bool GetEmergencyBrake() const override;
 
     void SetEmergencyBrake(bool on) override;
+
+    [[nodiscard]] ForwardLight GetLight() const override;
+
+    void SetLight(ForwardLight light) override;
 
 private:
     std::atomic_bool battery;
@@ -71,6 +75,7 @@ private:
     std::atomic_bool sander;
     std::atomic_bool pantograph;
     std::atomic_bool emergencyBrake;
+    std::atomic<ForwardLight> forwardLight;
 
 private:
     std::atomic<DirectionLeverPosition> trainDirection;

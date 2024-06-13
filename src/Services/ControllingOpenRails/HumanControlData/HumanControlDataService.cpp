@@ -25,7 +25,8 @@ HumanControlDataService::HumanControlDataService()
       pantograph(true),
       horn(false),
       sander(false),
-      emergencyBrake(false) {}
+      emergencyBrake(false),
+      forwardLight(ForwardLight::Day) {}
 
 bool HumanControlDataService::GetBattery() const {
     return battery;
@@ -119,4 +120,12 @@ bool HumanControlDataService::GetEmergencyBrake() const {
 
 void HumanControlDataService::SetEmergencyBrake(bool on) {
     emergencyBrake = on;
+}
+
+ForwardLight HumanControlDataService::GetLight() const {
+    return forwardLight;
+}
+
+void HumanControlDataService::SetLight(ForwardLight light) {
+    forwardLight = light;
 }

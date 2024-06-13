@@ -15,6 +15,7 @@
 
 #include "CANControlMessageHandler.hpp"
 #include "CANControlMessage.hpp"
+#include "ForwardLight.hpp"
 
 CANControlMessageHandler::CANControlMessageHandler(ServiceContainer& services) : MessageHandler(services) {
     jruLoggerService = services.FetchService<JRULoggerService>().get();
@@ -27,11 +28,17 @@ void CANControlMessageHandler::HandleMessageBody(const Message& message) {
     DrivingLeverPosition drivingLeverPosition = msg.GetDrivingLever();
     DirectionLeverPosition directionLeverPosition = msg.GetDirectionLever();
     EngineBrakeLeverPosition engineBrakeLeverPosition = msg.GetEngineBrakeLever();
-    // TODO is this pantograph behavior correct?
     bool pantograph = msg.GetPantograph() != PantographPosition::Down;
     bool horn = msg.GetHorn();
     bool sander = msg.GetSander();
     bool emergencyBrake = msg.GetGeneralStop();
+    ForwardLight light;
+    if (!msg.GetLights())
+        light = ForwardLight::Off;
+    else if (msg.GetFarLights())
+        light = ForwardLight::Far;
+    else
+        light = ForwardLight::Day;
 
     if (drivingLeverPosition == humanControlDataService->GetDrivingLever() &&
         directionLeverPosition == humanControlDataService->GetTrainDirection() &&
@@ -39,7 +46,8 @@ void CANControlMessageHandler::HandleMessageBody(const Message& message) {
         pantograph == humanControlDataService->GetPantograph() &&
         horn == humanControlDataService->GetHorn() &&
         sander == humanControlDataService->GetSander() &&
-        emergencyBrake == humanControlDataService->GetEmergencyBrake()) {
+        emergencyBrake == humanControlDataService->GetEmergencyBrake() &&
+        light == humanControlDataService->GetLight()) {
         jruLoggerService->Log(MessageType::Note,
                               "[CAN] ----> [ORC] || CAN control WITH NO CHANGE. "
                               "[Main lever: %drivingLeverPosition%] "
@@ -61,6 +69,7 @@ void CANControlMessageHandler::HandleMessageBody(const Message& message) {
     humanControlDataService->SetHorn(horn);
     humanControlDataService->SetSander(sander);
     humanControlDataService->SetEmergencyBrake(emergencyBrake);
+    humanControlDataService->SetLight(light);
     trainControlUpdateService->Update();
 }
 

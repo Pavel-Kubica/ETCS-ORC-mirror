@@ -133,6 +133,7 @@ void TrainControlUpdateService::HandleAuxiliaryFunctions(CabControlRequest& requ
     request.SetSander(humanControlDataService->GetSander());
     request.SetHorn(humanControlDataService->GetHorn());
     request.SetEmergencyBrake(humanControlDataService->GetEmergencyBrake());
+    request.SetLight(humanControlDataService->GetLight());
 }
 
 void TrainControlUpdateService::HandleEngineBrake(CabControlRequest &request) {
