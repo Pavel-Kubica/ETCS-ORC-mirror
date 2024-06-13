@@ -115,6 +115,8 @@ SimulationState SimulationStateApiService::SimulationStateFromJson(const nlohman
     state.brakeCylinderPressureInPsi = json.at("BrakeCylinderPressureInPsi");
     state.mainPipeBrakePressureInPsi = json.at("MainPipeBrakePressureInPsi");
     state.mainReservoirPressureInPsi = json.at("MainReservoirPressureInPsi");
+    state.worldLocationString = json.at("WorldLocationAsString");
+    state.worldPositionString = json.at("WorldPositionAsString");
     
     return state;
 }

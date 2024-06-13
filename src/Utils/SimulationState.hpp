@@ -5,13 +5,17 @@
  *  ORC         | 2.3.0
  *
  *  ###Description
- *  Structure describing the state of Open Rails simulation
+ *  Basically a response from /API/ORC endpoint of Open Rails API.
+ *  Structure describing the state of Open Rails simulation.
  *
  *  ###Contributors
  *  pavlian5
+ *  rehorja8
  */
 
 #pragma once
+
+#include <string>
 
 struct SimulationState {
     double distanceTravelledInMetres;
@@ -23,4 +27,6 @@ struct SimulationState {
     double brakeCylinderPressureInPsi;
     double mainPipeBrakePressureInPsi;
     double mainReservoirPressureInPsi;
+    std::string worldLocationString;
+    std::string worldPositionString;
 };
