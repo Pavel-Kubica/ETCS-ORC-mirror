@@ -18,6 +18,7 @@
 #include "JRULoggerService.hpp"
 #include "MqttPublisherService.hpp"
 #include "IBtmService.hpp"
+#include "BaliseCoordinatesPrinterService.hpp"
 
 class BtmService: public IBtmService, public IInitializable {
 public:
@@ -32,4 +33,5 @@ private:
     IBaliseDataService* baliseDataService;
     IMqttPublisherService* mqttPublisherService;
     JRULoggerService* jruLoggerService;
+    IBaliseCoordinatesPrinterService* printerService;
 };

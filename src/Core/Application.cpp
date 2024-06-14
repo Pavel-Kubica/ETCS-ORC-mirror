@@ -61,6 +61,7 @@ void Application::Initialize(const std::string& mqttHostname, int mqttPort) {
     service_container->RegisterService<BtmService>();
     service_container->RegisterService<BtmService>();
     service_container->RegisterService<SimulationStateApiService>();
+    service_container->RegisterService<BaliseCoordinatesPrinterService>();
     service_container->RegisterService<GuiSimulationStateSenderService>();
     service_container->RegisterService<OdoToEvcSenderService>();
     service_container->RegisterService<ConsoleInputService>();

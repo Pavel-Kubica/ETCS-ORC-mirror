@@ -17,16 +17,18 @@
 #include "EndOfInformation.hpp"
 
 void BtmService::Initialize(ServiceContainer& container) {
-    baliseDataService = container.FetchService<BaliseDataService>().get();
-    mqttPublisherService = container.FetchService<MqttPublisherService>().get();
-    jruLoggerService = container.FetchService<JRULoggerService>().get();
+    this->baliseDataService = container.FetchService<BaliseDataService>().get();
+    this->mqttPublisherService = container.FetchService<MqttPublisherService>().get();
+    this->jruLoggerService = container.FetchService<JRULoggerService>().get();
+    this->printerService = container.FetchService<IBaliseCoordinatesPrinterService>().get();
 }
 
 void BtmService::CheckIfBaliseWasPassed(Distance previousDistance, Distance currentDistance) {
     if (previousDistance == currentDistance) return;
     
     const std::vector<std::unique_ptr<Balise>>& balises = baliseDataService->GetBalisesSortedByDistance();
-    
+    uint32_t passedBalisesCnt = 0;
+
     if (previousDistance < currentDistance) {   // train is moving forwards
         //find the first balise which has higher position than previousDistance
         auto baliseIter = std::upper_bound(balises.begin(), balises.end(), previousDistance,
@@ -36,6 +38,7 @@ void BtmService::CheckIfBaliseWasPassed(Distance previousDistance, Distance curr
         // send a message for every balise with position in the interval (previousDistance, currentDistance>
         for (; baliseIter != balises.end() && (*baliseIter)->GetPos() <= currentDistance; ++baliseIter) {
             SendMessageThatBaliseWasPassed(**baliseIter);
+            ++passedBalisesCnt;
         }
     } else {    // train is moving backwards
         //find the last balise which has lower position than previousDistance
@@ -46,7 +49,11 @@ void BtmService::CheckIfBaliseWasPassed(Distance previousDistance, Distance curr
         // send a message for every balise with position in the interval <currentDistance, previousDistance)
         for (; baliseIter != balises.rend() && (*baliseIter)->GetPos() >= currentDistance; ++baliseIter) {
             SendMessageThatBaliseWasPassed(**baliseIter);
+            ++passedBalisesCnt;
         }
+    }
+    if (passedBalisesCnt) {
+        printerService->PrintBalisesOnCurrentPosition(currentDistance, passedBalisesCnt);
     }
 }
 
