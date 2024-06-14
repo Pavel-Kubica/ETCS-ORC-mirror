@@ -11,19 +11,27 @@
  *  pavlian5
  */
 
-
 #include "BaliseCoordinatesPrinterService.hpp"
 #include "BaliseCoordinatesPrinterConfiguration.hpp"
 
 void BaliseCoordinatesPrinterService::Initialize(ServiceContainer& container) {
+    this->logger = container.FetchService<JRULoggerService>().get();
     configurationService = container.FetchService<ConfigurationService>().get();
     auto config = configurationService->FetchConfiguration<BaliseCoordinatesPrinterConfiguration>();
     filename = config.baliseCoordinatesFilename;
     shouldPrintBalises = config.shouldPrintBalises;
     simulationStateDataService = container.FetchService<ISimulationStateDataService>().get();
     file = std::ofstream(filename);
-    if (!file) {
-        logger->Log(MessageType::Warning, "Balise coordinates output file was not created");
+    if (!file && shouldPrintBalises) {
+        logger->Log(true, MessageType::Warning,
+                    "Balise coordinates output file could not be created but it is wanted by the config file: %file%",
+                    BaliseCoordinatesPrinterConfiguration::FileName);
+    }
+    if (!shouldPrintBalises) {
+        logger->Log(true, MessageType::Note,
+                    "Logging of train coordinates when passing a balise is turned off (this is the default) - you can "
+                    "turn this on in the config file: %file%",
+                    BaliseCoordinatesPrinterConfiguration::FileName);
     }
 }
 
@@ -33,5 +41,5 @@ void BaliseCoordinatesPrinterService::PrintBalisesOnCurrentPosition(Distance cur
     }
     SimulationState simulationState = simulationStateDataService->GetSimulationState();
     file << "balise-count:{" << baliseCnt << "} | world-location:" << simulationState.worldLocationString
-           << " | world-position:" << simulationState.worldPositionString << std::endl;
+         << " | world-position:" << simulationState.worldPositionString << std::endl;
 }
