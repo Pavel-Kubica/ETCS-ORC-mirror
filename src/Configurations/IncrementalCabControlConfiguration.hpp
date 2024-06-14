@@ -23,8 +23,11 @@ public:
     void from_json(const nlohmann::json& j);
     [[nodiscard]] nlohmann::json to_json() const;
     
-     double throttleStep = 0.01;
-     double dynamicBrakeStep = 0.01;
-     double engineBrakeStep = 0.01;
+     double throttleIncStep = 0.01;
+     double dynamicBrakeIncStep = 0.03;
+     double engineBrakeIncStep = 0.03;
+     double throttleDecStep = 0.03;
+     double dynamicBrakeDecStep = 0.01;
+     double engineBrakeDecStep = 0.01;
      std::chrono::milliseconds timeBetweenIncrements{300};
 };
