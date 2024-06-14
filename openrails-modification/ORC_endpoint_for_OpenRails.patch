@@ -1,14 +1,23 @@
 diff --git a/Source/RunActivity/Viewer3D/WebServices/WebServer.cs b/Source/RunActivity/Viewer3D/WebServices/WebServer.cs
-index 42c8128..91782f7 100644
+index 42c8128..b3a1382 100644
 --- a/Source/RunActivity/Viewer3D/WebServices/WebServer.cs
 +++ b/Source/RunActivity/Viewer3D/WebServices/WebServer.cs
-@@ -134,6 +134,60 @@ public ORTSApiController(Viewer viewer)
+@@ -39,6 +39,7 @@
+ using System.Threading;
+ using System.Threading.Tasks;
+ using Orts.Viewer3D.WebServices.SwitchPanel;
++using System.Globalization;
+ 
+ namespace Orts.Viewer3D.WebServices
+ {
+@@ -134,6 +135,84 @@ public ORTSApiController(Viewer viewer)
              Viewer = viewer;
          }
  
 +
 +        #region /API/ORC
 +        // This region is for the Open-Rails-Client for the ETCS project at FIT CTU
++        // Author: rehorja8 (I have PTSD from this - just look at Train.cs, it has ~21 000 lines of code)
 +        public struct OrcTable
 +        {
 +            public float DistanceTravelledInMeters;
@@ -20,25 +29,48 @@ index 42c8128..91782f7 100644
 +            public float MainPipeBrakePressureInPsi;
 +            public float MainReservoirPressureInPsi;
 +            public float MotiveForceInNewtons;
++
++            public String WorldLocationAsString;
++            public String WorldPositionAsString;
 +        }
 +
 +        [Route(HttpVerbs.Get, "/ORC")]
 +        public OrcTable GetOrcInfo()
 +        {
 +            var train = Viewer.Simulator.Trains[0];
++            var car = train.Cars[0]; // car representing the train
++
++            var (positionAsString, locationAsString) = GetPostitionAndLocationString(car);
 +
 +            return new OrcTable()
 +            {
 +                DistanceTravelledInMeters             = train.DistanceTravelledM,
 +                SpeedInMetersPerSecond                = train.SpeedMpS,
-+                AccelerationInMetersPerSecondSquared = train.AccelerationMpSpS.Value,
++                AccelerationInMetersPerSecondSquared  = train.AccelerationMpSpS.Value,
 +                ThrottleLeverPercentage               = train.MUThrottlePercent,
 +                Direction                             = DirectionToFloat(train.MUDirection),
 +                BrakeCylinderPressureInPsi            = train.HUDLocomotiveBrakeCylinderPSI,
 +                MainPipeBrakePressureInPsi            = train.LeadPipePressurePSI,
 +                MainReservoirPressureInPsi            = train.BrakeLine2PressurePSI,
-+                MotiveForceInNewtons                  = train.Cars[0].MotiveForceN,
++                MotiveForceInNewtons                  = car.MotiveForceN,
++                WorldLocationAsString                 = locationAsString,
++                WorldPositionAsString                 = positionAsString,
 +            };
++        }
++
++        private (String, String) GetPostitionAndLocationString(Simulation.RollingStocks.TrainCar car)
++        {
++            var previousCultureFormat = Thread.CurrentThread.CurrentCulture;
++            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US"); // so floats use dot and not comma - I hate this feature of C#
++
++            var pos = car.WorldPosition;
++            String positionAsString = $"TileX:{{{pos.TileX}}} | TileZ:{{{pos.TileZ}}} | MatrixAsString:{{{pos.XNAMatrix}}}";
++            var loc = pos.WorldLocation;
++            String locationAsString = $"TileX:{{{loc.TileX}}} | TileZ:{{{loc.TileZ}}} | LocationX:{{{loc.Location.X.ToString()}}} | LocationY:{{{loc.Location.Y}}} | LocationZ:{{{loc.Location.Z}}}";
++
++            Thread.CurrentThread.CurrentCulture = previousCultureFormat;
++
++            return (positionAsString, locationAsString);
 +        }
 +
 +        private float DirectionToFloat(Direction directionFromOpenRails)
