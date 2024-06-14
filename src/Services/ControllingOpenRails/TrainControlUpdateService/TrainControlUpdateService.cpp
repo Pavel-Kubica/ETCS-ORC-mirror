@@ -130,19 +130,19 @@ void TrainControlUpdateService::HandleDirectionLever(CabControlRequest& request)
 }
 
 void TrainControlUpdateService::HandleAuxiliaryFunctions(CabControlRequest& request) {
-    if (humanControlDataService->LightSkipped()) {
-        // Necessary middle step, OR cannot go from far light to off or the other way around
-        // Also, for some reason if we put the middle step in the same request it doesn't work either
-        CabControlRequest lightReq;
-        lightReq.SetLight(ForwardLight::Day);
-        cabControlApiService->Send(lightReq);
-        std::this_thread::sleep_for(std::chrono::duration(std::chrono::milliseconds(50)));
-    }
     request.SetPantograph(humanControlDataService->GetPantograph());
     request.SetSander(humanControlDataService->GetSander());
     request.SetHorn(humanControlDataService->GetHorn());
     request.SetEmergencyBrake(humanControlDataService->GetEmergencyBrake());
-    request.SetLight(humanControlDataService->GetLight());
+    if (humanControlDataService->LightSkipped()) {
+        // As long as another Update is sent soon after, we can work around the OR limitation like this
+        // Our state will be temporarily desynchronized, but at least we don't have to have random timeouts here
+        request.SetLight(ForwardLight::Day);
+        humanControlDataService->ClearLightSkipped();
+    }
+    else {
+        request.SetLight(humanControlDataService->GetLight());
+    }
 }
 
 void TrainControlUpdateService::HandleEngineBrake(CabControlRequest &request) {

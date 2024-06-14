@@ -70,5 +70,7 @@ public:
     // We cannot send an OR api request that wants to go directly from far lights to off, or from off to far
     virtual bool LightSkipped() const = 0;
 
+    virtual void ClearLightSkipped() = 0;
+
     static constexpr ServiceType Type = ServiceType::TrainControlData;
 };

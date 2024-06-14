@@ -68,6 +68,8 @@ public:
 
     bool LightSkipped() const override;
 
+    void ClearLightSkipped() override;
+
 private:
     std::atomic_bool battery;
     std::atomic_bool cab;

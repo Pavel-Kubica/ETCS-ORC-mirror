@@ -143,3 +143,8 @@ bool HumanControlDataService::LightSkipped() const {
     std::lock_guard lk(lightMutex);
     return lightSkipped;
 }
+
+void HumanControlDataService::ClearLightSkipped() {
+    std::lock_guard lk(lightMutex);
+    lightSkipped = false;
+}
