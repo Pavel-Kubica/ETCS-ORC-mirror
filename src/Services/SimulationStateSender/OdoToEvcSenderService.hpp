@@ -30,6 +30,10 @@ private:
     JRULoggerService* jruLoggerService;
     IMqttPublisherService* mqttPublisher{};
 
+    double distanceTravelledInMeters = 0;
+    double prevPositionInMeters = 0;
+    static constexpr double STATIONARY_SPEED_THRESHOLD_MPS = 0.1;
+
     static constexpr uint16_t Q_CONTROL = 0b100000000;
     static constexpr uint16_t NID_C = 0;
     static constexpr uint32_t NID_BG = 16383;
