@@ -24,16 +24,22 @@ class ILocalCabControlsDataService : public IService
 {
 public:
     // Sets by how much throttle should be increased/decreased with each incremental change
-    virtual void SetThrottleStep(double step) = 0;
-    [[nodiscard]] virtual double GetThrottleStep() const = 0;
+    virtual void SetThrottleIncStep(double step) = 0;
+    [[nodiscard]] virtual double GetThrottleIncStep() const = 0;
+    virtual void SetThrottleDecStep(double step) = 0;
+    [[nodiscard]] virtual double GetThrottleDecStep() const = 0;
 
     // Sets by how much the dynamic brake should be increased/decreased with each incremental change
-    virtual void SetDynamicBrakeStep(double step) = 0;
-    [[nodiscard]] virtual double GetDynamicBrakeStep() const = 0;
+    virtual void SetDynamicBrakeIncStep(double step) = 0;
+    [[nodiscard]] virtual double GetDynamicBrakeIncStep() const = 0;
+    virtual void SetDynamicBrakeDecStep(double step) = 0;
+    [[nodiscard]] virtual double GetDynamicBrakeDecStep() const = 0;
 
     // Sets by how much the engine brake should be increased/decreased with each incremental change
-    virtual void SetEngineBrakeStep(double step) = 0;
-    [[nodiscard]] virtual double GetEngineBrakeStep() const = 0;
+    virtual void SetEngineBrakeIncStep(double step) = 0;
+    [[nodiscard]] virtual double GetEngineBrakeIncStep() const = 0;
+    virtual void SetEngineBrakeDecStep(double step) = 0;
+    [[nodiscard]] virtual double GetEngineBrakeDecStep() const = 0;
 
     virtual void SetThrottle(double newValue) = 0;
     [[nodiscard]] virtual double GetThrottle() const = 0;

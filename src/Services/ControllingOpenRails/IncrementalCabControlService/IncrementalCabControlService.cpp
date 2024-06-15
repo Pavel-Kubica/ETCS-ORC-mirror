@@ -22,10 +22,13 @@ void IncrementalCabControlService::Initialize(ServiceContainer& container) {
     configurationService = container.FetchService<ConfigurationService>().get();
     
     this->config = configurationService->FetchConfiguration<IncrementalCabControlConfiguration>();
-    
-    localCabControlsDataService->SetThrottleStep(config.throttleStep);
-    localCabControlsDataService->SetDynamicBrakeStep(config.dynamicBrakeStep);
-    localCabControlsDataService->SetEngineBrakeStep(config.engineBrakeStep);
+
+    localCabControlsDataService->SetThrottleIncStep(config.throttleIncStep);
+    localCabControlsDataService->SetThrottleDecStep(config.throttleDecStep);
+    localCabControlsDataService->SetDynamicBrakeIncStep(config.dynamicBrakeIncStep);
+    localCabControlsDataService->SetDynamicBrakeDecStep(config.dynamicBrakeDecStep);
+    localCabControlsDataService->SetEngineBrakeIncStep(config.engineBrakeIncStep);
+    localCabControlsDataService->SetEngineBrakeDecStep(config.engineBrakeDecStep);
 }
 
 void IncrementalCabControlService::StartIncreasingThrottle() {
