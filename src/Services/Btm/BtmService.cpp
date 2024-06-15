@@ -58,7 +58,7 @@ void BtmService::CheckIfBaliseWasPassed(Distance previousDistance, Distance curr
 }
 
 void BtmService::SendMessageThatBaliseWasPassed(const Balise& balise) {
-    std::vector<std::shared_ptr<Packet>> packets = {std::make_shared<Packet>(EndOfInformation())};
+    std::vector<std::shared_ptr<Packet>> packets = {std::make_shared<EndOfInformation>(0)};
     std::shared_ptr<BTMMessage> message = std::make_shared<BTMMessage>(
             balise.GetTelegram().Q_MEDIA,
             balise.GetTelegram().M_VERSION,
