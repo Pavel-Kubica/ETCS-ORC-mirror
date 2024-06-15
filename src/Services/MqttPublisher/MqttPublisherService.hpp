@@ -14,35 +14,43 @@
  *  zimaluk1
  *  hamaljan
  *  pavlian5
+ *  cajantom
  */
 
 #pragma once
 
- #include "ServiceContainer.hpp"
- #include "IInitializable.hpp"
- #include "JRULoggerService.hpp"
- #include "MqttService.hpp"
+#include "ServiceContainer.hpp"
+#include "IInitializable.hpp"
+#include "IStartable.hpp"
+#include "JRULoggerService.hpp"
+#include "MqttService.hpp"
 #include "IMqttPublisherService.hpp"
+#include "AsyncQueue.hpp"
 
 #include <mosquitto.h>
 #include <memory>
 #include <vector>
+#include <thread>
+
 /**
  * Service responsible for publishing messages via MQTT
  */
-class MqttPublisherService : public MqttService, public IMqttPublisherService, public IInitializable {
+class MqttPublisherService : public MqttService, public IMqttPublisherService, public IInitializable, public IStartable {
 public:
-    ~MqttPublisherService() override;
     /**
      * Publishes message via mosquitto
      * @param msg message to be published
      */
     void Publish(std::shared_ptr<Message> msg) override;
     void Initialize(ServiceContainer& container) override;
+    void Start(ServiceContainer& container) override;
+    void Wait() override;
+    void AppExit() override;
 
 private:
-    void ConnectToBroker();
+    void PublisherThreadEntryPoint();
 
-    struct mosquitto* komar;
     JRULoggerService* jruLoggerService;
+    std::thread publishThread;
+    AsyncQueue<std::shared_ptr<Message>> publishQueue;
 };

@@ -10,10 +10,12 @@
  *  ### Contributors
  *  cajantom
  *  rehorja8
+ *  kubicpa3
  */
 
 #include "CANControlMessageHandler.hpp"
 #include "CANControlMessage.hpp"
+#include "ForwardLight.hpp"
 
 CANControlMessageHandler::CANControlMessageHandler(ServiceContainer& services) : MessageHandler(services) {
     jruLoggerService = services.FetchService<JRULoggerService>().get();
@@ -25,10 +27,28 @@ void CANControlMessageHandler::HandleMessageBody(const Message& message) {
     const auto& msg = static_cast<const CANControlMessage&>(message);
     DrivingLeverPosition drivingLeverPosition = msg.GetDrivingLever();
     DirectionLeverPosition directionLeverPosition = msg.GetDirectionLever();
+    EngineBrakeLeverPosition engineBrakeLeverPosition = msg.GetEngineBrakeLever();
+    bool pantograph = msg.GetPantograph() != PantographPosition::Down;
+    bool horn = msg.GetHorn();
+    bool sander = msg.GetSander();
+    bool emergencyBrake = msg.GetGeneralStop();
     bool cabControl = msg.GetCabControl();
+    ForwardLight light;
+    if (!msg.GetLights())
+        light = ForwardLight::Off;
+    else if (msg.GetFarLights())
+        light = ForwardLight::Far;
+    else
+        light = ForwardLight::Day;
 
     if (drivingLeverPosition == humanControlDataService->GetDrivingLever() &&
         directionLeverPosition == humanControlDataService->GetTrainDirection() &&
+        engineBrakeLeverPosition == humanControlDataService->GetEngineBrake() &&
+        pantograph == humanControlDataService->GetPantograph() &&
+        horn == humanControlDataService->GetHorn() &&
+        sander == humanControlDataService->GetSander() &&
+        emergencyBrake == humanControlDataService->GetEmergencyBrake() &&
+        light == humanControlDataService->GetLight() &&
         cabControl == humanControlDataService->GetCab()) {
         jruLoggerService->Log(MessageType::Note,
                               "[CAN] ----> [ORC] || CAN control WITH NO CHANGE. "
@@ -48,6 +68,12 @@ void CANControlMessageHandler::HandleMessageBody(const Message& message) {
 
     humanControlDataService->SetDrivingLever(drivingLeverPosition);
     humanControlDataService->SetTrainDirection(directionLeverPosition);
+    humanControlDataService->SetEngineBrake(engineBrakeLeverPosition);
+    humanControlDataService->SetPantograph(pantograph);
+    humanControlDataService->SetHorn(horn);
+    humanControlDataService->SetSander(sander);
+    humanControlDataService->SetEmergencyBrake(emergencyBrake);
+    humanControlDataService->SetLight(light);
     humanControlDataService->SetCab(cabControl);
     trainControlUpdateService->Update();
 }

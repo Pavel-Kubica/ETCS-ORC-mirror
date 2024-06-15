@@ -42,5 +42,5 @@ enum class ServiceType {
     MachineControlData,
     TrainControlUpdate,
     LocalCabControlsData,
-    ThrottleAndDynBrakeControl
+    IncrementalCabControl
 };

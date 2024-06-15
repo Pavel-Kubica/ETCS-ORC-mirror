@@ -1,4 +1,4 @@
-/** @file ThrottleAndDynBrakeControlService.hpp
+/** @file IncrementalCabControlService.hpp
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
@@ -16,7 +16,7 @@
 
 #include "ConfigurationService.hpp"
 #include "ICabControlApiService.hpp"
-#include "IThrottleAndDynBrakeControlService.hpp"
+#include "IIncrementalCabControlService.hpp"
 #include "IInitializable.hpp"
 #include "ILocalCabControlsDataService.hpp"
 #include "ILpcManageable.hpp"
@@ -27,11 +27,11 @@
 #include <thread>
 #include "AsyncProperty.hpp"
 #include "Increment.hpp"
-#include "ThrottleAndDynBrakeControlConfiguration.hpp"
+#include "IncrementalCabControlConfiguration.hpp"
 
-class ThrottleAndDynBrakeControlService : public IInitializable,
-                                          public ILpcManageable,
-                                          public IThrottleAndDynBrakeControlService {
+class IncrementalCabControlService : public IInitializable,
+                                     public ILpcManageable,
+                                     public IIncrementalCabControlService {
 protected:
     void Initialize(ServiceContainer& container) override;
 
@@ -46,6 +46,11 @@ public:
     void StartDecreasingDynamicBrake() override;
     void SetDynamicBrakeTo(double value) override;
 
+    void StartIncreasingEngineBrake() override;
+    void StopChangingEngineBrake() override;
+    void StartDecreasingEngineBrake() override;
+    void SetEngineBrakeTo(double value) override;
+
     bool LpcSaidStart() override;
     bool LpcSaidStop() override;
     bool LpcSaidRestart() override;
@@ -55,10 +60,11 @@ private:
     ILocalCabControlsDataService* localCabControlsDataService;
 
     Increment throttleIncrement;
-    Increment brakeIncrement;
+    Increment dynamicBrakeIncrement;
+    Increment engineBrakeIncrement;
 
     // Loading from config files
-    ThrottleAndDynBrakeControlConfiguration config;
+    IncrementalCabControlConfiguration config;
     ConfigurationService* configurationService;
 
     // Says if the incrementing thread should be running or not
@@ -80,12 +86,14 @@ private:
      * @warning THIS METHOD IS NO SYNCHRONISED - IT DOES NOT LOCK `this->mtx`
      * @param [in, out] request - request that this method adds brake changes to, which should be sent to Open Rails API
      */
-    void ChangeBrake(CabControlRequest& request);
+    void ChangeDynamicBrake(CabControlRequest& request);
+
+    void ChangeEngineBrake(CabControlRequest& request);
 
     /**
      * @warning THIS METHOD IS NO SYNCHRONISED - IT DOES NOT LOCK `this->mtx`
      * @return true if incrementing thread has no more work to do
-     * (meaning `this->throttleIncrement` and `this->brakeIncrement` are `Increment::None`).
+     * (meaning `this->throttleIncrement` and `this->dynamicBrakeIncrement` are `Increment::None`).
      */
     [[nodiscard]] bool WorkDone() const;
 };

@@ -1,11 +1,11 @@
-/** @file IThrottleAndDynBrakeControlService.hpp
+/** @file IIncrementalCabControlService.hpp
  *
  *  Component   | Subset version
  *  :---------: | :-----------:
  *  ORC         | 2.3.0
  *
  *  ###Description
- *  Interface for ThrottleAndDynBrakeControlService
+ *  Interface for IncrementalCabControlService
  *
  *  ###Contributors
  *  kubicpa3
@@ -15,7 +15,7 @@
 #pragma once
 #include "IService.hpp"
 
-class IThrottleAndDynBrakeControlService : public IService
+class IIncrementalCabControlService : public IService
 {
 public:
     virtual void StartIncreasingThrottle() = 0;
@@ -28,5 +28,10 @@ public:
     virtual void StartDecreasingDynamicBrake() = 0;
     virtual void SetDynamicBrakeTo(double value) = 0;
 
-    static constexpr ServiceType Type = ServiceType::ThrottleAndDynBrakeControl;
+    virtual void StartIncreasingEngineBrake() = 0;
+    virtual void StopChangingEngineBrake() = 0;
+    virtual void StartDecreasingEngineBrake() = 0;
+    virtual void SetEngineBrakeTo(double value) = 0;
+
+    static constexpr ServiceType Type = ServiceType::IncrementalCabControl;
 };

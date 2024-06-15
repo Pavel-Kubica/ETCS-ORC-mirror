@@ -15,7 +15,7 @@
 #pragma once
 
 #include "ITrainControlUpdateService.hpp"
-#include "IThrottleAndDynBrakeControlService.hpp"
+#include "IIncrementalCabControlService.hpp"
 #include "IInitializable.hpp"
 #include "CabControlApiService.hpp"
 #include "MachineControlDataService.hpp"
@@ -24,7 +24,7 @@
 #include "ILocalCabControlsDataService.hpp"
 #include "IHumanControlDataService.hpp"
 #include "OpenRailsTrainBrakeConfiguration.hpp"
-#include "JruLoggerService.hpp"
+#include "JRULoggerService.hpp"
 
 class TrainControlUpdateService : public ITrainControlUpdateService,
                                   public ILpcManageable,
@@ -45,7 +45,7 @@ private:
     IHumanControlDataService* humanControlDataService;
     IMachineControlDataService* machineControlDataService;
     IMqttPublisherService* mqttPublisherService;
-    IThrottleAndDynBrakeControlService* throttleAndDynBrakeService;
+    IIncrementalCabControlService* incrementalCabControlService;
     ILocalCabControlsDataService* openRailsState;
     JRULoggerService* jruLoggerService;
     
@@ -68,6 +68,13 @@ private:
      * Handles the state of `this->humanControlDataService`.
      */
     void HandleHumanInstructions();
+    void HandleEngineBrake(CabControlRequest& request);
+    void HandleDirectionLever(CabControlRequest &request);
+    void HandleAuxiliaryFunctions(CabControlRequest &request);
+    /**
+     * This function might need to send requests in a specific order, so it doesn't take the request as an argument
+     */
+    void HandleDrivingLever();
 
     bool ReverserNotNeutral();
 };

@@ -29,7 +29,7 @@
 #include "OdoToEvcSenderService.hpp"
 #include "ControllingOpenRails/CabControlApiService/CabControlApiService.hpp"
 #include "ControllingOpenRails/TrainControlUpdateService/TrainControlUpdateService.hpp"
-#include "ControllingOpenRails/ThrottleAndDynBrakeControlService/ThrottleAndDynBrakeControlService.hpp"
+#include "ControllingOpenRails/IncrementalCabControlService/IncrementalCabControlService.hpp"
 #include "LocalCabControlsDataService.hpp"
 #include "HumanControlDataService.hpp"
 #include "BalisesFromJsonService.hpp"
@@ -73,7 +73,7 @@ void Application::Initialize(const std::string& mqttHostname, int mqttPort) {
     service_container->RegisterService<HumanControlDataService>();
     service_container->RegisterService<MachineControlDataService>();
     service_container->RegisterService<LocalCabControlsDataService>();
-    service_container->RegisterService<ThrottleAndDynBrakeControlService>();
+    service_container->RegisterService<IncrementalCabControlService>();
     service_container->RegisterService<TrainControlUpdateService>();
     service_container->RegisterService<CabControlApiService>();
 }

@@ -118,6 +118,30 @@ void ConsoleInputService::MainLoop() {
                 this->humanControlService->SetCab(cab);
                 break;
             }
+            case 'p': {
+                bool pantograph = (bool)argument;
+                this->humanControlService->SetPantograph(pantograph);
+                break;
+            }
+            case 'h': {
+                bool horn = (bool)argument;
+                this->humanControlService->SetHorn(horn);
+                break;
+            }
+            case 'e': {
+                auto engineBrake = (EngineBrakeLeverPosition)argument;
+                this->humanControlService->SetEngineBrake(engineBrake);
+                break;
+            }
+            case 'i': { // i0, i2, i4 are valid
+                if (argument != 0 && argument != 2 && argument != 4) {
+                    invalidInput();
+                    continue;
+                }
+                auto light = (ForwardLight)argument;
+                this->humanControlService->SetLight(light);
+                break;
+            }
             
             default:
                 invalidInput();

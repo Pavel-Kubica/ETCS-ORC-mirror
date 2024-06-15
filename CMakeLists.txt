@@ -91,7 +91,7 @@ include_directories(lib
         src/Services/ConsoleInput/
         src/Services/ControllingOpenRails/
         src/Services/ControllingOpenRails/LocalCabControlsDataService
-        src/Services/ControllingOpenRails/ThrottleAndDynBrakeControlService
+        src/Services/ControllingOpenRails/IncrementalCabControlService
         src/Services/ControllingOpenRails/CabControlApiService
         src/Services/ControllingOpenRails/TrainControlUpdateService
         src/Services/Configuration
