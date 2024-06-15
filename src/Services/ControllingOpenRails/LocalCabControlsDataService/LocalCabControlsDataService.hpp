@@ -27,14 +27,26 @@
 class LocalCabControlsDataService : public ILocalCabControlsDataService
 {
 public:
-    void SetThrottleStep(double step) override;
-    [[nodiscard]] double GetThrottleStep() const override;
+    void SetThrottleIncStep(double step) override;
+    [[nodiscard]] double GetThrottleIncStep() const override;
 
-    void SetDynamicBrakeStep(double step) override;
-    [[nodiscard]] double GetDynamicBrakeStep() const override;
+    void SetThrottleDecStep(double step) override;
 
-    void SetEngineBrakeStep(double step) override;
-    [[nodiscard]] double GetEngineBrakeStep() const override;
+    double GetThrottleDecStep() const override;
+
+    void SetDynamicBrakeDecStep(double step) override;
+
+    double GetDynamicBrakeDecStep() const override;
+
+    void SetEngineBrakeDecStep(double step) override;
+
+    double GetEngineBrakeDecStep() const override;
+
+    void SetDynamicBrakeIncStep(double step) override;
+    [[nodiscard]] double GetDynamicBrakeIncStep() const override;
+
+    void SetEngineBrakeIncStep(double step) override;
+    [[nodiscard]] double GetEngineBrakeIncStep() const override;
 
     void SetThrottle(double newThrottle) override;
     [[nodiscard]] double GetThrottle() const override;
@@ -55,9 +67,12 @@ public:
     [[nodiscard]] bool DecreaseEngineBrake() override;
 
 private:
-    std::atomic<double> throttleStep;
-    std::atomic<double> dynamicBrakeStep;
-    std::atomic<double> engineBrakeStep;
+    std::atomic<double> throttleIncStep;
+    std::atomic<double> dynamicBrakeIncStep;
+    std::atomic<double> engineBrakeIncStep;
+    std::atomic<double> throttleDecStep;
+    std::atomic<double> dynamicBrakeDecStep;
+    std::atomic<double> engineBrakeDecStep;
     std::atomic<double> throttle;
     std::atomic<double> dynamicBrake;
     std::atomic<double> engineBrake;
