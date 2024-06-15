@@ -48,9 +48,11 @@ CANControlMessage::CANControlMessage() {
 }
 
 CANControlMessage::CANControlMessage(DrivingLeverPosition drivingLever,
-                                     DirectionLeverPosition directionLever) :
+                                     DirectionLeverPosition directionLever,
+                                     bool cab) :
     drivingLever(drivingLever),
-    directionLever(directionLever)
+    directionLever(directionLever),
+    cab(cab)
 {
     NID_MESSAGE = MessageID::CANControls;
 }
@@ -65,15 +67,17 @@ void CANControlMessage::from_json(const nlohmann::json& j) {
 
 Bitstring CANControlMessage::ToBitstring() const {
     Bitstring bits = Bitstring::FromHex("ff00ff00ff00ff00");
-    bits.Write(directionsToBits.at(GetDirectionLever()), 42, 2);
-    bits.Write(drivingLeverToBits.at(GetDrivingLever()), 56, 5);
+	bits.Write(cab, 11, 1);
+	bits.Write(directionsToBits.at(GetDirectionLever()), 42, 2);
+	bits.Write(drivingLeverToBits.at(GetDrivingLever()), 56, 5);
     return bits;
 }
 
 void CANControlMessage::FromBitstring(const Bitstring& bits) {
     try {
-        directionLever = directionLeverSerializations.at(bits.At(42, 2));
-        drivingLever = drivingLeverSerializations.at(bits.At(56, 5));
+		cab = bits.At(11, 1);
+		directionLever = directionLeverSerializations.at(bits.At(42, 2));
+		drivingLever = drivingLeverSerializations.at(bits.At(56, 5));
     }
     catch (const std::out_of_range&) {
         throw std::invalid_argument(__FUNCTION__);
@@ -86,4 +90,8 @@ DrivingLeverPosition CANControlMessage::GetDrivingLever() const noexcept {
 
 DirectionLeverPosition CANControlMessage::GetDirectionLever() const noexcept {
     return directionLever;
+}
+
+bool CANControlMessage::GetCabControl() const noexcept {
+	return cab;
 }
