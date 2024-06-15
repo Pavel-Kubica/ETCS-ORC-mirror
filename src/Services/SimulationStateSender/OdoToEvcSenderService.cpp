@@ -24,6 +24,13 @@ void OdoToEvcSenderService::SendSimulationState(const SimulationState& simulatio
     double speed = simulationState.speedInMetresPerSecond;
     ODODirection q_control;
 
+    if (abs(speed) > STATIONARY_SPEED_THRESHOLD_MPS) {
+        distanceTravelledInMeters += abs(simulationState.distanceTravelledInMetres - prevPositionInMeters);
+        prevPositionInMeters = simulationState.distanceTravelledInMetres;
+    } else {
+        speed = 0;
+    }
+
     if (speed > 0) {
         q_control = ODODirection::Forward;
     } else if (speed < 0) {
@@ -33,8 +40,7 @@ void OdoToEvcSenderService::SendSimulationState(const SimulationState& simulatio
     }
 
     ODOMeasurementsMessage odoMeasurements(
-        Q_CONTROL, static_cast<uint32_t>(simulationState.distanceTravelledInMetres * 100),
-        abs(simulationState.speedInMetresPerSecond) * 3.6,
+        Q_CONTROL, static_cast<uint32_t>(distanceTravelledInMeters * 100), abs(speed) * 3.6,
         static_cast<uint16_t>(simulationState.accelerationInMetersPerSecondSquared), NID_C, NID_BG, DL_DOUBTOVER,
         DL_DOUBTUNDER, V_DOUBTPOS, V_DOUBTNEG, q_control);
 
@@ -42,6 +48,6 @@ void OdoToEvcSenderService::SendSimulationState(const SimulationState& simulatio
                           "OdoToEvcSenderService: sending ODO message "
                           "[travelled-distance: %distance%] "
                           "[speed: %speed%]",
-                          simulationState.distanceTravelledInMetres, simulationState.speedInMetresPerSecond);
+                          distanceTravelledInMeters, speed);
     mqttPublisher->Publish(std::make_shared<ODOMeasurementsMessage>(odoMeasurements));
 }
