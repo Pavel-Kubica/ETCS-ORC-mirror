@@ -25,25 +25,30 @@ void CANControlMessageHandler::HandleMessageBody(const Message& message) {
     const auto& msg = static_cast<const CANControlMessage&>(message);
     DrivingLeverPosition drivingLeverPosition = msg.GetDrivingLever();
     DirectionLeverPosition directionLeverPosition = msg.GetDirectionLever();
+    bool cabControl = msg.GetCabControl();
 
     if (drivingLeverPosition == humanControlDataService->GetDrivingLever() &&
-        directionLeverPosition == humanControlDataService->GetTrainDirection()) {
+        directionLeverPosition == humanControlDataService->GetTrainDirection() &&
+        cabControl == humanControlDataService->GetCab()) {
         jruLoggerService->Log(MessageType::Note,
                               "[CAN] ----> [ORC] || CAN control WITH NO CHANGE. "
                               "[Main lever: %drivingLeverPosition%] "
-                              "[Direction lever:%directionLever%]",
-                              drivingLeverPosition, directionLeverPosition);
+                              "[Direction lever:%directionLever%] "
+                              "[Cab control:%cabControl%]",
+                              drivingLeverPosition, directionLeverPosition, cabControl);
         return;
     }
 
     jruLoggerService->Log(true, MessageType::Info,
-                          "[CAN] ----> [ORC] || CAN control"
+                          "[CAN] ----> [ORC] || CAN control "
                           "[Main lever: %drivingLeverPosition%] "
-                          "[Direction lever:%directionLever%]",
-                          drivingLeverPosition, directionLeverPosition);
+                          "[Direction lever:%directionLever%] "
+                          "[Cab control:%cabControl%]",
+                          drivingLeverPosition, directionLeverPosition, cabControl);
 
     humanControlDataService->SetDrivingLever(drivingLeverPosition);
     humanControlDataService->SetTrainDirection(directionLeverPosition);
+    humanControlDataService->SetCab(cabControl);
     trainControlUpdateService->Update();
 }
 
