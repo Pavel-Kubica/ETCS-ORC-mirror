@@ -41,7 +41,7 @@ bool HumanControlDataService::GetCab() const {
 }
 
 void HumanControlDataService::SetCab(bool c) {
-    cab = c;
+    cab = battery = c;
 }
 
 DirectionLeverPosition HumanControlDataService::GetTrainDirection() const {

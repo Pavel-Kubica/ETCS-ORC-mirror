@@ -32,6 +32,7 @@ void CANControlMessageHandler::HandleMessageBody(const Message& message) {
     bool horn = msg.GetHorn();
     bool sander = msg.GetSander();
     bool emergencyBrake = msg.GetGeneralStop();
+    bool cabControl = msg.GetCabControl();
     ForwardLight light;
     if (!msg.GetLights())
         light = ForwardLight::Off;
@@ -47,20 +48,23 @@ void CANControlMessageHandler::HandleMessageBody(const Message& message) {
         horn == humanControlDataService->GetHorn() &&
         sander == humanControlDataService->GetSander() &&
         emergencyBrake == humanControlDataService->GetEmergencyBrake() &&
-        light == humanControlDataService->GetLight()) {
+        light == humanControlDataService->GetLight() &&
+        cabControl == humanControlDataService->GetCab()) {
         jruLoggerService->Log(MessageType::Note,
                               "[CAN] ----> [ORC] || CAN control WITH NO CHANGE. "
                               "[Main lever: %drivingLeverPosition%] "
-                              "[Direction lever:%directionLever%]",
-                              drivingLeverPosition, directionLeverPosition);
+                              "[Direction lever:%directionLever%] "
+                              "[Cab control:%cabControl%]",
+                              drivingLeverPosition, directionLeverPosition, cabControl);
         return;
     }
 
     jruLoggerService->Log(true, MessageType::Info,
-                          "[CAN] ----> [ORC] || CAN control"
+                          "[CAN] ----> [ORC] || CAN control "
                           "[Main lever: %drivingLeverPosition%] "
-                          "[Direction lever:%directionLever%]",
-                          drivingLeverPosition, directionLeverPosition);
+                          "[Direction lever:%directionLever%] "
+                          "[Cab control:%cabControl%]",
+                          drivingLeverPosition, directionLeverPosition, cabControl);
 
     humanControlDataService->SetDrivingLever(drivingLeverPosition);
     humanControlDataService->SetTrainDirection(directionLeverPosition);
@@ -70,6 +74,7 @@ void CANControlMessageHandler::HandleMessageBody(const Message& message) {
     humanControlDataService->SetSander(sander);
     humanControlDataService->SetEmergencyBrake(emergencyBrake);
     humanControlDataService->SetLight(light);
+    humanControlDataService->SetCab(cabControl);
     trainControlUpdateService->Update();
 }
 

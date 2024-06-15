@@ -35,7 +35,8 @@ public:
                       bool openRightDoor,
                       bool horn,
                       bool sander,
-                      bool emergencyStop);
+                      bool emergencyStop,
+                      bool cab);
     void from_json(const nlohmann::json& j) override;
     nlohmann::json to_json() const override;
     void FromBitstring(const Bitstring& bits) override;
@@ -54,6 +55,7 @@ public:
     bool GetHorn() const noexcept;
     bool GetSander() const noexcept;
     bool GetEmergencyStop() const noexcept;
+    bool GetCabControl() const noexcept;
 
 private:
     DrivingLeverPosition drivingLever;
@@ -70,4 +72,5 @@ private:
     bool horn;
     bool sander;
     bool emergencyStop;
+    bool cab;
 };

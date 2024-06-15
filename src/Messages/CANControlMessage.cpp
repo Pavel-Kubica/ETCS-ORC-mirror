@@ -88,7 +88,8 @@ CANControlMessage::CANControlMessage(DrivingLeverPosition drivingLever,
                                      bool openRightDoor,
                                      bool horn,
                                      bool sander,
-                                     bool emergencyStop) :
+                                     bool emergencyStop,
+                                     bool cab) :
     drivingLever(drivingLever),
     directionLever(directionLever),
     engineBrake(engineBrake),
@@ -102,7 +103,8 @@ CANControlMessage::CANControlMessage(DrivingLeverPosition drivingLever,
     openRightDoor(openRightDoor),
     horn(horn),
     sander(sander),
-    emergencyStop(emergencyStop) {
+    emergencyStop(emergencyStop),
+    cab(cab) {
     NID_MESSAGE = MessageID::CANControls;
 }
 
@@ -120,6 +122,7 @@ Bitstring CANControlMessage::ToBitstring() const {
     bits.Write(GetRightDoor(), 8, 1);
     bits.Write(GetLeftDoor(), 9, 1);
     bits.Write(GetGeneralStop(), 10, 1);
+    bits.Write(GetCabControl(), 11, 1);
     bits.Write(GetLights(), 24, 1);
     bits.Write(GetRightTimeout(), 25, 1);
     bits.Write(GetFarLights(), 26, 1);
@@ -140,6 +143,7 @@ void CANControlMessage::FromBitstring(const Bitstring& bits) {
         openRightDoor = bits.At(8, 1);
         openLeftDoor = bits.At(9, 1);
         generalStop = bits.At(10, 1);
+        cab = bits.At(11, 1);
         lights = bits.At(24, 1);
         rightTimeout = bits.At(25, 1);
         farLights = bits.At(26, 1);
@@ -211,4 +215,8 @@ bool CANControlMessage::GetSander() const noexcept {
 
 bool CANControlMessage::GetEmergencyStop() const noexcept {
     return emergencyStop;
+}
+
+bool CANControlMessage::GetCabControl() const noexcept {
+	return cab;
 }
