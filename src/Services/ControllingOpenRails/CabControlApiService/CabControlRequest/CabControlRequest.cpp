@@ -58,6 +58,31 @@ CabControlRequest& CabControlRequest::SetDirection(DirectionLeverPosition positi
     return *this;
 }
 
+CabControlRequest &CabControlRequest::SetSander(bool on) {
+    this->items.emplace_back(CabControlType::Sander, on);
+    return *this;
+}
+
+CabControlRequest &CabControlRequest::SetHorn(bool on) {
+    this->items.emplace_back(CabControlType::Horn, on);
+    return *this;
+}
+
+CabControlRequest &CabControlRequest::SetPantograph(bool up) {
+    this->items.emplace_back(CabControlType::Pantograph, up);
+    return *this;
+}
+
+CabControlRequest &CabControlRequest::SetEmergencyBrake(bool on) {
+    this->items.emplace_back(CabControlType::EmergencyBrake, on);
+    return *this;
+}
+
+CabControlRequest &CabControlRequest::SetLight(ForwardLight light) {
+    this->items.emplace_back(CabControlType::ForwardLight, toDouble(light));
+    return *this;
+}
+
 CabControlRequest& CabControlRequest::Clear() {
     this->items.clear();
     return *this;

@@ -18,7 +18,12 @@ enum class CabControlType {
     TrainBrake,
     EngineBrake,
     DynamicBrake,
-    Direction
+    Direction,
+    Pantograph,
+    Horn,
+    Sander,
+    EmergencyBrake,
+    ForwardLight
 };
 
 inline std::string_view CabControlTypeToRequestString(CabControlType type) {
@@ -33,6 +38,16 @@ inline std::string_view CabControlTypeToRequestString(CabControlType type) {
             return "DYNAMIC_BRAKE";
         case CabControlType::Direction:
             return "DIRECTION";
+        case CabControlType::Pantograph:
+            return "PANTOGRAPH";
+        case CabControlType::Horn:
+            return "BELL";
+        case CabControlType::Sander:
+            return "SANDERS";
+        case CabControlType::EmergencyBrake:
+            return "EMERGENCY_BRAKE";
+        case CabControlType::ForwardLight:
+            return "FRONT_HLIGHT";
         default:
             throw std::runtime_error("unreachable branch");
     }
